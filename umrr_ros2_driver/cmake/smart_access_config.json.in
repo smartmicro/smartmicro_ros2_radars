@@ -1,0 +1,13 @@
+{
+    "name": "SmartAccess Lib Config",
+    "version" : "3.3.0",
+    "client_id": 1,
+    "role": "master",
+    "shared_lib_path": "@LIB_PATH@",
+    "config_path": "@CONFIG_FOLDER_PATH@",
+    "user_interface_path": "@USER_INTERFACE_PATH@",
+    "download_path": "/data/update",
+    "instruction_serialization_type": "port_based",
+    "data_serialization_type": "port_based",
+    "alive": false
+}

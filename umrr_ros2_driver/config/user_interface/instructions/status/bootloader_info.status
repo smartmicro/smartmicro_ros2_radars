@@ -1,0 +1,186 @@
+{
+   "format_version_major"  : 1,
+   "format_version_minor"  : 0,
+   "format_version_patch"  : 0,
+   "name"                  : "bootloader_info",
+   "section"               : 3046,
+   "comment"               : "Bootloader information",
+   "status"                : [
+      {
+         "id"        : 0,
+         "name"      : "bootloader_info_version",
+         "comment"   : "Bootloader info status definition minor version. 0: Bootloader info not available",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },      
+      {
+         "id"        : 1,
+         "name"      : "project_id",
+         "comment"   : "Project identifier",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },     
+      {
+         "id"        : 2,
+         "name"      : "customer_id",
+         "comment"   : "Customer identifier",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 3,
+         "name"      : "applet_id",
+         "comment"   : "Applet identifier",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u32"
+      },      
+      {
+         "id"        : 4,
+         "name"      : "bootloader_version_digits",
+         "comment"   : "Number of used digits for bootloader version",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 5,
+         "name"      : "bootloader_version_1",
+         "comment"   : "project specific bootloader version, digit 1",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 6,
+         "name"      : "bootloader_version_2",
+         "comment"   : "project specific bootloader version, digit 2",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 7,
+         "name"      : "bootloader_version_3",
+         "comment"   : "project specific bootloader version, digit 3",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 8,
+         "name"      : "bootloader_version_4",
+         "comment"   : "project specific bootloader version, digit 4",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 9,
+         "name"      : "bootloader_version_5",
+         "comment"   : "project specific bootloader version, digit 5",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 10,
+         "name"      : "bootloader_version_6",
+         "comment"   : "project specific bootloader version, digit 6",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 11,
+         "name"      : "bootloader_version_7",
+         "comment"   : "project specific bootloader version, digit 7",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 12,
+         "name"      : "bootloader_version_8",
+         "comment"   : "project specific bootloader version, digit 8",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 13,
+         "name"      : "bootloader_version_9",
+         "comment"   : "project specific bootloader version, digit 9",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 14,
+         "name"      : "bootloader_build_stage",
+         "comment"   : "Build stage project bootloader",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 15,
+         "name"      : "baseline_bootloader_version_major",
+         "comment"   : "Baseline bootloader major version",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 16,
+         "name"      : "baseline_bootloader_version_minor",
+         "comment"   : "Baseline bootloader minor version",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 17,
+         "name"      : "baseline_bootloader_version_patch",
+         "comment"   : "Baseline bootloader patch version",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 18,
+         "name"      : "baseline_bootloader_build_stage",
+         "comment"   : "Baseline bootloader build stage",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 19,
+         "name"      : "bios_version_major",
+         "comment"   : "BIOS major version",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 20,
+         "name"      : "bios_version_minor",
+         "comment"   : "BIOS minor version",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      },
+      {
+         "id"        : 21,
+         "name"      : "bios_version_patch",
+         "comment"   : "BIOS patch version",
+         "access"    : "r",
+         "public"    : true,
+         "type"      : "u16"
+      }
+   ]
+}

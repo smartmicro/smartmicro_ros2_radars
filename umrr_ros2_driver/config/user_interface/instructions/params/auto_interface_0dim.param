@@ -1,0 +1,321 @@
+{
+   "format_version_major" : 1,
+   "format_version_minor" : 0,
+   "format_version_patch" : 0,
+   "name"                 : "auto_interface_0dim",
+   "section"              : 2010,
+   "comment"              : "Automotive user interface 0dimensional parameters",
+   "parameters"           : [
+      {
+         "id"      : 0,
+         "name"    : "tx_antenna_idx",
+         "type"    : "u8",
+         "comment" : "Index of Transmit Antenna",
+         "access"  : "rw",
+         "save"    : true,
+         "min"     : 0,
+         "max"     : 2,
+         "default" : 0
+      },
+      {
+         "id"      : 1,
+         "name"    : "center_frequency_idx",
+         "type"    : "u8",
+         "comment" : "Index of center frequency",
+         "access"  : "rw",
+         "save"    : true,
+         "min"     : 0,
+         "max"     : 2,
+         "default" : 1
+      },
+      {
+         "id"      : 2,
+         "name"    : "frequency_sweep_idx",
+         "type"    : "u8",
+         "comment" : "Index of sweep (0=226MHz, 1=512MHz, 2=1536MHz)",
+         "access"  : "rw",
+         "save"    : true,
+         "min"     : 0,
+         "max"     : 2,
+         "default" : 2
+      },
+      {
+         "id"      : 5,
+         "name"    : "range_toggle_mode",
+         "type"    : "u8",
+         "comment" : "Automatic toggle of range:0=off, 1=Short-Med, 2=Short-Long, 3=Med-Long",
+         "access"  : "rw",
+         "save"    : true,
+         "min"     : 0,
+         "max"     : 3,
+         "default" : 0
+      },
+      {
+         "id"      : 10,
+         "name"    : "prf_selector_manual",
+         "type"    : "u8",
+         "comment" : "0 = PRF switching active, 1 = PRF index given in prf_selector_index is used",
+         "access"  : "rw",
+         "save"    : true,
+         "min"     : 0,
+         "max"     : 1,
+         "default" : 0
+      },
+      {
+         "id"      : 11,
+         "name"    : "prf_set_selector",
+         "type"    : "u8",
+         "comment" : "Select PRF set index (only one set supported)",
+         "access"  : "rw",
+         "save"    : true,
+         "min"     : 0,
+         "max"     : 0,
+         "default" : 0
+      },
+      {
+         "id"      : 12,
+         "name"    : "prf_manual_value_idx",
+         "type"    : "u8",
+         "comment" : "In manual PRF mode only: use nth element of selected set",
+         "access"  : "rw",
+         "save"    : true,
+         "min"     : 0,
+         "max"     : 2,
+         "default" : 0
+      },
+      {
+         "id"      : 20,
+         "name"    : "tv_min_speed_sweep_idx_0",
+         "type"    : "f32",
+         "access"  : "rw",
+         "save"    : true,
+         "comment" : "Target Validation: minimum speed of target at first sweep",
+         "min"     : -150.0,
+         "max"     : 150.0,
+         "default" : -20.0
+      },
+      {
+         "id"      : 21,
+         "name"    : "tv_min_speed_sweep_idx_1",
+         "type"    : "f32",
+         "access"  : "rw",
+         "save"    : true,
+         "comment" : "Target Validation: minimum speed of target at second sweep",
+         "min"     : -150.0,
+         "max"     : 150.0,
+         "default" : -20.0
+      },
+      {
+         "id"      : 22,
+         "name"    : "tv_min_speed_sweep_idx_2",
+         "type"    : "f32",
+         "access"  : "rw",
+         "save"    : true,
+         "comment" : "Target Validation: minimum speed of target at third sweep",
+         "min"     : -150.0,
+         "max"     : 150.0,
+         "default" : -20.0
+      },
+      {
+         "id"      : 30,
+         "name"    : "tv_max_speed_sweep_idx_0",
+         "type"    : "f32",
+         "access"  : "rw",
+         "save"    : true,
+         "comment" : "Target Validation: maximum speed of target at first sweep",
+         "min"     : -150.0,
+         "max"     : 150.0,
+         "default" : 20.0
+      },
+      {
+         "id"      : 31,
+         "name"    : "tv_max_speed_sweep_idx_1",
+         "type"    : "f32",
+         "access"  : "rw",
+         "save"    : true,
+         "comment" : "Target Validation: maximum speed of target at second sweep",
+         "min"     : -150.0,
+         "max"     : 150.0,
+         "default" : 20.0
+      },
+      {
+         "id"      : 32,
+         "name"    : "tv_max_speed_sweep_idx_2",
+         "type"    : "f32",
+         "access"  : "rw",
+         "save"    : true,
+         "comment" : "Target Validation: maximum speed of target at third sweep",
+         "min"     : -150.0,
+         "max"     : 150.0,
+         "default" : 20.0
+      },
+      {
+         "id"     : 200,
+         "name"   : "output_control_target_list_can",
+         "type"   : "u8",
+         "comment": "send raw targets via CAN, 0 = disabled, 1 = enabled",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 1,
+         "default": 1
+      },
+      {
+         "id"     : 201,
+         "name"   : "output_control_object_list_can",
+         "type"   : "u8",
+         "comment": "send objects via CAN, 0 = disabled, 1 = enabled",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 0,
+         "default": 0
+      },
+      {
+         "id"     : 202,
+         "name"   : "output_control_target_list_eth",
+         "type"   : "u8",
+         "comment": "send raw targets via Ethernet, 0 = disabled, 1 = enabled",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 1,
+         "default": 1
+      },
+      {
+         "id"     : 203,
+         "name"   : "output_control_object_list_eth",
+         "type"   : "u8",
+         "comment": "send objects via Ethernet, 0 = disabled, 1 = enabled",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 0,
+         "default": 0
+      },
+      {
+         "id"     : 231,
+         "name"   : "ip_source_address",
+         "type"   : "u32",
+         "access" : "rw",
+         "save"   : true,
+         "comment": "IP source address (32bit)",
+         "default": 3232238347
+      },
+      {
+         "id"     : 233,
+         "name"   : "subnet_mask",
+         "type"   : "u32",
+         "access" : "rw",
+         "save"   : true,
+         "comment": "Subnet mask (32bit)",
+         "default": 4294967040
+      },
+      {
+         "id"     : 235,
+         "name"   : "ip_dest_address",
+         "type"   : "u32",
+         "access" : "rw",
+         "save"   : true,
+         "comment": "IP destination address (32bit)",
+         "default": 3232238353
+      },
+      {
+         "id"     : 236,
+         "name"   : "ip_dest_port",
+         "type"   : "u16",
+         "access" : "rw",
+         "save"   : true,
+         "comment": "IP destination port",
+         "default": 55555
+      },
+      {
+         "id"     : 300,
+         "name"   : "sync_mode",
+         "type"   : "u8",
+         "comment": "(Master+Slave config) 0=off, 1=master, 2=slave",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 2,
+         "default": 0
+      },
+      {
+         "id"     : 301,
+         "name"   : "sync_slave_identifier",
+         "type"   : "u8",
+         "comment": "(Slave config) Unique Sync Slave Identifier, ignored on master (always 0)",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 7,
+         "default": 0
+      },
+      {
+         "id"     : 302,
+         "name"   : "sync_group_identifier",
+         "type"   : "u8",
+         "comment": "(Slave config) Sync Group Identifier, ignored on master (always 0)",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 1,
+         "default": 0
+      },
+      {
+         "id"     : 303,
+         "name"   : "sync_nof_devices_1st_group",
+         "type"   : "u8",
+         "comment": "(Master config) Number of synced devices (incl. master) in first group, ignored on slave",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 1,
+         "max"    : 8,
+         "default": 1
+      },
+      {
+         "id"     : 304,
+         "name"   : "sync_nof_devices_2nd_group",
+         "type"   : "u8",
+         "comment": "(Master config) Number of synced devices in second group, ignored on slave",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 7,
+         "default": 0
+      },
+      {
+         "id"     : 310,
+         "name"   : "sync_interface",
+         "type"   : "u8",
+         "comment": "(Master+Slave config) interface for sensor sync, 1=can,2=ethernet",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 1,
+         "max"    : 2,
+         "default": 2
+      },
+      {
+         "id"     : 320,
+         "name"   : "time_sync_mode",
+         "type"   : "u8",
+         "comment": "(Time Sync: Master+Slave config) 0=off, 1=master, 2=slave",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 0,
+         "max"    : 2,
+         "default": 0
+      },
+      {
+         "id"     : 321,
+         "name"   : "time_sync_nof_devices",
+         "type"   : "u8",
+         "comment": "(Time Sync: Master config) Number of time synced devices (incl. master), ignored on slave",
+         "access" : "rw",
+         "save"   : true,
+         "min"    : 1,
+         "max"    : 8,
+         "default": 1
+      }
+   ]
+}

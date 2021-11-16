@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<serialization xmlns:xi="http://www.w3.org/2001/XInclude" version="0.1.0">
+    <ports num_of_ports="1">
+        <xi:include href="ports/com_target_list_port.xml" name="comTargetListPort" port_id="66" intern="false"/>
+    </ports>
+</serialization>

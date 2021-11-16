@@ -1,0 +1,72 @@
+﻿<header>
+    <version major="0" minor="0" patch="0" />
+    <segment type="static" name="GenericPortHeader" size="24" id="0">
+    <description> Provides general information about the given smartmicro port.</description>
+        <element_list>
+            <element>
+                <name>PortId</name>
+                <description>Port identification number.</description>
+                <element_offset>0 </element_offset>
+                <size>4</size>
+                <data_type>SP_UINT32</data_type>
+            </element>
+            <element>
+                <name>PortVersionMajor</name>
+                <description>Major version of the port API.</description>
+                <element_offset>4</element_offset>
+                <size>2</size>
+                <data_type>SP_INT16</data_type>
+            </element>
+            <element>
+                <name>PortVersionMinor</name>
+                <description>Minor version of the port API.</description>
+                <element_offset>6</element_offset>
+                <size>2</size>
+                <data_type>SP_INT16</data_type>
+            </element>
+            <element>
+                <name>Timestamp</name>
+                <description>Time of creation of the port.</description>
+                <element_offset>8</element_offset>
+                <size>8</size>
+                <data_type>SP_UINT64</data_type>
+            </element>
+            <element>
+                <name>PortSize</name>
+                <description>Size of the port including this header.</description>
+                <element_offset>16</element_offset>
+                <size>4</size>
+                <data_type>SP_UINT32</data_type>
+            </element>
+            <element>
+                <name>BodyEndianness</name>
+                <description>Endianness of the sensor system.Please notice that the data will be presented in the host endianness, and should not be reversed.</description>
+                <element_offset>20</element_offset>
+                <size>1</size>
+                <data_type>SP_UINT8</data_type>
+            </element>
+            <element>
+                <name>PortIndex</name>
+                <description>The port index is used for multiple occurance of ports with the same port identifier. </description>
+                <element_offset>21</element_offset>
+                <size>1</size>
+                <data_type>SP_UINT8</data_type>
+            </element>
+            <element>
+                <name>HeaderVersionMajor</name>
+                <description>Major version of the generic port API.</description>
+                <element_offset>22</element_offset>
+                <size>1</size>
+                <data_type>SP_UINT8</data_type>
+            </element>
+            <element>
+                <name>HeaderVersionMinor</name>
+                <description>Minor version of the generic port API. </description>
+                <element_offset>23</element_offset>
+                <size>1</size>
+                <data_type>SP_UINT8</data_type>
+            </element>
+        </element_list>
+    </segment>
+</header>
+

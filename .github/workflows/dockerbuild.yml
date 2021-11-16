@@ -1,0 +1,34 @@
+name: Build and test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build the docker container
+      run: docker build . -t umrr-ros:latest
+
+    - name: Get the smartaccess binaries
+      working-directory: ./umrr_ros2_driver
+      run:  echo "yes" | ./smart_extract.sh
+
+    - name: Building the driver with the docker container
+      run: docker run --rm -v`pwd`:/code umrr-ros colcon build
+
+    - name: Running the unit/integration tests via the docker container and exit
+      run: docker-compose up --exit-code-from ros_node
+
+    - name: Getting the test coverage
+      run: docker run --rm -v`pwd`:/code umrr-ros colcon test-result --all --verbose
+
+    - name: Shut down docker containers and networks
+      run: docker-compose down
