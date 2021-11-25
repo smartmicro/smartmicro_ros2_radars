@@ -1,0 +1,6 @@
+string section
+string param
+int32 value
+int32 sensor_id
+---
+string res

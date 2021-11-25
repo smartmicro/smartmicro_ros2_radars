@@ -30,8 +30,11 @@ endif()
 
 find_package(ament_cmake_auto REQUIRED)
 find_package(Threads REQUIRED)
+find_package(umrr_ros2_msgs REQUIRED)
 
 set(ENABLE_CJSON_UNINSTALL OFF CACHE BOOL "Enable creating uninstall target")
+set(FASTRTPS_INCLUDE_DIR "/opt/ros/foxy/include")
+set(FastRTPTS_LIBRARY_RELEASE "/opt/ros/foxy/lib/linfastrtps.so")
 
 #TODO use the new git tag when released as the option for unsetting the uninstall is not available!!
 FetchContent_Declare(
@@ -69,6 +72,9 @@ rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"
     EXECUTABLE smartmicro_radar_node_exe
 )
+
+ament_target_dependencies(smartmicro_radar_node
+rclcpp umrr_ros2_msgs)
 
 if(BUILD_TESTING)
     find_package(launch_testing_ament_cmake)

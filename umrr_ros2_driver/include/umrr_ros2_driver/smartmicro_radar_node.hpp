@@ -18,13 +18,20 @@
 #define UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
 
 
+#include "umrr_ros2_msgs/srv/set_param.hpp"
+#include "umrr_ros2_msgs/srv/set_ip.hpp"
+#include "umrr_ros2_msgs/msg/port_header.hpp"
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <umrr_ros2_driver/visibility_control.hpp>
 
+#include <CommDataStreamServiceIface.h>
 #include <comtargetlistport/ComTargetListPort.h>
 #include <CommunicationServicesIface.h>
+#include <Instruction.h>
+#include <InstructionBatch.h>
+#include <InstructionServiceIface.h>
 
 #include <array>
 #include <memory>
@@ -81,6 +88,31 @@ private:
   /// @brief      Read parameters and update the json config files required by Smart Access C++ API.
   ///
   void update_config_files_from_params();
+
+   ///
+  /// @brief      Callaback for getting the instruction response.
+  ///
+  void MyResponseCallback(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response);
+  
+  ///
+  /// @brief      Callaback for changing IP address.
+  ///
+  void MyResponseCallback_ip(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response_ip_change);
+  
+  ///
+  /// @brief      Send instructions to the sensor.
+  ///
+  void change_radar_mode(const std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Request> request,
+                      std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Response> response);
+
+  ///
+  /// @brief      Configure the sensor.
+  ///
+  void change_ip_address(const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request_ip,
+                     std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response_ip);
+  
+  rclcpp::Service<umrr_ros2_msgs::srv::SetParam>::SharedPtr command_srv_;
+  rclcpp::Service<umrr_ros2_msgs::srv::SetIp>::SharedPtr ip_addr_srv_;
 
   std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
   std::array<detail::SensorConfig, detail::kMaxSensorCount> m_sensors{};
