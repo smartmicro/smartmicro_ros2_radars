@@ -20,12 +20,11 @@
               ip: "172.22.10.101"
               # The port to be used.
               port: 55555
-              # The interface to be used for data transport.
-              #iface_name: "enx002432163c8d"
               # The frame_id to be set to the published messages.
               frame_id: "umrr"
               # Specify the history size.
               history_size: 10
+              # Interfacae name of the sensor.
               user_interface_name: "umrr11_t132_automotive"
           sensor_1:
               # The client_id of the sensor/source, must be a unique integer.
@@ -34,11 +33,10 @@
               ip: "172.22.10.102"
               # The port to be used.
               port: 55555
-              # The interface to be used for data transport.
-              #iface_name: "enx002432163c8d"
               # The frame_id to be set to the published messages.
               frame_id: "umrr"
               # Specify the history size.
               history_size: 10
+              # Interface name of the sensor.
               user_interface_name: "umrr11_t132_automotive"
           
