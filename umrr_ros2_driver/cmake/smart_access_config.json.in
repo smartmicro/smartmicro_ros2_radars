@@ -1,13 +1,23 @@
 {
     "name": "SmartAccess Lib Config",
-    "version" : "3.3.0",
+    "version" : "1.0.0",
     "client_id": 1,
     "role": "master",
     "shared_lib_path": "@LIB_PATH@",
     "config_path": "@CONFIG_FOLDER_PATH@",
-    "user_interface_path": "@USER_INTERFACE_PATH@",
-    "download_path": "/data/update",
+    "user_interface_name": "base",
+    "user_interface_major_v": 1,
+    "user_interface_minor_v": 0,
+    "user_interface_patch_v": 2,
+    "download_path": "",
     "instruction_serialization_type": "port_based",
     "data_serialization_type": "port_based",
-    "alive": false
+    "alive": false,
+    "time_sync_cfg" :
+    {
+        "link_type" : "eth",
+        "dev_id" : 1,
+        "role" : "master",
+        "max_num_of_iter" : 50
+    }
 }

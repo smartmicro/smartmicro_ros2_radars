@@ -29,7 +29,13 @@ TEST(SmartmicroRadarNodeTest, Create) {
   node_options.append_parameter_override("hw_dev_id", 2);
   node_options.append_parameter_override("hw_port", 55555);
   node_options.append_parameter_override("hw_iface_name", "lo");
-  node_options.append_parameter_override("sensors.sensor_0.id", 42);
+  node_options.append_parameter_override("sensors.sensor_0.id", 2);
   auto node = std::make_shared<SmartmicroRadarNode>(node_options);
-  EXPECT_TRUE(node != nullptr);
+  ASSERT_TRUE(node != nullptr);
+  if (node != nullptr)
+  {
+    std::cout << "The node is not empty" << std::endl;
+  }
+
+  std::this_thread::sleep_for(std::chrono::seconds(2));
 }

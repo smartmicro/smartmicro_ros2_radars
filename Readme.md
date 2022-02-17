@@ -22,12 +22,12 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR-96 radar and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR-96 radar (or data recorded from it)
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR-96 radar or UMRR-11 (or data recorded from it)
 is required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
 - Date of release: `November 01, 2021`
-- Library version: `v3.3.15`
+- Library version: `v4.3.0`
 - User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v4.1.1`
 
 ### Point cloud message wrapper library
@@ -61,9 +61,10 @@ For more details, see the [`radar.template.yaml`](param/radar.template.yaml) fil
 - `iface_name`: name of the used network interface
 - `frame_id`: name of the frame in which the messages will be published
 - `history_size`: size of history for the message publisher
+- `user_interface_name`: the interface name of the sensor
 
 ## Configuration of the sensors
-In order to use multiple sensors with the node the sensors should be configured separately. There are
+In order to use multiple sensors (max upto ten) with the node the sensors should be configured separately. There are
 two possible ways to assign IP addresses to the sensors:
 - Through the smartmicro tool `DriveRecorder`.
 - Using the `Smart Access C++ API`.

@@ -9,3 +9,5 @@ umrr_ros2_driver/smartmicro/osal
 umrr_ros2_driver/smartmicro/smart_access_release
 umrr_ros2_driver/smartmicro/LICENSE_3rdParty.txt
 umrr_ros2_driver/smartmicro/LICENSE.txt
+umrr_ros2_driver/smartmicro/lib-linux-x86_64-gcc_7
+umrr_ros2_driver/smartmicro/lib-linux-armv8-gcc_7

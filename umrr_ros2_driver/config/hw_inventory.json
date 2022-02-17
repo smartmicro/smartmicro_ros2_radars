@@ -1,12 +1,13 @@
 {
-    "hwItems": [
-        {
-            "dev_id": 2,
-            "iface_name": "eth0",
-            "port": 55555,
-            "type": "eth"
-        }
-    ],
-    "name": "HW inventory List",
-    "version": "0.3"
+    "name": "HW Inventory List",
+        "version" : "1.1.0",
+        "hwItems" :
+        [
+            {
+                "type"     : "eth",
+                "dev_id"       : 50,
+                "iface_name"   : "youriface",
+                "port" : 11111
+            }
+        ]
 }

@@ -23,7 +23,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <umrr_ros2_driver/visibility_control.hpp>
 
-#include <comtargetlistport/ComTargetListPort.h>
+#include <umrr11_t132_automotive_v1_0_0/comtargetlist/ComTargetList.h>
 #include <CommunicationServicesIface.h>
 
 #include <array>
@@ -50,6 +50,7 @@ struct SensorConfig
   std::string iface_name{};
   std::string frame_id{};
   std::uint32_t history_size{};
+  std::string user_interface_name{};
 };
 }  // namespace detail
 
@@ -75,7 +76,7 @@ private:
   ///
   void target_list_callback(
     const std::uint32_t sensor_idx,
-    const std::shared_ptr<com::master::comtargetlistport::ComTargetListPort> & target_list_port);
+    const std::shared_ptr<com::master::umrr11_t132_automotive_v1_0_0::comtargetlist::ComTargetList> & target_list_port);
 
   ///
   /// @brief      Read parameters and update the json config files required by Smart Access C++ API.

@@ -1,14 +1,19 @@
 {
-    "clients": [
-        {
-            "client_id": 3,
-            "data_serialization_type": "port_based",
-            "instruction_serialization_type": "port_based",
-            "ip": "172.22.10.101",
-            "link_type": "eth",
-            "port": 55555
-        }
-    ],
     "name": "Client Routing Table",
-    "version": "3.3.0"
+    "version" : "1.0.0",
+    "clients" :
+    [
+        {
+            "client_id" : 111 ,
+            "link_type": "eth",
+            "ip": "111.111.111.111",
+            "port": 11111,
+            "instruction_serialization_type" : "port_based",
+            "data_serialization_type" : "port_based",
+            "user_interface_name": "umrr11_t132_automotive",
+            "user_interface_major_v": 1,
+            "user_interface_minor_v": 0,
+            "user_interface_patch_v": 0
+        }
+    ]
 }
