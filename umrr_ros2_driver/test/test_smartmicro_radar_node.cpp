@@ -32,10 +32,4 @@ TEST(SmartmicroRadarNodeTest, Create) {
   node_options.append_parameter_override("sensors.sensor_0.id", 2);
   auto node = std::make_shared<SmartmicroRadarNode>(node_options);
   ASSERT_TRUE(node != nullptr);
-  if (node != nullptr)
-  {
-    std::cout << "The node is not empty" << std::endl;
-  }
-
-  std::this_thread::sleep_for(std::chrono::seconds(2));
 }

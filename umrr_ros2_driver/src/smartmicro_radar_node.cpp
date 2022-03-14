@@ -25,6 +25,11 @@
 #include <InstructionBatch.h>
 #include <InstructionServiceIface.h>
 
+#include <umrr96_t153_automotive_v1_0_0/comtargetlist/ComTargetList.h>
+#include <umrr96_t153_automotive_v1_0_0/comtargetlist/port_header.h>
+#include <umrr96_t153_automotive_v1_0_0/comtargetlist/Target.h>
+#include <umrr96_t153_automotive_v1_0_0/DataStreamServiceIface.h>
+
 #include <umrr11_t132_automotive_v1_0_0/comtargetlist/ComTargetList.h>
 #include <umrr11_t132_automotive_v1_0_0/comtargetlist/port_header.h>
 #include <umrr11_t132_automotive_v1_0_0/comtargetlist/Target.h>
@@ -52,7 +57,7 @@ using com::master::CommunicationServicesIface;
 using com::master::InstructionServiceIface;
 using point_cloud_msg_wrapper::PointCloud2Modifier;
 using com::master::umrr11_t132_automotive_v1_0_0::comtargetlist::port_header;
-using com::master::umrr11_t132_automotive_v1_0_0::DataStreamServiceIface;
+using com::master::umrr96_t153_automotive_v1_0_0::comtargetlist::port_header;
 
 
 namespace
@@ -65,9 +70,6 @@ constexpr auto kDefaultPort = 55555;
 constexpr auto kDefaultHistorySize = 10;
 constexpr auto kDefaultFrameId = "umrr";
 constexpr auto kDefaultUserIfaceName = "umrr11_t132_automotive";
-constexpr auto kDefaultUserIfaceMajorV = 1;
-constexpr auto kDefaultUserIfaceMinorV = 0;
-constexpr auto kDefaultUserIfacePatchV = 0;
 
 constexpr auto kClientIdTag = "client_id";
 constexpr auto kPortTag = "port";
@@ -75,6 +77,7 @@ constexpr auto kIpTag = "ip";
 constexpr auto kIfaceNameTag = "iface_name";
 constexpr auto kMasterClientIdTag = "master_client_id";
 constexpr auto kDevIdTag = "hw_dev_id";
+constexpr auto kDevTypeTag = "hw_dev_type";
 constexpr auto kDevIfaceNameTag = "hw_iface_name";
 constexpr auto kDevPortTag = "hw_port";
 constexpr auto kUserIfaceNameTag = "user_interface_name";
@@ -98,7 +101,7 @@ struct RadarPoint
   float radial_speed{};
   float power{};
   float RCS{};
-  float TgtNoise{};
+  float Noise{};
   constexpr friend bool operator==(const RadarPoint & p1, const RadarPoint & p2) noexcept
   {
     return
@@ -108,7 +111,7 @@ struct RadarPoint
       float_eq(p1.radial_speed, p2.radial_speed) &&
       float_eq(p1.power, p2.power) &&
       float_eq(p1.RCS, p2.RCS) &&
-      float_eq(p1.TgtNoise, p2.TgtNoise);
+      float_eq(p1.Noise, p2.Noise);
   }
 };
 
@@ -122,7 +125,7 @@ using Generators = std::tuple<
   point_cloud_msg_wrapper::field_z_generator,
   field_radial_speed_generator,
   field_RCS_generator,
-  field_TgtNoise_generator,
+  field_Noise_generator,
   field_power_generator>;
 using RadarCloudModifier = PointCloud2Modifier<RadarPoint, Generators>;
 
@@ -152,25 +155,33 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
     throw std::runtime_error("Initialization failed");
   }
 
-  // Getting the data stream service
-  std::shared_ptr<DataStreamServiceIface> data = DataStreamServiceIface::Get();
+  // Getting the data stream services
+  std::shared_ptr<com::master::umrr11_t132_automotive_v1_0_0::DataStreamServiceIface> data_umrr11 = com::master::umrr11_t132_automotive_v1_0_0::DataStreamServiceIface::Get();
+  std::shared_ptr<com::master::umrr96_t153_automotive_v1_0_0::DataStreamServiceIface> data_umrr96 = com::master::umrr96_t153_automotive_v1_0_0::DataStreamServiceIface::Get();
   // Wait init time
   std::this_thread::sleep_for(std::chrono::seconds(2));
 
   for (auto i = 0UL; i < m_number_of_sensors; ++i) {
     const auto & sensor = m_sensors[i];
-    if (com::types::ERROR_CODE_OK != data->RegisterComTargetListReceiveCallback(
+    if (com::types::ERROR_CODE_OK != data_umrr11->RegisterComTargetListReceiveCallback(
         sensor.id,
-        std::bind(&SmartmicroRadarNode::target_list_callback, this, i, std::placeholders::_1)))
+        std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11, this, i, std::placeholders::_1)))
     {
-      throw std::runtime_error("Failed to register ComTargetListPort port callback");
+      std::cout << "Failed to register ComTargetListPort port callback for umr11" << std::endl;
+    }
+    if (com::types::ERROR_CODE_OK != data_umrr96->RegisterComTargetListReceiveCallback(
+        sensor.id,
+        std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96, this, i, std::placeholders::_1)))
+    {
+      std::cout << "Failed to register ComTargetListPort port callback for umr96" << std::endl;
     }
     m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
       "umrr/targets_" + std::to_string(i), sensor.history_size);
+    }
   }
 }
 
-void SmartmicroRadarNode::target_list_callback(
+void SmartmicroRadarNode::targetlist_callback_umrr11(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr11_t132_automotive_v1_0_0::comtargetlist::ComTargetList> & target_list_port)
 {
@@ -196,7 +207,41 @@ void SmartmicroRadarNode::target_list_callback(
             range * std::sin(elevation_angle),
             target->GetSpeedRadial(),
             target->GetRCS(),
-            target->GetTgtNoise(),
+            target->GetNoise(),
+            target->GetPower()
+          });
+  }
+
+  m_publishers[sensor_idx]->publish(msg);
+}
+
+void SmartmicroRadarNode::targetlist_callback_umrr96(
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<com::master::umrr96_t153_automotive_v1_0_0::comtargetlist::ComTargetList> & target_list_port)
+{
+  const auto port_header = target_list_port->Getport_header();
+
+  sensor_msgs::msg::PointCloud2 msg;
+  RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
+  const auto timestamp = std::chrono::microseconds{port_header->Gettimestamp()};
+  const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
+  const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
+  msg.header.stamp.sec = sec.count();
+  msg.header.stamp.nanosec = nanosec.count();
+
+  for (const auto & target : target_list_port->GetTargetList()) {
+    const auto range = target->GetRange();
+    const auto elevation_angle = target->GetElevationAngle();
+    const auto range_2d = range * std::cos(elevation_angle);
+    const auto azimuth_angle = target->GetAzimuthAngle();
+    modifier.push_back(
+          {
+            range_2d * std::cos(azimuth_angle),
+            range_2d * std::sin(azimuth_angle),
+            range * std::sin(elevation_angle),
+            target->GetSpeedRadial(),
+            target->GetRCS(),
+            target->GetNoise(),
             target->GetPower()
           });
   }

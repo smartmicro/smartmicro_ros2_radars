@@ -3,9 +3,6 @@ install
 log
 *.pyc
 umrr_ros2_driver/__pycache__
-umrr_ros2_driver/smartmicro/cJSON
-umrr_ros2_driver/smartmicro/lib
-umrr_ros2_driver/smartmicro/osal
 umrr_ros2_driver/smartmicro/smart_access_release
 umrr_ros2_driver/smartmicro/LICENSE_3rdParty.txt
 umrr_ros2_driver/smartmicro/LICENSE.txt

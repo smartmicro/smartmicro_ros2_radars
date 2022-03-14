@@ -22,8 +22,7 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR-96 radar and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR-96 radar or UMRR-11 (or data recorded from it)
-is required to run this node. This code is bundled with a version of Smart Access API. Please make
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR-96 radar, UMRR-11 (or data recorded from it) or both are required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
 - Date of release: `November 01, 2021`
