@@ -25,15 +25,15 @@
 #include <InstructionBatch.h>
 #include <InstructionServiceIface.h>
 
-#include <umrr96_t153_automotive_v1_0_0/comtargetlist/ComTargetList.h>
-#include <umrr96_t153_automotive_v1_0_0/comtargetlist/port_header.h>
-#include <umrr96_t153_automotive_v1_0_0/comtargetlist/Target.h>
-#include <umrr96_t153_automotive_v1_0_0/DataStreamServiceIface.h>
-
 #include <umrr11_t132_automotive_v1_0_0/comtargetlist/ComTargetList.h>
 #include <umrr11_t132_automotive_v1_0_0/comtargetlist/port_header.h>
 #include <umrr11_t132_automotive_v1_0_0/comtargetlist/Target.h>
 #include <umrr11_t132_automotive_v1_0_0/DataStreamServiceIface.h>
+
+#include <umrr96_t153_automotive_v1_0_0/comtargetlist/ComTargetList.h>
+#include <umrr96_t153_automotive_v1_0_0/comtargetlist/port_header.h>
+#include <umrr96_t153_automotive_v1_0_0/comtargetlist/Target.h>
+#include <umrr96_t153_automotive_v1_0_0/DataStreamServiceIface.h>
 
 #include <nlohmann/json.hpp>
 
@@ -56,8 +56,6 @@ using com::master::Response;
 using com::master::CommunicationServicesIface;
 using com::master::InstructionServiceIface;
 using point_cloud_msg_wrapper::PointCloud2Modifier;
-using com::master::umrr11_t132_automotive_v1_0_0::comtargetlist::port_header;
-using com::master::umrr96_t153_automotive_v1_0_0::comtargetlist::port_header;
 
 
 namespace
@@ -77,7 +75,6 @@ constexpr auto kIpTag = "ip";
 constexpr auto kIfaceNameTag = "iface_name";
 constexpr auto kMasterClientIdTag = "master_client_id";
 constexpr auto kDevIdTag = "hw_dev_id";
-constexpr auto kDevTypeTag = "hw_dev_type";
 constexpr auto kDevIfaceNameTag = "hw_iface_name";
 constexpr auto kDevPortTag = "hw_port";
 constexpr auto kUserIfaceNameTag = "user_interface_name";
@@ -118,7 +115,7 @@ struct RadarPoint
 LIDAR_UTILS__DEFINE_FIELD_GENERATOR_FOR_MEMBER(radial_speed);
 LIDAR_UTILS__DEFINE_FIELD_GENERATOR_FOR_MEMBER(power);
 LIDAR_UTILS__DEFINE_FIELD_GENERATOR_FOR_MEMBER(RCS);
-LIDAR_UTILS__DEFINE_FIELD_GENERATOR_FOR_MEMBER(TgtNoise);
+LIDAR_UTILS__DEFINE_FIELD_GENERATOR_FOR_MEMBER(Noise);
 using Generators = std::tuple<
   point_cloud_msg_wrapper::field_x_generator,
   point_cloud_msg_wrapper::field_y_generator,
@@ -155,7 +152,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
     throw std::runtime_error("Initialization failed");
   }
 
-  // Getting the data stream services
+  // Getting the data stream service
   std::shared_ptr<com::master::umrr11_t132_automotive_v1_0_0::DataStreamServiceIface> data_umrr11 = com::master::umrr11_t132_automotive_v1_0_0::DataStreamServiceIface::Get();
   std::shared_ptr<com::master::umrr96_t153_automotive_v1_0_0::DataStreamServiceIface> data_umrr96 = com::master::umrr96_t153_automotive_v1_0_0::DataStreamServiceIface::Get();
   // Wait init time
@@ -167,17 +164,16 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
         sensor.id,
         std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11, this, i, std::placeholders::_1)))
     {
-      std::cout << "Failed to register ComTargetListPort port callback for umr11" << std::endl;
+      std::cout << "Falied to register targetlist callback for sensor umrr11" << std::endl;
     }
     if (com::types::ERROR_CODE_OK != data_umrr96->RegisterComTargetListReceiveCallback(
         sensor.id,
         std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96, this, i, std::placeholders::_1)))
     {
-      std::cout << "Failed to register ComTargetListPort port callback for umr96" << std::endl;
+      std::cout << "Failed to register targetlist callback for sensor umrr96" << std::endl;
     }
     m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
       "umrr/targets_" + std::to_string(i), sensor.history_size);
-    }
   }
 }
 
@@ -288,6 +284,7 @@ void SmartmicroRadarNode::update_config_files_from_params()
       current_sensor.user_interface_name = this->declare_parameter(
         prefix + ".user_interface_name",
         kDefaultUserIfaceName);
+      
       return true;
     };
 

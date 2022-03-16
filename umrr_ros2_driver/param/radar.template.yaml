@@ -39,4 +39,4 @@
               history_size: 10
               # Interface name of the sensor.
               user_interface_name: "umrr11_t132_automotive"
-          
+     

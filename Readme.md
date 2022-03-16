@@ -27,7 +27,8 @@ sure the version used to publish the data is compatible with this version:
 
 - Date of release: `November 01, 2021`
 - Library version: `v4.3.0`
-- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v4.1.1`
+- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v5.2.2`
+- User interface version: `Smartaccess UMRR11 Type 132 AUTOMOTIVE v5.1.2`
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
