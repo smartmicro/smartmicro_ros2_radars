@@ -6,6 +6,5 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     ros-foxy-point-cloud-msg-wrapper \
     wget
-RUN pip3 install dpkt
 
 WORKDIR /code

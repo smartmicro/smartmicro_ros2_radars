@@ -14,20 +14,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Build the docker container
-      run: docker build . -t umrr-ros:latest
-
     - name: Get the smartaccess binaries
       run:  echo "yes" | ./smart_extract.sh
 
+    - name: Build the docker container
+      run:  docker build . -t umrr-ros:latest
+
     - name: Building the driver with the docker container
-      run: docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver
+      run:  docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver
 
     - name: Running the unit/integration tests via the docker container and exit
-      run: docker-compose up --exit-code-from ros_node
+      run:  docker-compose up --exit-code-from ros_node
 
     - name: Getting the test coverage
-      run: docker run --rm -v`pwd`:/code umrr-ros colcon test-result --all --verbose
+      run:  docker run --rm -v`pwd`:/code umrr-ros colcon test-result --all --verbose
 
     - name: Shut down docker containers and networks
-      run: docker-compose down
+      run:  docker-compose down
