@@ -35,4 +35,3 @@
               frame_id: "umrr"
               # Specify the history size.
               history_size: 10
-                        
