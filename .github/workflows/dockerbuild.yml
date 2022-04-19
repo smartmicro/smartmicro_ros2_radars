@@ -18,7 +18,6 @@ jobs:
       run: docker build . -t umrr-ros:latest
 
     - name: Get the smartaccess binaries
-      working-directory: ./umrr_ros2_driver
       run:  echo "yes" | ./smart_extract.sh
 
     - name: Building the driver with the docker container
