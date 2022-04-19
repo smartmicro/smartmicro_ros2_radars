@@ -15,7 +15,7 @@
           # e.g., sensor_0, sensor_1, etc. The list must start with sensor_0.
           sensor_0:
               # The client_id of the sensor/source, must be a unique integer.
-              id: 4
+              id: 100
               # The ip address of the sensor or of the source acting as a sensor.
               ip: "172.22.10.101"
               # The port to be used.
@@ -24,11 +24,9 @@
               frame_id: "umrr"
               # Specify the history size.
               history_size: 10
-              # Interfacae name of the sensor.
-              user_interface_name: "umrr11_t132_automotive"
           sensor_1:
               # The client_id of the sensor/source, must be a unique integer.
-              id: 5
+              id: 200
               # The ip address of the sensor or of the source acting as a sensor.
               ip: "172.22.10.102"
               # The port to be used.
@@ -37,6 +35,4 @@
               frame_id: "umrr"
               # Specify the history size.
               history_size: 10
-              # Interface name of the sensor.
-              user_interface_name: "umrr11_t132_automotive"
-     
+                        

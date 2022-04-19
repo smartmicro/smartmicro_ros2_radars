@@ -46,15 +46,15 @@ endif()
 ament_auto_find_build_dependencies()
 
 # specify the path to search for the libraries
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_7)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs)
 
 install(FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_7/libsmart_access.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_7/libosal.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_7/libcom_lib.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_7/libbasev1.0.2_user_interface.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_7/libumrr11_t132_automotivev1.0.0_user_interface.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_7/libumrr96_t153_automotivev1.0.0_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libsmart_access.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libosal.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libcom_lib.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libbasev1.0.2_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libumrr11_t132_automotivev1.1.1_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libumrr96_t153_automotivev1.2.1_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -71,9 +71,9 @@ configure_file(
 ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.cpp")
 
 target_include_directories(smartmicro_radar_node PUBLIC ${CMAKE_INSTALL_PREFIX}/include/
-smartmicro/smart_access_release/
-smartmicro/smart_access_release/umrr11_t132_automotive_v1_0_0
-smartmicro/smart_access_release/umrr96_t153_automotive_v1_0_0)
+smartmicro/release/
+smartmicro/release/umrr11_t132_automotive_v1_1_1
+smartmicro/release/umrr96_t153_automotive_v1_2_1)
 
 # link smart_access_libs to the node
 target_link_libraries(smartmicro_radar_node 
@@ -81,8 +81,8 @@ target_link_libraries(smartmicro_radar_node
     nlohmann_json::nlohmann_json
     com_lib
     osal
-    umrr11_t132_automotivev1.0.0_user_interface
-    umrr96_t153_automotivev1.0.0_user_interface)
+    umrr11_t132_automotivev1.1.1_user_interface
+    umrr96_t153_automotivev1.2.1_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"
@@ -90,15 +90,16 @@ rclcpp_components_register_node(smartmicro_radar_node
 )
 
 if(BUILD_TESTING)
+   
+    find_package(launch_testing_ament_cmake)
+    add_launch_test(test/radar_node_test.launch.py
+        TIMEOUT "150"
+    )
+    
     find_package(ament_cmake_gtest REQUIRED)
     ament_add_gtest(test_smartmicro_radar_node test/test_smartmicro_radar_node.cpp)
     target_link_libraries(test_smartmicro_radar_node smartmicro_radar_node)
 
-    find_package(launch_testing_ament_cmake)
-    add_launch_test(test/radar_node_test.launch.py
-        TIMEOUT "500"
-    )
-
 endif()
 
-ament_auto_package(INSTALL_TO_SHARE config launch param pcap)
+ament_auto_package(INSTALL_TO_SHARE config launch param)

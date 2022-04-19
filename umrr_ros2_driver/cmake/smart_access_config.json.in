@@ -12,12 +12,5 @@
     "download_path": "",
     "instruction_serialization_type": "port_based",
     "data_serialization_type": "port_based",
-    "alive": false,
-    "time_sync_cfg" :
-    {
-        "link_type" : "eth",
-        "dev_id" : 1,
-        "role" : "master",
-        "max_num_of_iter" : 50
-    }
+    "alive": false
 }

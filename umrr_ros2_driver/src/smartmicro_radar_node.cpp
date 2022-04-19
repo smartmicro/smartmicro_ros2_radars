@@ -25,15 +25,15 @@
 #include <InstructionBatch.h>
 #include <InstructionServiceIface.h>
 
-#include <umrr11_t132_automotive_v1_0_0/comtargetlist/ComTargetList.h>
-#include <umrr11_t132_automotive_v1_0_0/comtargetlist/port_header.h>
-#include <umrr11_t132_automotive_v1_0_0/comtargetlist/Target.h>
-#include <umrr11_t132_automotive_v1_0_0/DataStreamServiceIface.h>
+#include <umrr11_t132_automotive_v1_1_1/DataStreamServiceIface.h>
+#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
+#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
+#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/Target.h>
 
-#include <umrr96_t153_automotive_v1_0_0/comtargetlist/ComTargetList.h>
-#include <umrr96_t153_automotive_v1_0_0/comtargetlist/port_header.h>
-#include <umrr96_t153_automotive_v1_0_0/comtargetlist/Target.h>
-#include <umrr96_t153_automotive_v1_0_0/DataStreamServiceIface.h>
+#include <umrr96_t153_automotive_v1_2_1/DataStreamServiceIface.h>
+#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
+#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/GenericPortHeader.h>
+#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/Target.h>
 
 #include <nlohmann/json.hpp>
 
@@ -67,7 +67,6 @@ constexpr auto kDefaultIp = "127.0.0.1";
 constexpr auto kDefaultPort = 55555;
 constexpr auto kDefaultHistorySize = 10;
 constexpr auto kDefaultFrameId = "umrr";
-constexpr auto kDefaultUserIfaceName = "umrr11_t132_automotive";
 
 constexpr auto kClientIdTag = "client_id";
 constexpr auto kPortTag = "port";
@@ -77,7 +76,6 @@ constexpr auto kMasterClientIdTag = "master_client_id";
 constexpr auto kDevIdTag = "hw_dev_id";
 constexpr auto kDevIfaceNameTag = "hw_iface_name";
 constexpr auto kDevPortTag = "hw_port";
-constexpr auto kUserIfaceNameTag = "user_interface_name";
 
 constexpr auto kDevIdJsonTag = "dev_id";
 constexpr auto kClientsJsonTag = "clients";
@@ -153,25 +151,27 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   }
 
   // Getting the data stream service
-  std::shared_ptr<com::master::umrr11_t132_automotive_v1_0_0::DataStreamServiceIface> data_umrr11 = com::master::umrr11_t132_automotive_v1_0_0::DataStreamServiceIface::Get();
-  std::shared_ptr<com::master::umrr96_t153_automotive_v1_0_0::DataStreamServiceIface> data_umrr96 = com::master::umrr96_t153_automotive_v1_0_0::DataStreamServiceIface::Get();
+  std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface> data_umrr11 = com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface::Get();
+  std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface> data_umrr96 = com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface::Get();
+  std::cout << "Data stream services have been received!" << std::endl;
   // Wait init time
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::this_thread::sleep_for(std::chrono::seconds(5));
 
   for (auto i = 0UL; i < m_number_of_sensors; ++i) {
     const auto & sensor = m_sensors[i];
-    if (com::types::ERROR_CODE_OK != data_umrr11->RegisterComTargetListReceiveCallback(
-        sensor.id,
-        std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11, this, i, std::placeholders::_1)))
-    {
-      std::cout << "Falied to register targetlist callback for sensor umrr11" << std::endl;
-    }
-    if (com::types::ERROR_CODE_OK != data_umrr96->RegisterComTargetListReceiveCallback(
+    if (com::types::ERROR_CODE_OK != data_umrr96->RegisterComTargetListPortReceiveCallback(
         sensor.id,
         std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96, this, i, std::placeholders::_1)))
     {
-      std::cout << "Failed to register targetlist callback for sensor umrr96" << std::endl;
+      std::cout << "Falied to register targetlist callback for sensor umrr96" << std::endl;
     }
+    if (com::types::ERROR_CODE_OK != data_umrr11->RegisterComTargetListPortReceiveCallback(
+        sensor.id,
+        std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11, this, i, std::placeholders::_1)))
+    {
+      std::cout << "Failed to register targetlist callback for sensor umrr11" << std::endl;
+    }
+  
     m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
       "umrr/targets_" + std::to_string(i), sensor.history_size);
   }
@@ -179,13 +179,13 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
 
 void SmartmicroRadarNode::targetlist_callback_umrr11(
   const std::uint32_t sensor_idx,
-  const std::shared_ptr<com::master::umrr11_t132_automotive_v1_0_0::comtargetlist::ComTargetList> & target_list_port)
+  const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::ComTargetListPort> & target_list_port)
 {
-  const auto port_header = target_list_port->Getport_header();
-
+  std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::GenericPortHeader> port_header = target_list_port->GetGenericPortHeader();
+ 
   sensor_msgs::msg::PointCloud2 msg;
   RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
-  const auto timestamp = std::chrono::microseconds{port_header->Gettimestamp()};
+  const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
   const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
   const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
   msg.header.stamp.sec = sec.count();
@@ -203,29 +203,29 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
             range * std::sin(elevation_angle),
             target->GetSpeedRadial(),
             target->GetRCS(),
-            target->GetNoise(),
+            target->GetTgtNoise(),
             target->GetPower()
           });
-  }
-
+  } 
+  
   m_publishers[sensor_idx]->publish(msg);
 }
 
 void SmartmicroRadarNode::targetlist_callback_umrr96(
   const std::uint32_t sensor_idx,
-  const std::shared_ptr<com::master::umrr96_t153_automotive_v1_0_0::comtargetlist::ComTargetList> & target_list_port)
+  const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::ComTargetListPort> & target_list_port)
 {
-  const auto port_header = target_list_port->Getport_header();
-
+  std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::GenericPortHeader> port_header = target_list_port->GetGenericPortHeader();
+  
   sensor_msgs::msg::PointCloud2 msg;
   RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
-  const auto timestamp = std::chrono::microseconds{port_header->Gettimestamp()};
+  const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
   const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
   const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
   msg.header.stamp.sec = sec.count();
   msg.header.stamp.nanosec = nanosec.count();
 
-  for (const auto & target : target_list_port->GetTargetList()) {
+ for (const auto & target : target_list_port->GetTargetList()) {
     const auto range = target->GetRange();
     const auto elevation_angle = target->GetElevationAngle();
     const auto range_2d = range * std::cos(elevation_angle);
@@ -237,7 +237,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
             range * std::sin(elevation_angle),
             target->GetSpeedRadial(),
             target->GetRCS(),
-            target->GetNoise(),
+            target->GetTgtNoise(),
             target->GetPower()
           });
   }
@@ -281,9 +281,6 @@ void SmartmicroRadarNode::update_config_files_from_params()
       current_sensor.history_size = this->declare_parameter(
         prefix + ".history_size",
         kDefaultHistorySize);
-      current_sensor.user_interface_name = this->declare_parameter(
-        prefix + ".user_interface_name",
-        kDefaultUserIfaceName);
       
       return true;
     };
@@ -326,7 +323,6 @@ void SmartmicroRadarNode::update_config_files_from_params()
     client[kClientIdTag] = sensor.id;
     client[kPortTag] = sensor.port;
     client[kIpTag] = sensor.ip;
-    client[kUserIfaceNameTag] = sensor.user_interface_name;
     clients.push_back(client);
   }
   std::ofstream{kRoutingTableFilePath, std::ios::trunc} << routing_table;

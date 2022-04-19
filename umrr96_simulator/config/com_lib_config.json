@@ -1,0 +1,16 @@
+{
+    "name": "Com Lib Config",
+    "version" : "1.0.0",
+    "client_id": 200,
+    "role": "slave",
+    "shared_lib_path": "/code/umrr96_simulator/libs",
+    "config_path": "/code/umrr96_simulator/config",
+    "user_interface_name": "umrr96_t153_automotive",
+    "user_interface_major_v": 1,
+    "user_interface_minor_v": 2,
+    "user_interface_patch_v": 1,
+    "download_path": "",
+    "instruction_serialization_type": "port_based",
+    "data_serialization_type": "port_based",
+    "alive": false
+}

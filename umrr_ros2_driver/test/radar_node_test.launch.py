@@ -104,8 +104,10 @@ class TestSmartNode(unittest.TestCase):
 
             while time.time() < end_time:
                 rclpy.spin_once(self.test_node, timeout_sec=0.1)
-                if len(data_rx_s1) > 1 and len(data_rx_s2) > 1:
-                    print(f"Data received at {time.time()}")
+                if len(data_rx_s1) > 1:
+                    print(f"Data from S1 received at {time.time()}")
+                if len(data_rx_s2) > 1:
+                    print(f"Data from S2 received at {time.time()}")
 
             self.assertGreater(len(data_rx_s1), 1)
             self.assertGreater(len(data_rx_s2), 1)

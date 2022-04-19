@@ -18,7 +18,7 @@ services:
         image: umrr-ros:latest
         volumes:
             - .:/code
-        entrypoint: ["python3", "/code/umrr_ros2_driver/test/transmit_pcap.py"]
+        entrypoint: ["/code/umrr11_simulator/simulation/build_run_sensor.sh"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.101
@@ -26,7 +26,7 @@ services:
         image: umrr-ros:latest
         volumes:
             - .:/code
-        entrypoint: ["python3", "/code/umrr_ros2_driver/test/transmit_pcap.py"]
+        entrypoint: ["/code/umrr96_simulator/simulation/build_run_sensor.sh"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.102
@@ -37,7 +37,7 @@ services:
             - "sensor_1"
         volumes:
             - .:/code
-        command: ["colcon", "test"]
+        command: ["colcon", "test", "--packages-above", "umrr_ros2_driver"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.100

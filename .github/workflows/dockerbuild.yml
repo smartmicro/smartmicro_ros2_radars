@@ -22,7 +22,7 @@ jobs:
       run:  echo "yes" | ./smart_extract.sh
 
     - name: Building the driver with the docker container
-      run: docker run --rm -v`pwd`:/code umrr-ros colcon build
+      run: docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver
 
     - name: Running the unit/integration tests via the docker container and exit
       run: docker-compose up --exit-code-from ros_node

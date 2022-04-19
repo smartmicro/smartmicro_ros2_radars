@@ -9,11 +9,7 @@
             "ip": "111.111.111.111",
             "port": 11111,
             "instruction_serialization_type" : "port_based",
-            "data_serialization_type" : "port_based",
-            "user_interface_name": "umrr11_t132_automotive",
-            "user_interface_major_v": 1,
-            "user_interface_minor_v": 0,
-            "user_interface_patch_v": 0
+            "data_serialization_type" : "port_based"
         }
     ]
 }
