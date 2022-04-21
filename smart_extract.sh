@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-smart_pack=Smart_Access_V3315_Linux64_UMRR-96_Type_153_Automotive_V411_ROS.tar.gz
+smart_pack=ROS_Automotive_v1.0.0.tar.gz
 URL_smartbinaries=https://www.smartmicro.com/fileadmin/media/Downloads/Automotive_Radar/Software/${smart_pack}
 
 cat << EOF
