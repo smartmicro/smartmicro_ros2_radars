@@ -22,13 +22,14 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR-96 radar and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR-96 radar (or data recorded from it)
-is required to run this node. This code is bundled with a version of Smart Access API. Please make
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or both are 
+are required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `November 01, 2021`
-- Library version: `v3.3.15`
-- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v4.1.1`
+- Date of release: `March 25, 2022`
+- Library version: `v4.3.0`
+- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v5.2.1`
+- User interface version: `Smartaccess UMRR11 Type 132 AUTOMOTIVE v4.1.1`
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -63,10 +64,9 @@ For more details, see the [`radar.template.yaml`](param/radar.template.yaml) fil
 - `history_size`: size of history for the message publisher
 
 ## Configuration of the sensors
-In order to use multiple sensors with the node the sensors should be configured separately. There are
-two possible ways to assign IP addresses to the sensors:
-- Through the smartmicro tool `DriveRecorder`.
-- Using the `Smart Access C++ API`.
+In order to use multiple sensors (maximum of upto ten sensors) with the node the sensors should be configured separately.
+The IP addresses of the sensors could be assigned using:
+- The smartmicro tool `DriveRecorder`.
 
 Each sensor has to be assigned a unique IP address!
 
@@ -85,7 +85,7 @@ Accept the agreement and get the smartaccess release
 
 Building the driver with the docker container
 ```bash
-docker run --rm -v`pwd`:/code umrr-ros colcon build
+docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver
 ```
 
 Running the unit and integration tests via the docker compose

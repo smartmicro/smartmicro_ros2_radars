@@ -15,26 +15,22 @@
           # e.g., sensor_0, sensor_1, etc. The list must start with sensor_0.
           sensor_0:
               # The client_id of the sensor/source, must be a unique integer.
-              id: 3
+              id: 100
               # The ip address of the sensor or of the source acting as a sensor.
               ip: "172.22.10.101"
               # The port to be used.
               port: 55555
-              # The interface to be used for data transport.
-              iface_name: "eth0"
               # The frame_id to be set to the published messages.
               frame_id: "umrr"
               # Specify the history size.
               history_size: 10
           sensor_1:
               # The client_id of the sensor/source, must be a unique integer.
-              id: 4
+              id: 200
               # The ip address of the sensor or of the source acting as a sensor.
               ip: "172.22.10.102"
               # The port to be used.
               port: 55555
-              # The interface to be used for data transport.
-              iface_name: "eth0"
               # The frame_id to be set to the published messages.
               frame_id: "umrr"
               # Specify the history size.
