@@ -202,8 +202,11 @@ void SmartmicroRadarNode::change_radar_mode(
   const std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Request> request,
   std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Response> result)
 {
+  const std::uint32_t sensor_idx = 0;
   std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  //std::this_thread::sleep_for(std::chrono::seconds(2));
+  my_timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
+    &SmartmicroRadarNode::my_timer_callback, this));
   std::shared_ptr<InstructionBatch> batch(inst->AllocateInstructionBatch());
   std::shared_ptr<SetParamRequest<uint8_t>> radar_mode(
     new SetParamRequest<uint8_t>(request->section, request->param, request->value)
@@ -212,28 +215,41 @@ void SmartmicroRadarNode::change_radar_mode(
   batch->AddRequest(radar_mode);
   // create list of clients to pass the instructions
   std::set<ClientId> clients;
-  clients.insert(request->sensor_id);
+  client_id = request->sensor_id;
+  if (m_sensors[sensor_idx].id != client_id)
+  {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Sensor ID is not listed.Check the param file!");
+    result->res = "Service was not conducted";
+    return;
+  }
+  clients.insert(client_id);
+  for (auto it = clients.begin(); it !=clients.end(); it++)
+  {
+    std::cout << *it << " " << std::endl;
+  }
   // send instruction batch to the device
   if (ERROR_CODE_OK != inst->SetInstructionBatch(
       clients,
       batch,
       std::bind(
-        &SmartmicroRadarNode::MyResponseCallback, this, std::placeholders::_1,
+        &SmartmicroRadarNode::sensor_response, this, client_id,
         std::placeholders::_2)))
   {
-    throw std::runtime_error("Failed to send batch");
+    // throw std::runtime_error("Failed to send batch");
     result->res = "Service is not conducted";
-  } else {
+  } 
     result->res = "Service conducted successfully";
-  }
 }
 
 void SmartmicroRadarNode::change_ip_address(
   const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request_ip,
   std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> result_ip)
 {
+  const std::uint32_t sensor_idx = 0;
   std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  //std::this_thread::sleep_for(std::chrono::seconds(2));
+  my_timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
+    &SmartmicroRadarNode::my_timer_callback, this));
   std::shared_ptr<InstructionBatch> batch_ip(inst->AllocateInstructionBatch());
   std::shared_ptr<SetParamRequest<uint32_t>> ip_address(
     new SetParamRequest<uint32_t>("auto_interface_0dim", "ip_source_address", request_ip->value_ip)
@@ -249,16 +265,23 @@ void SmartmicroRadarNode::change_ip_address(
   batch_ip->AddRequest(cmd);
   // create list of clients to pass the instructions
   std::set<ClientId> clients;
-  clients.insert(request_ip->sensor_id);
+  client_id = request_ip->sensor_id;
+  if (m_sensors[sensor_idx].id != client_id)
+  {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Sensor ID is not listed. Check the param file!");
+    result_ip->res_ip = "Service was not conducted";
+    return;
+  }
+  clients.insert(client_id);
   // send instruction batch to the device
   if (ERROR_CODE_OK != inst->SetInstructionBatch(
       clients,
       batch_ip,
       std::bind(
-        &SmartmicroRadarNode::MyResponseCallback_ip, this, std::placeholders::_1,
+        &SmartmicroRadarNode::sensor_response_ip, this, client_id,
         std::placeholders::_2)))
   {
-    throw std::runtime_error("Failed to send batch");
+    // throw std::runtime_error("Failed to send batch");
     result_ip->res_ip = "Service not conducted";
   } else {
     RCLCPP_INFO(
@@ -270,24 +293,41 @@ void SmartmicroRadarNode::change_ip_address(
   }
 }
 
-void SmartmicroRadarNode::MyResponseCallback(
-  const ClientId,
+void SmartmicroRadarNode::sensor_response(
+  const ClientId client_id,
   const std::shared_ptr<com::master::ResponseBatch> & response)
 {
+  std::cout << "ENTERING DEBUGGING " << std::endl;
   std::vector<std::shared_ptr<Response<uint8_t>>> myResp_1;
+  
   if (!response->GetResponse<uint8_t>(
       "auto_interface_0dim", "frequency_sweep_idx",
       myResp_1))
   {
+    std::cout << "ENTERING DEBUGGING PART 1" << std::endl;
     for (auto & resp : myResp_1) {
-      response_type = resp->GetResponseType();
-      std::cout << "Response from clients [" << response_type << "]" << std::endl;
+      std::cout << "ENTERING DEBUGGING PART 2" << std::endl;
+      /*uint64_t value = 0;
+      if (resp->GetConvertValue(value))
+      {
+        std::cout << "Value = " << value << std::endl;
+      }*/
+      
+      std::cout << "Response from clients [" << resp->GetResponseType() << "]" << std::endl;
+      
+      if (responses = resp->GetResponseType())
+      {
+        std::cout << "Response from clients [" << responses << "]" << std::endl;
+      }
     }
+  }
+  else{
+    std::cout << "NOTHINGGGG" << std::endl;
   }
 }
 
-void SmartmicroRadarNode::MyResponseCallback_ip(
-  const ClientId,
+void SmartmicroRadarNode::sensor_response_ip(
+  const ClientId client_id,
   const std::shared_ptr<com::master::ResponseBatch> & response_ip_change)
 {
   std::vector<std::shared_ptr<Response<uint32_t>>> myResp_2;

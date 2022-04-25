@@ -102,12 +102,12 @@ private:
    ///
   /// @brief      Callaback for getting the instruction response.
   ///
-  void MyResponseCallback(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response);
+  void sensor_response(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response);
   
   ///
   /// @brief      Callaback for changing IP address.
   ///
-  void MyResponseCallback_ip(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response_ip_change);
+  void sensor_response_ip(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response_ip_change);
   
   ///
   /// @brief      Send instructions to the sensor.
@@ -120,16 +120,26 @@ private:
   ///
   void change_ip_address(const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request_ip,
                      std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response_ip);
+
+  ///
+  /// @brief      Configure the sensor.
+  ///
+  void my_timer_callback()
+  {
+    my_timer->cancel();
+    RCLCPP_INFO(this->get_logger(), "Timer has been cancelled!");
+  }
   
   rclcpp::Service<umrr_ros2_msgs::srv::SetParam>::SharedPtr command_srv_;
   rclcpp::Service<umrr_ros2_msgs::srv::SetIp>::SharedPtr ip_addr_srv_;
-
   std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
   std::array<detail::SensorConfig, detail::kMaxSensorCount> m_sensors{};
   std::array<
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
     detail::kMaxSensorCount> m_publishers{};
   std::size_t m_number_of_sensors{};
+  rclcpp::TimerBase::SharedPtr my_timer;
+  ClientId client_id;
 };
 
 }  // namespace radar

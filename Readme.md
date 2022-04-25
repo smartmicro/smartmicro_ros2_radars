@@ -73,14 +73,14 @@ Each sensor has to be assigned a unique IP address!
 ## Development
 The dockerfile can be used to build and test the ros driver.
 
-Building docker container
-```bash
-docker build . -t umrr-ros:latest
-```
-
 Accept the agreement and get the smartaccess release
 ```bash
 ./smart_extract.sh
+```
+
+Building docker container
+```bash
+docker build . -t umrr-ros:latest
 ```
 
 Building the driver with the docker container
