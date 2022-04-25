@@ -58,7 +58,7 @@ void slave_callback(ClientId clientId, PortId portId, BufferDescriptor buffer)
         }
         else
         {
-            std::cout << "No instruction received from ROS driver!" << std::endl;
+            std::cout << "Unknown instruction received from ROS driver!" << std::endl;
         }
      
     dataServices->SetInstructionBuffer(clientId ,*receive, nullptr);
