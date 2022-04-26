@@ -51,6 +51,7 @@ struct SensorConfig
   std::string iface_name{};
   std::string frame_id{};
   std::uint32_t history_size{};
+  std::string model{};
 };
 }  // namespace detail
 

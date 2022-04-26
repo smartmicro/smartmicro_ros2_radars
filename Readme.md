@@ -23,13 +23,13 @@ ros2 launch umrr_ros2_driver radar.launch.py
 
 ### UMRR-96 radar and Smart Access API version
 A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or both are 
-are required to run this node. This code is bundled with a version of Smart Access API. Please make
+required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
 - Date of release: `March 25, 2022`
-- Library version: `v4.3.0`
-- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v5.2.1`
-- User interface version: `Smartaccess UMRR11 Type 132 AUTOMOTIVE v4.1.1`
+- Smart Access Library version: `v4.3.0`
+- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v1.2.1`
+- User interface version: `Smartaccess UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -62,25 +62,27 @@ For more details, see the [`radar.template.yaml`](param/radar.template.yaml) fil
 - `iface_name`: name of the used network interface
 - `frame_id`: name of the frame in which the messages will be published
 - `history_size`: size of history for the message publisher
+- `model`: the model of the sensor being used 
 
 ## Configuration of the sensors
-In order to use multiple sensors (maximum of upto ten sensors) with the node the sensors should be configured separately.
+In order to use multiple sensors (maximum of up to ten sensors) with the node the sensors should be configured separately.
 The IP addresses of the sensors could be assigned using:
 - The smartmicro tool `DriveRecorder`.
+- Using the `Smart Access C++ API`
 
 Each sensor has to be assigned a unique IP address!
 
 ## Development
 The dockerfile can be used to build and test the ros driver.
 
-Building docker container
-```bash
-docker build . -t umrr-ros:latest
-```
-
 Accept the agreement and get the smartaccess release
 ```bash
 ./smart_extract.sh
+
+
+Building docker container
+```bash
+docker build . -t umrr-ros:latest
 ```
 
 Building the driver with the docker container

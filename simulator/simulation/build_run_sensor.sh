@@ -2,6 +2,9 @@
 work_dir=$(pwd)
 set -e
 
+args=("$@")
+cd /code/simulator/simulation
+
 function build_simulation {
     mkdir -p build_dir
     cmake -G "Unix Makefiles" -S. -Bbuild_dir \
@@ -12,13 +15,9 @@ function build_simulation {
     make -C build_dir install
 }
 
-export SMART_ACCESS_CFG_FILE_PATH=/code/umrr96_simulator/config/com_lib_config.json
-export LD_LIBRARY_PATH=/code/umrr96_simulator/libs
-
-cd /code/umrr96_simulator/simulation
 function run_simulation
-{   
-    ./out/bin/simulator
+{
+    ./out/bin/simulator ${args[0]} ${args[1]} ${args[2]}
 }
 
 build_simulation

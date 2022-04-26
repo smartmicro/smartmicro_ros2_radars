@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
 #include <filesystem> 
 #include <Instruction.h>
 #include <InstructionBatch.h>
@@ -16,6 +19,10 @@ using namespace com::common;
 using namespace com::master;
 using namespace com::types;
 
+uint64_t identifier;
+uint64_t majorVersion;
+uint64_t minorVersion;
+
 std::shared_ptr<com::common::DataServicesIface> dataServices = com::common::DataServicesIface::Get();
 
 void slave_callback(ClientId clientId, PortId portId, BufferDescriptor buffer)
@@ -25,48 +32,59 @@ void slave_callback(ClientId clientId, PortId portId, BufferDescriptor buffer)
     uint32_t instnumber = receive->GetNumOfInstructions();
     auto instructions = receive->GetInstructions();
     
-    for (auto instruction: instructions)
-        if (instruction->GetSectionId() == 3042 && instruction->GetId() == 20)
-        {
-            std::cout << "Base user interface major version for UMRR96 set!"  << std::endl;
+    for (auto instruction: instructions) {
+        if(instruction->GetSectionId() == 3042 && instruction->GetId() == 20)
+        {   
+            std::cout << "Base user interface major version set!"  << std::endl;
             instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
             instruction->SetValue(1);
         }
-        else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 21)
-        {
-            std::cout << "Base user interface minor version for UMRR96 set!"  << std::endl;
+        else if(instruction->GetSectionId() == 3042 && instruction->GetId() == 21)
+        {   
+            std::cout << "Base user interface minor version set!"  << std::endl;
             instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-            instruction->SetValue(0);
+            instruction->SetValue(0);    
         }
-        else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 22)
-        {
-            std::cout << "User interface identifier for UMRR96 set!" << std::endl;
+        else if(instruction->GetSectionId() == 3042 && instruction->GetId() == 22)
+        {   
+            std::cout << "User interface identifier set!"  << std::endl;
             instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-            instruction->SetValue(5);
+            instruction->SetValue(identifier);
         }
-        else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 23)
-        {
-            std::cout << "User interface major version for UMRR96 set!" << std::endl;
+        else if(instruction->GetSectionId() == 3042 && instruction->GetId() == 23)
+        {   
+            std::cout << "User interface major version set!"  << std::endl;
             instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-            instruction->SetValue(1);
+            instruction->SetValue(majorVersion);
         }
-        else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 24)
-        {
-            std::cout << "User interface minor version for UMRR96 set!" << std::endl;
+        else if(instruction->GetSectionId() == 3042 && instruction->GetId() == 24)
+        {   
+            std::cout << "User interface minor version set!"  << std::endl;
             instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-            instruction->SetValue(2);
+            instruction->SetValue(minorVersion);
         }
         else
         {
-            std::cout << "Unknown instruction received from ROS driver!" << std::endl;
-        }
-     
-    dataServices->SetInstructionBuffer(clientId ,*receive, nullptr);
+            std::cout << "Unknown instruction received from ROS driver!"  << std::endl;
+        }    
+    }
+
+    dataServices->SetInstructionBuffer(clientId, *receive, nullptr);
 }
 
 
-int main()
-{
+int main(int argc, char *argv[])
+{   
+    if(argc != 4)
+    {
+        std::cout << "Specifiy User Interface for the sensor" << std::endl;
+        return 1;
+    }
+    
+    identifier = strtoll(argv[1], nullptr, 10);
+    majorVersion = strtoll(argv[2], nullptr, 10);
+    minorVersion = strtoll(argv[3], nullptr, 10);
+   
     if(!dataServices->Init())
     {
         throw std::runtime_error("Data services have not been initialized!");
@@ -78,7 +96,7 @@ int main()
     {   
         ClientId masterId = 1;
         PortId portTargetListId = 66;
-        std::string portFile = "/code/umrr96_simulator/port_radar_targets.bin";
+        std::string portFile = "/code/simulator/targetlist_port.bin";
         std::ifstream ifs (portFile, std::ifstream::binary | std::ios::binary);
         std::filebuf* pbuf = ifs.rdbuf();
         int size = pbuf->pubseekoff (0, ifs.end, ifs.in);
@@ -95,7 +113,7 @@ int main()
             return -1;
         }
 
-        std::cout << "sensor UMRR96 is transmitting data! " << std::endl;
+        std::cout << "sensor is transmitting data! " << std::endl;
         ifs.close();
         delete[] filebuffer;
 

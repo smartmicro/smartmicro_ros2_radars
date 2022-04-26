@@ -67,6 +67,7 @@ constexpr auto kDefaultIp = "127.0.0.1";
 constexpr auto kDefaultPort = 55555;
 constexpr auto kDefaultHistorySize = 10;
 constexpr auto kDefaultFrameId = "umrr";
+constexpr auto kDefaultSensorType = "umrr11";
 
 constexpr auto kClientIdTag = "client_id";
 constexpr auto kPortTag = "port";
@@ -155,24 +156,24 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface> data_umrr96 = com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface::Get();
   std::cout << "Data stream services have been received!" << std::endl;
   // Wait init time
-  std::this_thread::sleep_for(std::chrono::seconds(5));
+  std::this_thread::sleep_for(std::chrono::seconds(2));
 
   for (auto i = 0UL; i < m_number_of_sensors; ++i) {
     const auto & sensor = m_sensors[i];
-    if (com::types::ERROR_CODE_OK != data_umrr96->RegisterComTargetListPortReceiveCallback(
-        sensor.id,
-        std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96, this, i, std::placeholders::_1)))
-    {
-      std::cout << "Falied to register targetlist callback for sensor umrr96" << std::endl;
-    }
-    if (com::types::ERROR_CODE_OK != data_umrr11->RegisterComTargetListPortReceiveCallback(
+    if (sensor.model == "umrr11" && com::types::ERROR_CODE_OK != data_umrr11->RegisterComTargetListPortReceiveCallback(
         sensor.id,
         std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11, this, i, std::placeholders::_1)))
-    {
+      {
       std::cout << "Failed to register targetlist callback for sensor umrr11" << std::endl;
-    }
-  
-    m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
+      }
+    if (sensor.model == "umrr96" && com::types::ERROR_CODE_OK != data_umrr96->RegisterComTargetListPortReceiveCallback(
+          sensor.id,
+          std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96, this, i, std::placeholders::_1)))
+      {
+        std::cout << "Falied to register targetlist callback for sensor umrr96" << std::endl;
+      }
+    
+        m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
       "umrr/targets_" + std::to_string(i), sensor.history_size);
   }
 }
@@ -180,7 +181,8 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
 void SmartmicroRadarNode::targetlist_callback_umrr11(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::ComTargetListPort> & target_list_port)
-{
+{ 
+  std::cout << "TargetList for UMRR11!" << std::endl;
   std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::GenericPortHeader> port_header = target_list_port->GetGenericPortHeader();
  
   sensor_msgs::msg::PointCloud2 msg;
@@ -214,7 +216,8 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
 void SmartmicroRadarNode::targetlist_callback_umrr96(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::ComTargetListPort> & target_list_port)
-{
+{ 
+  std::cout << "TargetList for UMRR96!" << std::endl;
   std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::GenericPortHeader> port_header = target_list_port->GetGenericPortHeader();
   
   sensor_msgs::msg::PointCloud2 msg;
@@ -267,6 +270,7 @@ void SmartmicroRadarNode::update_config_files_from_params()
   auto read_sensor_params_if_possible = [&](const std::uint32_t index) {
       auto & current_sensor = m_sensors[index];
       const auto prefix = "sensors.sensor_" + std::to_string(index);
+      current_sensor.model = this->declare_parameter(prefix + ".model", kDefaultSensorType);
       current_sensor.id = this->declare_parameter(prefix + ".id", kDefaultClientId);
       if (current_sensor.id == kDefaultClientId) {
         // The id was not set, so the sensor with this index was not defined. Stop here.

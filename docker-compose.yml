@@ -18,7 +18,11 @@ services:
         image: umrr-ros:latest
         volumes:
             - .:/code
-        entrypoint: ["/code/umrr11_simulator/simulation/build_run_sensor.sh"]
+        environment:
+            - SMART_ACCESS_CFG_FILE_PATH=/code/simulator/config_umrr11/com_lib_config.json
+            - LD_LIBRARY_PATH=/code/simulator/libs
+        entrypoint: ["/code/simulator/simulation/build_run_sensor.sh"]
+        command:    ["4", "1", "1"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.101
@@ -26,7 +30,11 @@ services:
         image: umrr-ros:latest
         volumes:
             - .:/code
-        entrypoint: ["/code/umrr96_simulator/simulation/build_run_sensor.sh"]
+        environment:
+            - SMART_ACCESS_CFG_FILE_PATH=/code/simulator/config_umrr96/com_lib_config.json
+            - LD_LIBRARY_PATH=/code/simulator/libs
+        entrypoint: ["/code/simulator/simulation/build_run_sensor.sh"]
+        command:    ["5", "1", "2"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.102
@@ -35,6 +43,7 @@ services:
         depends_on:
             - "sensor_0"
             - "sensor_1"
+         #   - "sensor_2"
         volumes:
             - .:/code
         command: ["colcon", "test", "--packages-above", "umrr_ros2_driver"]
