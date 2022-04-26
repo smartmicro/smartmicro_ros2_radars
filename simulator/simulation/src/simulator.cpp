@@ -34,7 +34,7 @@ void slave_callback(ClientId clientId, PortId portId, BufferDescriptor buffer)
     
     for (auto instruction: instructions) {
         if(instruction->GetSectionId() == 3042 && instruction->GetId() == 20)
-        {   
+        {
             std::cout << "Base user interface major version set!"  << std::endl;
             instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
             instruction->SetValue(1);

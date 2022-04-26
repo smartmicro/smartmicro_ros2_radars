@@ -43,7 +43,6 @@ services:
         depends_on:
             - "sensor_0"
             - "sensor_1"
-         #   - "sensor_2"
         volumes:
             - .:/code
         command: ["colcon", "test", "--packages-above", "umrr_ros2_driver"]
