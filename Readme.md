@@ -78,7 +78,7 @@ The dockerfile can be used to build and test the ros driver.
 Accept the agreement and get the smartaccess release
 ```bash
 ./smart_extract.sh
-
+````
 
 Building docker container
 ```bash
@@ -92,7 +92,7 @@ docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_
 
 Running the unit and integration tests via the docker compose
 ```bash
-docker-compose up --exit-code-from ros_node
+docker-compose up
 ```
 
 Getting the test coverage via the docker container

@@ -25,7 +25,7 @@ uint64_t minorVersion;
 
 std::shared_ptr<com::common::DataServicesIface> dataServices = com::common::DataServicesIface::Get();
 
-void slave_callback(ClientId clientId, PortId portId, BufferDescriptor buffer)
+void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer)
 {   
     InstructionBuffer* receive = reinterpret_cast<InstructionBuffer*>(buffer.GetBufferPtr());
     int sizeIncomingBuf = buffer.GetSize();
@@ -91,7 +91,8 @@ int main(int argc, char *argv[])
     }
     
     dataServices->RegisterInstRecvCallback(slave_callback);
-    
+    auto Start = std::chrono::steady_clock::now();
+
     while(1)
     {   
         ClientId masterId = 1;
@@ -102,12 +103,15 @@ int main(int argc, char *argv[])
         int size = pbuf->pubseekoff (0, ifs.end, ifs.in);
         pbuf->pubseekpos (0, ifs.in);
         char* filebuffer=new (std::nothrow) char[size];
+        
         if (filebuffer == nullptr) {
             std::cout << "error assigning memory!" << std::endl;    
         }
+        
         pbuf->sgetn (filebuffer, size);
         BufferDescriptor bufferdesc((uint8_t*)filebuffer, size);
         std::this_thread::sleep_for(std::chrono::seconds(1));
+        
         if(ERROR_CODE_OK !=  dataServices->StreamDataPort(masterId, portTargetListId, bufferdesc))
         {
             return -1;
@@ -116,6 +120,9 @@ int main(int argc, char *argv[])
         std::cout << "sensor is transmitting data! " << std::endl;
         ifs.close();
         delete[] filebuffer;
+        
+        if(std::chrono::steady_clock::now() - Start > std::chrono::seconds(30))
+            break;
 
     }
     return 0;
