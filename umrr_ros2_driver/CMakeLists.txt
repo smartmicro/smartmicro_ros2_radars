@@ -46,15 +46,15 @@ endif()
 ament_auto_find_build_dependencies()
 
 # specify the path to search for the libraries
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9)
 
 install(FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libsmart_access.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libosal.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libcom_lib.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libbasev1.0.2_user_interface.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libumrr11_t132_automotivev1.1.1_user_interface.so"
-    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/libs/libumrr96_t153_automotivev1.2.1_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libsmart_access.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libosal.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libcom_lib.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libbasev1.0.2_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr11_t132_automotivev1.1.1_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr96_t153_automotivev1.2.1_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -71,11 +71,11 @@ configure_file(
 ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.cpp")
 
 target_include_directories(smartmicro_radar_node PUBLIC ${CMAKE_INSTALL_PREFIX}/include/
-smartmicro/release/
-smartmicro/release/umrr11_t132_automotive_v1_1_1
-smartmicro/release/umrr96_t153_automotive_v1_2_1)
+smartmicro/include/
+smartmicro/include/umrr11_t132_automotive_v1_1_1
+smartmicro/include/umrr96_t153_automotive_v1_2_1)
 
-# link smart_access_libs to the node
+# link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node 
     smart_access
     nlohmann_json::nlohmann_json

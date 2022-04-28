@@ -104,7 +104,10 @@ Stop and remove docker containers and networks
 ```bash
 docker-compose down
 ```
-
+## ARMv8 Support
+The smart access release which would be attained using the script also offers platform support for armv8. In order build the driver on an armv8 machine, the `CmakeLists.txt` should be adopted.
+Instead of using the default `lib-linux-x86_64_gcc_9` the user should plugin the `lib-linux-armv8-gcc_9` for armv8.
+ 
 ## Contribution
 This project is a joint effort between [smartmicro](https://www.smartmicro.com/) and [Apex.AI](https://www.apex.ai/). The initial version of the code was developed by Igor Bogoslavskyi of Apex.AI (@niosus) and was thereafter adapted and extended by smartmicro.
 

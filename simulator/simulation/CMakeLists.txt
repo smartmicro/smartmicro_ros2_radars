@@ -15,10 +15,9 @@ add_executable(simulator
                src/simulator.cpp)
 
 target_include_directories(simulator PUBLIC
-                           ../release
-                           release
-                           release/umrr11_t132_automotive_v1_1_1
-                           release/umrr96_t153_automotive_v1_2_1)
+                           ../smartmicro/include
+                           smartmicro/include/umrr11_t132_automotive_v1_1_1
+                           smartmicro/include/umrr96_t153_automotive_v1_2_1)
 
 target_link_libraries(simulator
                       com_lib
