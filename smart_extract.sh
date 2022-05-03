@@ -43,7 +43,6 @@ function getSmartaccessBinaries {
     wget -c $URL_smartbinaries
     echo "extracting smart access"
     tar xfz $smart_pack -C umrr_ros2_driver/smartmicro/
-    tar xfz $smart_pack -C simulator/smartmicro
 }
 
 function cleanup {

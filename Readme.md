@@ -6,7 +6,7 @@
 There is a need for a node that will interface with a smartmicro radar driver and publish the data
 acquired by the sensor through the ROS2 pipeline. This package implements such a node.
 
-## Get the smartaccess release
+## Get the Smart Access release
 ```bash
 ./smart_extract.sh
 ```
@@ -27,9 +27,9 @@ required to run this node. This code is bundled with a version of Smart Access A
 sure the version used to publish the data is compatible with this version:
 
 - Date of release: `March 25, 2022`
-- Smart Access Library version: `v4.3.0`
-- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v1.2.1`
-- User interface version: `Smartaccess UMRR11 Type 132 AUTOMOTIVE v1.1.1`
+- Smart Access Automotive version: `v1.1.0`
+- User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
+- User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -78,7 +78,7 @@ The dockerfile can be used to build and test the ros driver.
 Accept the agreement and get the smartaccess release
 ```bash
 ./smart_extract.sh
-````
+```
 
 Building docker container
 ```bash
@@ -105,7 +105,7 @@ Stop and remove docker containers and networks
 docker-compose down
 ```
 ## ARMv8 Support
-The smart access release which would be attained using the script also offers platform support for armv8. In order build the driver on an armv8 machine, the `CmakeLists.txt` should be adopted.
+The Smart Access release which would be attained using the script also offers platform support for armv8. In order to build the driver on an armv8 machine, the `CmakeLists.txt` should be adopted.
 Instead of using the default `lib-linux-x86_64_gcc_9` the user should plugin the `lib-linux-armv8-gcc_9` for armv8.
  
 ## Contribution

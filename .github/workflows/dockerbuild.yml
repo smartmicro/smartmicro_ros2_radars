@@ -14,7 +14,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Get the smartaccess binaries
+    - name: Get the Smart Access binaries
       run:  echo "yes" | ./smart_extract.sh
 
     - name: Build the docker container

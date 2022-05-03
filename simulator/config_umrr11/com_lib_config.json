@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "client_id": 100,
     "role": "slave",
-    "shared_lib_path": "/code/simulator/smartmicro/lib-linux-x86_64-gcc_9",
+    "shared_lib_path": "/code/umrr_ros2_driver/smartmicro/lib-linux-x86_64-gcc_9",
     "config_path": "/code/simulator/config_umrr11",
     "user_interface_name": "umrr11_t132_automotive",
     "user_interface_major_v": 1,

@@ -162,18 +162,16 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
     const auto & sensor = m_sensors[i];
     if (sensor.model == "umrr11" && com::types::ERROR_CODE_OK != data_umrr11->RegisterComTargetListPortReceiveCallback(
         sensor.id,
-        std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11, this, i, std::placeholders::_1)))
-      {
-      std::cout << "Failed to register targetlist callback for sensor umrr11" << std::endl;
-      }
+        std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11, this, i, std::placeholders::_1))) {
+          std::cout << "Failed to register targetlist callback for sensor umrr11" << std::endl;
+    }
     if (sensor.model == "umrr96" && com::types::ERROR_CODE_OK != data_umrr96->RegisterComTargetListPortReceiveCallback(
           sensor.id,
-          std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96, this, i, std::placeholders::_1)))
-      {
-        std::cout << "Falied to register targetlist callback for sensor umrr96" << std::endl;
-      }
+          std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96, this, i, std::placeholders::_1))) {
+            std::cout << "Falied to register targetlist callback for sensor umrr96" << std::endl;
+    }
     
-        m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
+    m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
       "umrr/targets_" + std::to_string(i), sensor.history_size);
   }
 }
