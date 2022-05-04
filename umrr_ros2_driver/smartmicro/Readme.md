@@ -1,5 +1,3 @@
-## Smart Access Release v4.3.0
-
 ## Purpose / Use cases
 This directory will include the Smart Access release once it has been download using the `smart_extract.sh` script!
 

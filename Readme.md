@@ -105,7 +105,7 @@ Stop and remove docker containers and networks
 docker-compose down
 ```
 ## ARMv8 Support
-The Smart Access release which would be attained using the script also offers platform support for armv8. In order to build the driver on an armv8 machine, the `CmakeLists.txt` should be adopted.
+The Smart Access release which will be downloaded using the script also offers platform support for armv8. In order to build the driver on an armv8 machine, the `CmakeLists.txt` should be adopted.
 Instead of using the default `lib-linux-x86_64_gcc_9` the user should plugin the `lib-linux-armv8-gcc_9` for armv8.
  
 ## Contribution
