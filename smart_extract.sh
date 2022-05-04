@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-smart_pack=Smart_Access_V3315_Linux64_UMRR-96_Type_153_Automotive_V411_ROS.tar.gz
+smart_pack=SmartAccessAutomotive_1_1_0.tar.gz
 URL_smartbinaries=https://www.smartmicro.com/fileadmin/media/Downloads/Automotive_Radar/Software/${smart_pack}
 
 cat << EOF
@@ -42,7 +42,7 @@ echo
 function getSmartaccessBinaries {
     wget -c $URL_smartbinaries
     echo "extracting smart access"
-    tar xfz $smart_pack -C smartmicro/ --strip-components=1
+    tar xfz $smart_pack -C umrr_ros2_driver/smartmicro/
 }
 
 function cleanup {

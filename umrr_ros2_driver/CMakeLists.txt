@@ -16,6 +16,7 @@
 # was thereafter adapted and extended by smartmicro.
 
 cmake_minimum_required(VERSION 3.11)
+
 project(umrr_ros2_driver)
 include(FetchContent)
 
@@ -31,21 +32,6 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 find_package(Threads REQUIRED)
 
-set(ENABLE_CJSON_UNINSTALL OFF CACHE BOOL "Enable creating uninstall target")
-
-#TODO use the new git tag when released as the option for unsetting the uninstall is not available!!
-FetchContent_Declare(
-    cJSON
-    GIT_REPOSITORY https://github.com/DaveGamble/cJSON.git
-    GIT_TAG b9eff8b02afd0e2612b695fb8d67d56839b126ce
-)
-
-FetchContent_GetProperties(cJSON)
-if(NOT cJSON_POPULATED)
-    FetchContent_Populate(cJSON)
-    add_subdirectory(${cjson_SOURCE_DIR} ${cjson_BINARY_DIR})
-endif()
-
 FetchContent_Declare(json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG v3.10.4
@@ -58,12 +44,45 @@ if(NOT json_POPULATED)
 endif()
 
 ament_auto_find_build_dependencies()
-add_subdirectory(smartmicro)
-# Note that we don't need to link the radar node to osal as the node will be dynamically linked
-# through the smart_access library to every library specified in the lib folder in the config file.
+
+# specify the path to search for the libraries
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9)
+
+install(FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libsmart_access.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libosal.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libcom_lib.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libbasev1.0.2_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr11_t132_automotivev1.1.1_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr96_t153_automotivev1.2.1_user_interface.so"
+DESTINATION lib)
+
+set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CONFIG_FOLDER_PATH "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/config")
+set(CONFIG_FILE_PATH "${CONFIG_FOLDER_PATH}/smart_access_config.json")
+set(HW_INVENTORY_FILE_PATH "${CONFIG_FOLDER_PATH}/hw_inventory.json")
+set(ROUTING_TABLE_FILE_PATH "${CONFIG_FOLDER_PATH}/routing_table.json")
+configure_file(
+    "${PROJECT_SOURCE_DIR}/cmake/smart_access_config.json.in" "${CONFIG_FILE_PATH}" @ONLY)
+configure_file(
+    "${PROJECT_SOURCE_DIR}/cmake/config_path.hpp.in"
+    "${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}/config_path.hpp" @ONLY)
+
 ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.cpp")
-target_include_directories(smartmicro_radar_node PUBLIC ${CMAKE_INSTALL_PREFIX}/include/)
-target_link_libraries(smartmicro_radar_node smart_access nlohmann_json::nlohmann_json)
+
+target_include_directories(smartmicro_radar_node PUBLIC ${CMAKE_INSTALL_PREFIX}/include/
+smartmicro/include/
+smartmicro/include/umrr11_t132_automotive_v1_1_1
+smartmicro/include/umrr96_t153_automotive_v1_2_1)
+
+# link smart_access_lib-linux-x86_64-gcc_9 to the node
+target_link_libraries(smartmicro_radar_node 
+    smart_access
+    nlohmann_json::nlohmann_json
+    com_lib
+    osal
+    umrr11_t132_automotivev1.1.1_user_interface
+    umrr96_t153_automotivev1.2.1_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"
@@ -71,15 +90,16 @@ rclcpp_components_register_node(smartmicro_radar_node
 )
 
 if(BUILD_TESTING)
+   
     find_package(launch_testing_ament_cmake)
     add_launch_test(test/radar_node_test.launch.py
-        TIMEOUT "500"
+        TIMEOUT "150"
     )
-
+    
     find_package(ament_cmake_gtest REQUIRED)
     ament_add_gtest(test_smartmicro_radar_node test/test_smartmicro_radar_node.cpp)
-    add_dependencies(test_smartmicro_radar_node smartmicro_radar_node osal)
-    target_link_libraries(test_smartmicro_radar_node smartmicro_radar_node osal)
+    target_link_libraries(test_smartmicro_radar_node smartmicro_radar_node)
+
 endif()
 
-ament_auto_package(INSTALL_TO_SHARE config launch param pcap)
+ament_auto_package(INSTALL_TO_SHARE config launch param)

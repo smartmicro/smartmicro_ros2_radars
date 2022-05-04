@@ -28,8 +28,11 @@ TEST(SmartmicroRadarNodeTest, Create) {
   node_options.append_parameter_override("master_client_id", 1);
   node_options.append_parameter_override("hw_dev_id", 2);
   node_options.append_parameter_override("hw_port", 55555);
-  node_options.append_parameter_override("hw_iface_name", "lo");
-  node_options.append_parameter_override("sensors.sensor_0.id", 42);
+  node_options.append_parameter_override("hw_iface_name", "eth0");
+  node_options.append_parameter_override("sensors.sensor_0.id", 10);
+  node_options.append_parameter_override("sensors.sensor_0.ip", "172.22.10.101");
+  node_options.append_parameter_override("sensors.sensor_1.id", 20);
+  node_options.append_parameter_override("sensors.sensor_1.ip", "172.22.10.102");
   auto node = std::make_shared<SmartmicroRadarNode>(node_options);
-  EXPECT_TRUE(node != nullptr);
+  ASSERT_TRUE(node != nullptr);
 }
