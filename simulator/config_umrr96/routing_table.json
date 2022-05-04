@@ -1,0 +1,14 @@
+{
+    "clients": [
+        {
+            "client_id": 1,
+            "data_serialization_type": "port_based",
+            "instruction_serialization_type": "port_based",
+            "ip": "172.22.10.100",
+            "link_type": "eth",
+            "port": 55555
+        }
+    ],
+    "name": "Client Routing Table",
+    "version": "1.0.0"
+}

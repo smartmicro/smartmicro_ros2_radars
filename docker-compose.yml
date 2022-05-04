@@ -14,19 +14,38 @@
 
 version: "3"
 services:
-    sensor_0:
+    build_simulator: 
         image: umrr-ros:latest
         volumes:
             - .:/code
-        entrypoint: ["python3", "/code/umrr_ros2_driver/test/transmit_pcap.py"]
+        entrypoint: ["/code/simulator/simulation/build_simulator.sh"]
+    sensor_0:
+        depends_on:
+            build_simulator:
+                condition: service_completed_successfully
+        image: umrr-ros:latest
+        volumes:
+            - .:/code
+        environment:
+            - SMART_ACCESS_CFG_FILE_PATH=/code/simulator/config_umrr11/com_lib_config.json
+            - LD_LIBRARY_PATH=/code/umrr_ros2_driver/smartmicro/lib-linux-x86_64-gcc_9
+        entrypoint: ["/code/simulator/simulation/out/bin/simulator"]
+        command:    ["4", "1", "1"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.101
     sensor_1:
+        depends_on:
+            build_simulator:
+                condition: service_completed_successfully
         image: umrr-ros:latest
         volumes:
             - .:/code
-        entrypoint: ["python3", "/code/umrr_ros2_driver/test/transmit_pcap.py"]
+        environment:
+            - SMART_ACCESS_CFG_FILE_PATH=/code/simulator/config_umrr96/com_lib_config.json
+            - LD_LIBRARY_PATH=/code/umrr_ros2_driver/smartmicro/lib-linux-x86_64-gcc_9
+        entrypoint: ["/code/simulator/simulation/out/bin/simulator"]
+        command:    ["5", "1", "2"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.102
@@ -37,7 +56,7 @@ services:
             - "sensor_1"
         volumes:
             - .:/code
-        command: ["colcon", "test"]
+        command: ["colcon", "test", "--packages-above", "umrr_ros2_driver"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.100

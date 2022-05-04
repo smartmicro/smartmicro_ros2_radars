@@ -23,7 +23,8 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <umrr_ros2_driver/visibility_control.hpp>
 
-#include <comtargetlistport/ComTargetListPort.h>
+#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
+#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
 #include <CommunicationServicesIface.h>
 
 #include <array>
@@ -50,6 +51,7 @@ struct SensorConfig
   std::string iface_name{};
   std::string frame_id{};
   std::uint32_t history_size{};
+  std::string model{};
 };
 }  // namespace detail
 
@@ -68,14 +70,24 @@ public:
 
 private:
   ///
-  /// @brief      A callback that is called when a new target list port arrives.
+  /// @brief      A callback that is called when a new target list port for umrr11 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port
   ///
-  void target_list_callback(
+  void targetlist_callback_umrr11(
     const std::uint32_t sensor_idx,
-    const std::shared_ptr<com::master::comtargetlistport::ComTargetListPort> & target_list_port);
+    const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::ComTargetListPort> & target_list_port);
+
+  ///
+  /// @brief      A callback that is called when a new target list port for umrr96 arrives.
+  ///
+  /// @param[in]  sensor_idx   The sensor id for respective published topic.
+  /// @param[in]  target_list_port  The target list port
+  ///
+  void targetlist_callback_umrr96(
+    const std::uint32_t sensor_idx,
+    const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::ComTargetListPort> & target_list_port);
 
   ///
   /// @brief      Read parameters and update the json config files required by Smart Access C++ API.
