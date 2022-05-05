@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-smart_pack=ROS_Automotive_v1.0.0.tar.gz
+smart_pack=SmartAccessAutomotive_1_1_0.tar.gz
 URL_smartbinaries=https://www.smartmicro.com/fileadmin/media/Downloads/Automotive_Radar/Software/${smart_pack}
 
 cat << EOF
@@ -42,9 +42,7 @@ echo
 function getSmartaccessBinaries {
     wget -c $URL_smartbinaries
     echo "extracting smart access"
-    tar xfz $smart_pack -C umrr_ros2_driver/smartmicro/ --strip-components=1
-    tar xfz $smart_pack -C umrr11_simulator/ --strip-components=1
-    tar xfz $smart_pack -C umrr96_simulator/ --strip-components=1
+    tar xfz $smart_pack -C umrr_ros2_driver/smartmicro/
 }
 
 function cleanup {

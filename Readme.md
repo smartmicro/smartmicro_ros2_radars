@@ -6,7 +6,7 @@
 There is a need for a node that will interface with a smartmicro radar driver and publish the data
 acquired by the sensor through the ROS2 pipeline. This package implements such a node.
 
-## Get the smartaccess release
+## Get the Smart Access release
 ```bash
 ./smart_extract.sh
 ```
@@ -23,13 +23,13 @@ ros2 launch umrr_ros2_driver radar.launch.py
 
 ### UMRR-96 radar and Smart Access API version
 A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or both are 
-are required to run this node. This code is bundled with a version of Smart Access API. Please make
+required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
 - Date of release: `March 25, 2022`
-- Library version: `v4.3.0`
-- User interface version: `Smartaccess UMRR96 Type 153 AUTOMOTIVE v5.2.1`
-- User interface version: `Smartaccess UMRR11 Type 132 AUTOMOTIVE v4.1.1`
+- Smart Access Automotive version: `v1.1.0`
+- User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
+- User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -62,11 +62,13 @@ For more details, see the [`radar.template.yaml`](param/radar.template.yaml) fil
 - `iface_name`: name of the used network interface
 - `frame_id`: name of the frame in which the messages will be published
 - `history_size`: size of history for the message publisher
+- `model`: the model of the sensor being used 
 
 ## Configuration of the sensors
-In order to use multiple sensors (maximum of upto ten sensors) with the node the sensors should be configured separately.
+In order to use multiple sensors (maximum of up to ten sensors) with the node the sensors should be configured separately.
 The IP addresses of the sensors could be assigned using:
 - The smartmicro tool `DriveRecorder`.
+- Using the `Smart Access C++ API`
 
 Each sensor has to be assigned a unique IP address!
 
@@ -90,7 +92,7 @@ docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_
 
 Running the unit and integration tests via the docker compose
 ```bash
-docker-compose up --exit-code-from ros_node
+docker-compose up
 ```
 
 Getting the test coverage via the docker container
@@ -102,7 +104,10 @@ Stop and remove docker containers and networks
 ```bash
 docker-compose down
 ```
-
+## ARMv8 Support
+The Smart Access release which will be downloaded using the script also offers platform support for armv8. In order to build the driver on an armv8 machine, the `CmakeLists.txt` should be adopted.
+Instead of using the default `lib-linux-x86_64_gcc_9` the user should plugin the `lib-linux-armv8-gcc_9` for armv8.
+ 
 ## Contribution
 This project is a joint effort between [smartmicro](https://www.smartmicro.com/) and [Apex.AI](https://www.apex.ai/). The initial version of the code was developed by Igor Bogoslavskyi of Apex.AI (@niosus) and was thereafter adapted and extended by smartmicro.
 

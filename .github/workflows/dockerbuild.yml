@@ -14,7 +14,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Get the smartaccess binaries
+    - name: Get the Smart Access binaries
       run:  echo "yes" | ./smart_extract.sh
 
     - name: Build the docker container
@@ -24,7 +24,7 @@ jobs:
       run:  docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver
 
     - name: Running the unit/integration tests via the docker container and exit
-      run:  docker-compose up --exit-code-from ros_node
+      run:  docker-compose up
 
     - name: Getting the test coverage
       run:  docker run --rm -v`pwd`:/code umrr-ros colcon test-result --all --verbose
