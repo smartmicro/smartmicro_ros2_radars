@@ -31,7 +31,6 @@ endif()
 
 find_package(ament_cmake_auto REQUIRED)
 find_package(Threads REQUIRED)
-find_package(umrr_ros2_msgs REQUIRED)
 
 FetchContent_Declare(json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -89,9 +88,6 @@ rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"
     EXECUTABLE smartmicro_radar_node_exe
 )
-
-ament_target_dependencies(smartmicro_radar_node
-rclcpp umrr_ros2_msgs)
 
 if(BUILD_TESTING)
    
