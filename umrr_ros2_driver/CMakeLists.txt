@@ -31,7 +31,6 @@ endif()
 
 find_package(ament_cmake_auto REQUIRED)
 find_package(Threads REQUIRED)
-find_package(umrr_ros2_msgs REQUIRED)
 
 FetchContent_Declare(json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
