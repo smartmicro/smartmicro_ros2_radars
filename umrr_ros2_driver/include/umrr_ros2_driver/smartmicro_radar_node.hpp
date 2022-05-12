@@ -18,7 +18,7 @@
 #define UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
 
 
-#include "umrr_ros2_msgs/srv/set_param.hpp"
+#include "umrr_ros2_msgs/srv/set_mode.hpp"
 #include "umrr_ros2_msgs/srv/set_ip.hpp"
 #include "umrr_ros2_msgs/msg/port_header.hpp"
 #include <rclcpp/publisher.hpp>
@@ -103,35 +103,40 @@ private:
    ///
   /// @brief      Callaback for getting the instruction response.
   ///
-  void sensor_response(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response);
+  void sensor_response(
+    const com::types::ClientId client_id,
+    const std::shared_ptr<com::master::ResponseBatch> & response);
   
   ///
-  /// @brief      Callaback for changing IP address.
+  /// @brief      Callback for changing IP address.
   ///
-  void sensor_response_ip(const ClientId,const std::shared_ptr<com::master::ResponseBatch> & response_ip_change);
+  void sensor_response_ip(
+    const com::types::ClientId client_id,
+    const std::shared_ptr<com::master::ResponseBatch> & response);
   
   ///
   /// @brief      Send instructions to the sensor.
   ///
-  void change_radar_mode(const std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Request> request,
-                      std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Response> response);
+  void radar_mode(
+    const std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Request> request,
+    std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> response);
 
   ///
-  /// @brief      Configure the sensor.
+  /// @brief      Configure the sensor ip address..
   ///
-  void change_ip_address(const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request_ip,
-                     std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response_ip);
+  void ip_address(
+    const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,
+    std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response);
 
   ///
-  /// @brief      Configure the sensor.
+  /// @brief      A timer to handle the initialization.
   ///
   void my_timer_callback()
   {
-    my_timer->cancel();
-    RCLCPP_INFO(this->get_logger(), "Timer has been cancelled!");
+    timer->cancel();
   }
   
-  rclcpp::Service<umrr_ros2_msgs::srv::SetParam>::SharedPtr command_srv_;
+  rclcpp::Service<umrr_ros2_msgs::srv::SetMode>::SharedPtr mode_srv_;
   rclcpp::Service<umrr_ros2_msgs::srv::SetIp>::SharedPtr ip_addr_srv_;
   std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
   std::array<detail::SensorConfig, detail::kMaxSensorCount> m_sensors{};
@@ -139,8 +144,10 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
     detail::kMaxSensorCount> m_publishers{};
   std::size_t m_number_of_sensors{};
-  rclcpp::TimerBase::SharedPtr my_timer;
-  ClientId client_id;
+  rclcpp::TimerBase::SharedPtr timer;
+  com::types::ClientId client_id;
+  std::uint64_t response_type {};
+  
 };
 
 }  // namespace radar

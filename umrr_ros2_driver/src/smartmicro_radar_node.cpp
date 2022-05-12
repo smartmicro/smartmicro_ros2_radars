@@ -85,9 +85,6 @@ constexpr auto kDevIdJsonTag = "dev_id";
 constexpr auto kClientsJsonTag = "clients";
 constexpr auto kHwItemsJsonTag = "hwItems";
 
-uint64_t response_type;
-uint32_t response_ip;
-
 constexpr bool float_eq(const float a, const float b) noexcept
 {
   const auto maximum = std::max(std::fabs(a), std::fabs(b));
@@ -145,7 +142,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
 : rclcpp::Node{"smartmicro_radar_node", node_options}
 {
   update_config_files_from_params();
-
+  
   const auto override = false;
   setenv("SMART_ACCESS_CFG_FILE_PATH", kConfigFilePath, override);
 
@@ -181,77 +178,107 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   }
 
   // create a ros2 service to change the radar parameters
-  command_srv_ = create_service<umrr_ros2_msgs::srv::SetParam>(
-    "smartmicro_radar_node/set_radar_parameter",
+  mode_srv_ = create_service<umrr_ros2_msgs::srv::SetMode>(
+    "smartmicro_radar_node/set_radar_mode",
     std::bind(
-      &SmartmicroRadarNode::change_radar_mode, this, std::placeholders::_1,
+      &SmartmicroRadarNode::radar_mode, this, std::placeholders::_1,
       std::placeholders::_2));
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Radar parameter services are ready.");
-
+  
   // create a ros2 service to change the IP address
   ip_addr_srv_ = create_service<umrr_ros2_msgs::srv::SetIp>(
-    "smartmicro_radar_node/configure_ip_address",
+    "smartmicro_radar_node/set_ip_address",
     std::bind(
-      &SmartmicroRadarNode::change_ip_address, this, std::placeholders::_1,
+      &SmartmicroRadarNode::ip_address, this, std::placeholders::_1,
       std::placeholders::_2));
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Radar is ready to be configured.");
+  
+  RCLCPP_INFO(this->get_logger(), "Radar services are ready.");
+
 }
 
-void SmartmicroRadarNode::change_radar_mode(
-  const std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Request> request,
-  std::shared_ptr<umrr_ros2_msgs::srv::SetParam::Response> result)
+void SmartmicroRadarNode::radar_mode(
+  const std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Request> request,
+  std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> result)
 {
-  const std::uint32_t sensor_idx = 0;
-  std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
-  //std::this_thread::sleep_for(std::chrono::seconds(2));
-  my_timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
-    &SmartmicroRadarNode::my_timer_callback, this));
-  std::shared_ptr<InstructionBatch> batch(inst->AllocateInstructionBatch());
-  std::shared_ptr<SetParamRequest<uint8_t>> radar_mode(
-    new SetParamRequest<uint8_t>(request->section, request->param, request->value)
-  );
-
-  batch->AddRequest(radar_mode);
-  // create list of clients to pass the instructions
-  std::set<ClientId> clients;
+  std::uint16_t check_value {};
+  std::string check_inst_name {};
+  bool check_flag = false; 
   client_id = request->sensor_id;
-  if (m_sensors[sensor_idx].id != client_id)
+  check_value = request->value;
+  for(auto & sensor : m_sensors) {
+    if(client_id == sensor.id)
+      if(check_value < 3)
+      {
+        check_flag = true;
+        break;
+      }
+  }
+    if(!check_flag){
+      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Either the sensor ID or the mode value entered is invalid! ");
+      result->res = "Either the sensor ID or the mode value entered is invalid! ";
+      return;
+    }
+
+  std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
+  timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
+    &SmartmicroRadarNode::my_timer_callback, this));
+  std::shared_ptr<InstructionBatch> batch;
+  
+  if(!inst->AllocateInstructionBatch(client_id, batch))
   {
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Sensor ID is not listed.Check the param file!");
-    result->res = "Service was not conducted";
+    std::cout << "failed to allocate instruction batch" << std::endl;
+  }  
+  std::shared_ptr<SetParamRequest<uint8_t>> radar_mode(
+    new SetParamRequest<uint8_t>("auto_interface_0dim", request->param, request->value)
+  );
+  
+  if((request->param != "tx_antenna_idx") && (request->param != "frequency_sweep_idx"))
+  {
+    RCLCPP_ERROR(this->get_logger(), "Invalid mode name!");
+    result->res = "Invalid mode name!";
     return;
   }
-  clients.insert(client_id);
-  for (auto it = clients.begin(); it !=clients.end(); it++)
-  {
-    std::cout << *it << " " << std::endl;
-  }
-  // send instruction batch to the device
-  if (ERROR_CODE_OK != inst->SetInstructionBatch(
-      clients,
+  batch->AddRequest(radar_mode);
+     
+  if (com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
       batch,
       std::bind(
         &SmartmicroRadarNode::sensor_response, this, client_id,
         std::placeholders::_2)))
   {
-    // throw std::runtime_error("Failed to send batch");
     result->res = "Service is not conducted";
   } 
     result->res = "Service conducted successfully";
 }
 
-void SmartmicroRadarNode::change_ip_address(
-  const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request_ip,
-  std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> result_ip)
+void SmartmicroRadarNode::ip_address(
+  const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,
+  std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> result)
 {
-  const std::uint32_t sensor_idx = 0;
   std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
-  //std::this_thread::sleep_for(std::chrono::seconds(2));
-  my_timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
+  bool check_flag = false; 
+  client_id = request->sensor_id;
+  for(auto & sensor : m_sensors) {
+    if(client_id == sensor.id)
+    {
+      check_flag = true;
+      break;
+    }
+  }
+    if(!check_flag){
+      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Sensor ID entered is not listed in the param file! ");
+      result->res_ip = "Sensor ID entered is not listed in the param file! ";
+      return;
+    }
+
+  timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
     &SmartmicroRadarNode::my_timer_callback, this));
-  std::shared_ptr<InstructionBatch> batch_ip(inst->AllocateInstructionBatch());
+  std::shared_ptr<InstructionBatch> batch;
+  if(!inst->AllocateInstructionBatch(client_id, batch))
+  {
+    std::cout << "Failed to allocate instruction batch" << std::endl;
+  }
   std::shared_ptr<SetParamRequest<uint32_t>> ip_address(
-    new SetParamRequest<uint32_t>("auto_interface_0dim", "ip_source_address", request_ip->value_ip)
+    new SetParamRequest<uint32_t>("auto_interface_0dim", "ip_source_address", request->value_ip)
   );
   std::shared_ptr<CmdRequest> cmd(
     new CmdRequest(
@@ -260,83 +287,71 @@ void SmartmicroRadarNode::change_ip_address(
       2010
     )
   );
-  batch_ip->AddRequest(ip_address);
-  batch_ip->AddRequest(cmd);
-  // create list of clients to pass the instructions
-  std::set<ClientId> clients;
-  client_id = request_ip->sensor_id;
-  if (m_sensors[sensor_idx].id != client_id)
-  {
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Sensor ID is not listed. Check the param file!");
-    result_ip->res_ip = "Service was not conducted";
-    return;
-  }
-  clients.insert(client_id);
+  batch->AddRequest(ip_address);
+  batch->AddRequest(cmd);
+ 
   // send instruction batch to the device
-  if (ERROR_CODE_OK != inst->SetInstructionBatch(
-      clients,
-      batch_ip,
+  if (com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
+      batch,
       std::bind(
         &SmartmicroRadarNode::sensor_response_ip, this, client_id,
         std::placeholders::_2)))
   {
-    // throw std::runtime_error("Failed to send batch");
-    result_ip->res_ip = "Service not conducted";
+    result->res_ip = "Service not conducted";
   } else {
     RCLCPP_INFO(
-      rclcpp::get_logger(
-        "rclcpp"),
-      "Radar must be restarted and the parameters must be updated !!.");
-    std::string service_response = std::to_string(response_ip);
-    result_ip->res_ip = service_response;
+      this->get_logger(),
+      "Radar must be restarted and the parameters in the param file must be updated !!.");
+    result->res_ip = "Service conducted successfully";
   }
 }
 
 void SmartmicroRadarNode::sensor_response(
-  const ClientId client_id,
+  const com::types::ClientId client_id,
   const std::shared_ptr<com::master::ResponseBatch> & response)
 {
-  std::cout << "ENTERING DEBUGGING " << std::endl;
   std::vector<std::shared_ptr<Response<uint8_t>>> myResp_1;
-  
-  if (!response->GetResponse<uint8_t>(
-      "auto_interface_0dim", "frequency_sweep_idx",
-      myResp_1))
+  std::uint64_t value {};
+
+  if (response->GetResponse<uint8_t>("auto_interface_0dim", "tx_antenna_idx", myResp_1))
   {
-    std::cout << "ENTERING DEBUGGING PART 1" << std::endl;
     for (auto & resp : myResp_1) {
-      std::cout << "ENTERING DEBUGGING PART 2" << std::endl;
-      /*uint64_t value = 0;
       if (resp->GetConvertValue(value))
       {
-        std::cout << "Value = " << value << std::endl;
-      }*/
-      
-      std::cout << "Response from clients [" << resp->GetResponseType() << "]" << std::endl;
-      
-      if (responses = resp->GetResponseType())
-      {
-        std::cout << "Response from clients [" << responses << "]" << std::endl;
+        response_type = resp->GetConvertValue(value);
+        RCLCPP_INFO(this->get_logger(), "Response from tx_antenna mode : %i", response_type);
       }
     }
   }
-  else{
-    std::cout << "NOTHINGGGG" << std::endl;
+  if (response->GetResponse<uint8_t>("auto_interface_0dim", "frequency_sweep_idx", myResp_1))
+  {
+    for (auto & resp : myResp_1) {
+      if (resp->GetConvertValue(value))
+      {
+        response_type = resp->GetConvertValue(value);
+        std::cout << "Response from frequency = " << response_type << std::endl;
+        RCLCPP_INFO(this->get_logger(), "Response from frequency_sweep service: %i", response_type);
+      }
+    }
   }
 }
 
 void SmartmicroRadarNode::sensor_response_ip(
-  const ClientId client_id,
-  const std::shared_ptr<com::master::ResponseBatch> & response_ip_change)
+  const com::types::ClientId client_id,
+  const std::shared_ptr<com::master::ResponseBatch> & response)
 {
   std::vector<std::shared_ptr<Response<uint32_t>>> myResp_2;
-  if (!response_ip_change->GetResponse<uint32_t>(
+  std::uint64_t value {};
+  if (response->GetResponse<uint32_t>(
       "auto_interface_0dim", "ip_source_address",
       myResp_2))
   {
     for (auto & resp : myResp_2) {
-      response_ip = resp->GetValue();
-      std::cout << "Response from clients [" << response_ip << "]" << std::endl;
+      if (resp->GetConvertValue(value))
+      {
+        response_type = resp->GetConvertValue(value);
+        RCLCPP_INFO(this->get_logger(), "Response from sensor for ip change: %i", response_type);
+      }
     }
   }
 }
@@ -345,9 +360,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::ComTargetListPort> & target_list_port)
 { 
-  std::cout << "TargetList for UMRR11!" << std::endl;
   std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::GenericPortHeader> port_header = target_list_port->GetGenericPortHeader();
- 
   sensor_msgs::msg::PointCloud2 msg;
   RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
   const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
@@ -380,9 +393,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::ComTargetListPort> & target_list_port)
 { 
-  std::cout << "TargetList for UMRR96!" << std::endl;
   std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::GenericPortHeader> port_header = target_list_port->GetGenericPortHeader();
-  
   sensor_msgs::msg::PointCloud2 msg;
   RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
   const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
@@ -491,7 +502,7 @@ void SmartmicroRadarNode::update_config_files_from_params()
     client[kPortTag] = sensor.port;
     client[kIpTag] = sensor.ip;
     clients.push_back(client);
-  }
+}
   std::ofstream{kRoutingTableFilePath, std::ios::trunc} << routing_table;
 }
 
