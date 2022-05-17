@@ -40,6 +40,8 @@
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
+#include <experimental/filesystem>
+
 #include <limits>
 #include <memory>
 #include <set>
@@ -84,6 +86,7 @@ constexpr auto kDevPortTag = "hw_port";
 constexpr auto kDevIdJsonTag = "dev_id";
 constexpr auto kClientsJsonTag = "clients";
 constexpr auto kHwItemsJsonTag = "hwItems";
+
 
 constexpr bool float_eq(const float a, const float b) noexcept
 {
@@ -142,7 +145,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
 : rclcpp::Node{"smartmicro_radar_node", node_options}
 {
   update_config_files_from_params();
-  
+
   const auto override = false;
   setenv("SMART_ACCESS_CFG_FILE_PATH", kConfigFilePath, override);
 
@@ -199,28 +202,59 @@ void SmartmicroRadarNode::radar_mode(
   const std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Request> request,
   std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> result)
 {
-  std::uint16_t check_value {};
-  std::string check_inst_name {};
-  bool check_flag = false; 
-  client_id = request->sensor_id;
-  check_value = request->value;
-  for(auto & sensor : m_sensors) {
-    if(client_id == sensor.id)
-      if(check_value < 3)
-      {
-        check_flag = true;
-        break;
-      }
-  }
-    if(!check_flag){
-      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Either the sensor ID or the mode value entered is invalid! ");
-      result->res = "Either the sensor ID or the mode value entered is invalid! ";
-      return;
-    }
-
   std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
   timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
     &SmartmicroRadarNode::my_timer_callback, this));
+  
+  std::string instruction_name {};
+  std::uint16_t check_value {};
+  bool check_flag_param = false;
+  bool check_flag_id = false; 
+
+  std::experimental::filesystem::path p_test = std::experimental::filesystem::path("..") / ".." / "umrr_ros2_driver/config/sensor_params.json";
+  std::string FilePath = std::experimental::filesystem::canonical(p_test);
+  if(!std::experimental::filesystem::exists(FilePath))
+  {
+    result->res = "FIle Path invalid! ";
+    return;
+  }
+  
+  std::ifstream instr_file(FilePath);
+  auto param_table = nlohmann::json::parse(instr_file);
+  
+  instruction_name = request->param;
+  check_value = request->value;
+  client_id = request->sensor_id;
+
+  for(const auto & item : param_table.items())
+  {
+    for(const auto & param : item.value().items()) {
+      if(instruction_name == param.value()["name"])
+        if(check_value <= param.value()["max"])
+        {
+          check_flag_param = true;
+          break;
+        }
+    }
+  }
+  if(!check_flag_param){
+    result->res = "Invalid instruction name or value! ";
+    return;
+  }
+    
+  for(auto & sensor : m_sensors) {
+    if(client_id == sensor.id)
+      {
+        check_flag_id = true;
+        break;
+      }
+  }
+  if(!check_flag_id){
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "The sensor ID value entered is invalid! ");
+    result->res = "The sensor ID value entered is invalid! ";
+    return;
+  }
+
   std::shared_ptr<InstructionBatch> batch;
   
   if(!inst->AllocateInstructionBatch(client_id, batch))
@@ -230,13 +264,7 @@ void SmartmicroRadarNode::radar_mode(
   std::shared_ptr<SetParamRequest<uint8_t>> radar_mode(
     new SetParamRequest<uint8_t>("auto_interface_0dim", request->param, request->value)
   );
-  
-  if((request->param != "tx_antenna_idx") && (request->param != "frequency_sweep_idx"))
-  {
-    RCLCPP_ERROR(this->get_logger(), "Invalid mode name!");
-    result->res = "Invalid mode name!";
-    return;
-  }
+
   batch->AddRequest(radar_mode);
      
   if (com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
@@ -254,7 +282,10 @@ void SmartmicroRadarNode::ip_address(
   const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,
   std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> result)
 {
+  
   std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
+  timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
+    &SmartmicroRadarNode::my_timer_callback, this));
   bool check_flag = false; 
   client_id = request->sensor_id;
   for(auto & sensor : m_sensors) {
@@ -270,8 +301,6 @@ void SmartmicroRadarNode::ip_address(
       return;
     }
 
-  timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
-    &SmartmicroRadarNode::my_timer_callback, this));
   std::shared_ptr<InstructionBatch> batch;
   if(!inst->AllocateInstructionBatch(client_id, batch))
   {
@@ -329,8 +358,37 @@ void SmartmicroRadarNode::sensor_response(
       if (resp->GetConvertValue(value))
       {
         response_type = resp->GetConvertValue(value);
-        std::cout << "Response from frequency = " << response_type << std::endl;
         RCLCPP_INFO(this->get_logger(), "Response from frequency_sweep service: %i", response_type);
+      }
+    }
+  }
+  if (response->GetResponse<uint8_t>("auto_interface_0dim", "enable_tx_ant_toggle", myResp_1))
+  {
+    for (auto & resp : myResp_1) {
+      if (resp->GetConvertValue(value))
+      {
+        response_type = resp->GetConvertValue(value);
+        RCLCPP_INFO(this->get_logger(), "Response from enable_tx_ant_toggle service: %i", response_type);
+      }
+    }
+  }
+  if (response->GetResponse<uint8_t>("auto_interface_0dim", "angular_separation", myResp_1))
+  {
+    for (auto & resp : myResp_1) {
+      if (resp->GetConvertValue(value))
+      {
+        response_type = resp->GetConvertValue(value);
+        RCLCPP_INFO(this->get_logger(), "Response from angular_separation service: %i", response_type);
+      }
+    }
+  }
+  if (response->GetResponse<uint8_t>("auto_interface_0dim", "range_toggle_mode", myResp_1))
+  {
+    for (auto & resp : myResp_1) {
+      if (resp->GetConvertValue(value))
+      {
+        response_type = resp->GetConvertValue(value);
+        RCLCPP_INFO(this->get_logger(), "Response from range_toggle_mode service: %i", response_type);
       }
     }
   }
@@ -502,8 +560,9 @@ void SmartmicroRadarNode::update_config_files_from_params()
     client[kPortTag] = sensor.port;
     client[kIpTag] = sensor.ip;
     clients.push_back(client);
-}
+  }
   std::ofstream{kRoutingTableFilePath, std::ios::trunc} << routing_table;
+
 }
 
 

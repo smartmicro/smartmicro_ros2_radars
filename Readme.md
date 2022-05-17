@@ -87,7 +87,7 @@ docker build . -t umrr-ros:latest
 
 Building the driver with the docker container
 ```bash
-docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver
+docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver umrr_ros2_msgs
 ```
 
 Running the unit and integration tests via the docker compose

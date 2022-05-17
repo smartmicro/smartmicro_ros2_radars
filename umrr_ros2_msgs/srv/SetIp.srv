@@ -1,4 +1,4 @@
-int64 value_ip
+uint32 value_ip
 int32 sensor_id
 ---
 string res_ip
