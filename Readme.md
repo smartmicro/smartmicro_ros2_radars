@@ -81,14 +81,14 @@ In order to use multiple sensors (maximum of up to ten sensors) with the node th
 The IP addresses of the sensors could be assigned using:
 - The smartmicro tool `DriveRecorder`.
 - Using the `Smart Access C++ API`
-- Using sensor services provided by the node
+- Using `Sensor Services` provided by the node
 
 Each sensor has to be assigned a unique IP address!
 
-To use the ros2 `SetIp`service we require to inputs:
--`value_ip`: the value of the ip address in decimal. For instance to set the IP to `192.168.11.64` its corresponding
+To use the ros2 `SetIp`service we require two inputs:
+- `value_ip`: the value of the ip address in decimal. For instance to set the IP to `192.168.11.64` its corresponding
 value in decimal `3232238400` should be used.
--`sensor_id`: the sensor whose ip address is to be changed.
+- `sensor_id`: the sensor whose ip address is to be changed.
 
 The call for such a service would be as follows:
 `ros2 service call /smartmicro_radar_node/set_ip_address umrr_ros2_msgs/srv/SetIp "{value_ip: 3232238400, sensor_id: 100}"`

@@ -337,66 +337,53 @@ void SmartmicroRadarNode::sensor_response(
   const std::shared_ptr<com::master::ResponseBatch> & response)
 {
   std::vector<std::shared_ptr<Response<uint8_t>>> myResp_1;
-  std::uint64_t value {};
-
+  
   if (response->GetResponse<uint8_t>("auto_interface_0dim", "tx_antenna_idx", myResp_1))
   {
-    for (auto & resp : myResp_1) {
-      if (resp->GetConvertValue(value))
-      {
-        response_type = resp->GetConvertValue(value);
-        RCLCPP_INFO(this->get_logger(), "Response from tx_antenna mode : %i", response_type);
-      }
+    for (auto & resp : myResp_1)
+    {
+      response_type = resp->GetValue();
+      RCLCPP_INFO(this->get_logger(), "Response from tx_antenna mode : %i", response_type);
     }
   }
   if (response->GetResponse<uint8_t>("auto_interface_0dim", "frequency_sweep_idx", myResp_1))
   {
-    for (auto & resp : myResp_1) {
-      if (resp->GetConvertValue(value))
-      {
-        response_type = resp->GetConvertValue(value);
-        RCLCPP_INFO(this->get_logger(), "Response from frequency_sweep service: %i", response_type);
-      }
+    for (auto & resp : myResp_1)
+    {
+      response_type = resp->GetValue();
+      RCLCPP_INFO(this->get_logger(), "Response from frequency_sweep service: %i", response_type);
     }
   }
   if (response->GetResponse<uint8_t>("auto_interface_0dim", "center_frequency_idx", myResp_1))
   {
-    for (auto & resp : myResp_1) {
-      if (resp->GetConvertValue(value))
-      {
-        response_type = resp->GetConvertValue(value);
-        RCLCPP_INFO(this->get_logger(), "Response from center frequency service: %i", response_type);
-      }
+    for (auto & resp : myResp_1)
+    {
+      response_type = resp->GetValue();
+      RCLCPP_INFO(this->get_logger(), "Response from center frequency service: %i", response_type);
     }
   }
   if (response->GetResponse<uint8_t>("auto_interface_0dim", "enable_tx_ant_toggle", myResp_1))
   {
-    for (auto & resp : myResp_1) {
-      if (resp->GetConvertValue(value))
-      {
-        response_type = resp->GetConvertValue(value);
-        RCLCPP_INFO(this->get_logger(), "Response from enable_tx_ant_toggle service: %i", response_type);
-      }
+    for (auto & resp : myResp_1)
+    {
+      response_type = resp->GetValue();
+      RCLCPP_INFO(this->get_logger(), "Response from enable_tx_ant_toggle service: %i", response_type);
     }
   }
   if (response->GetResponse<uint8_t>("auto_interface_0dim", "angular_separation", myResp_1))
   {
-    for (auto & resp : myResp_1) {
-      if (resp->GetConvertValue(value))
-      {
-        response_type = resp->GetConvertValue(value);
-        RCLCPP_INFO(this->get_logger(), "Response from angular_separation service: %i", response_type);
-      }
+    for (auto & resp : myResp_1)
+    {
+      response_type = resp->GetValue();
+      RCLCPP_INFO(this->get_logger(), "Response from angular_separation service: %i", response_type);
     }
   }
   if (response->GetResponse<uint8_t>("auto_interface_0dim", "range_toggle_mode", myResp_1))
   {
-    for (auto & resp : myResp_1) {
-      if (resp->GetConvertValue(value))
-      {
-        response_type = resp->GetConvertValue(value);
-        RCLCPP_INFO(this->get_logger(), "Response from range_toggle_mode service: %i", response_type);
-      }
+    for (auto & resp : myResp_1)
+    {
+      response_type = resp->GetValue();
+      RCLCPP_INFO(this->get_logger(), "Response from range_toggle_mode service: %i", response_type);
     }
   }
 }
