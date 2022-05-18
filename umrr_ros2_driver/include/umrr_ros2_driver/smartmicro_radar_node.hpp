@@ -20,7 +20,6 @@
 
 #include "umrr_ros2_msgs/srv/set_mode.hpp"
 #include "umrr_ros2_msgs/srv/set_ip.hpp"
-#include "umrr_ros2_msgs/msg/port_header.hpp"
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
@@ -122,7 +121,7 @@ private:
     std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> response);
 
   ///
-  /// @brief      Configure the sensor ip address..
+  /// @brief      Configure the sensor ip address.
   ///
   void ip_address(
     const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,

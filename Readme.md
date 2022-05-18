@@ -55,7 +55,7 @@ The driver publishes `sensor_msgs::msg::PointCloud2` messages with the radar tar
 
 ### Configuration:
 The node is configured through the parameters. Here is a short recap of the most important parts.
-For more details, see the [`radar.template.yaml`](param/radar.template.yaml) file.
+For more details, see the [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) file.
 - `client_id`: the id of the client, must be a unique integer
 - `ip`: the IP of the used sensor or the source
 - `port`: port to be used to receive the packets
@@ -66,7 +66,7 @@ For more details, see the [`radar.template.yaml`](param/radar.template.yaml) fil
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
-may access these modes. A list of available sensor modes is given in the [`sensor_params.json`](config/sensor_params.json).
+may access these modes. A list of available sensor modes is given in the [`sensor_params.json`](umrr_ros2_driver/config/sensor_params.json).
 
 A ros2 `SetMode` service should be called to implement these mode changes. There are three inputs to a ros2 service call:
 - `param`: name of the mode instruction (specific to the sensor)
@@ -94,7 +94,7 @@ The call for such a service would be as follows:
 `ros2 service call /smartmicro_radar_node/set_ip_address umrr_ros2_msgs/srv/SetIp "{value_ip: 3232238400, sensor_id: 100}"`
 
 Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
-[`radar.template.yaml`](param/radar.template.yaml) is updated and the driver is build again.
+[`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
 
 ## Development
 The dockerfile can be used to build and test the ros driver.

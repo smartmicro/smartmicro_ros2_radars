@@ -256,14 +256,19 @@ void SmartmicroRadarNode::radar_mode(
   
   if(!inst->AllocateInstructionBatch(client_id, batch))
   {
-    std::cout << "failed to allocate instruction batch" << std::endl;
+    result->res = "Failed to allocate instruction batch! ";
+    return;
   }  
   std::shared_ptr<SetParamRequest<uint8_t>> radar_mode(
     new SetParamRequest<uint8_t>("auto_interface_0dim", request->param, request->value)
   );
 
-  batch->AddRequest(radar_mode);
-     
+  if(!batch->AddRequest(radar_mode))
+  {
+    result->res = "Failed to add instruction to batch! ";
+    return;
+  }
+       
   if (com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
       batch,
       std::bind(
@@ -271,8 +276,9 @@ void SmartmicroRadarNode::radar_mode(
         std::placeholders::_2)))
   {
     result->res = "Service is not conducted";
+    return;
   } 
-    result->res = "Service conducted successfully";
+  result->res = "Service conducted successfully";
 }
 
 void SmartmicroRadarNode::ip_address(
@@ -301,7 +307,8 @@ void SmartmicroRadarNode::ip_address(
   std::shared_ptr<InstructionBatch> batch;
   if(!inst->AllocateInstructionBatch(client_id, batch))
   {
-    std::cout << "Failed to allocate instruction batch" << std::endl;
+    result->res_ip = "Failed to allocate instruction batch! ";
+    return;
   }
   std::shared_ptr<SetParamRequest<uint32_t>> ip_address(
     new SetParamRequest<uint32_t>("auto_interface_0dim", "ip_source_address", request->value_ip)
@@ -313,9 +320,16 @@ void SmartmicroRadarNode::ip_address(
       2010
     )
   );
-  batch->AddRequest(ip_address);
-  batch->AddRequest(cmd);
- 
+  if(!batch->AddRequest(ip_address))
+  {
+    result->res_ip = "Failed to add instruction to batch! ";
+    return;
+  }
+  if(!batch->AddRequest(cmd))
+  {
+    result->res_ip = "Failed to add instruction to batch! ";
+    return;
+  }
   // send instruction batch to the device
   if (com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
       batch,
@@ -324,6 +338,7 @@ void SmartmicroRadarNode::ip_address(
         std::placeholders::_2)))
   {
     result->res_ip = "Service not conducted";
+    return;
   } else {
     RCLCPP_INFO(
       this->get_logger(),
@@ -342,7 +357,7 @@ void SmartmicroRadarNode::sensor_response(
   {
     for (auto & resp : myResp_1)
     {
-      response_type = resp->GetValue();
+      response_type = resp->GetResponseType();
       RCLCPP_INFO(this->get_logger(), "Response from tx_antenna mode : %i", response_type);
     }
   }
@@ -350,7 +365,7 @@ void SmartmicroRadarNode::sensor_response(
   {
     for (auto & resp : myResp_1)
     {
-      response_type = resp->GetValue();
+      response_type = resp->GetResponseType();
       RCLCPP_INFO(this->get_logger(), "Response from frequency_sweep service: %i", response_type);
     }
   }
@@ -358,7 +373,7 @@ void SmartmicroRadarNode::sensor_response(
   {
     for (auto & resp : myResp_1)
     {
-      response_type = resp->GetValue();
+      response_type = resp->GetResponseType();
       RCLCPP_INFO(this->get_logger(), "Response from center frequency service: %i", response_type);
     }
   }
@@ -366,7 +381,7 @@ void SmartmicroRadarNode::sensor_response(
   {
     for (auto & resp : myResp_1)
     {
-      response_type = resp->GetValue();
+      response_type = resp->GetResponseType();
       RCLCPP_INFO(this->get_logger(), "Response from enable_tx_ant_toggle service: %i", response_type);
     }
   }
@@ -374,7 +389,7 @@ void SmartmicroRadarNode::sensor_response(
   {
     for (auto & resp : myResp_1)
     {
-      response_type = resp->GetValue();
+      response_type = resp->GetResponseType();
       RCLCPP_INFO(this->get_logger(), "Response from angular_separation service: %i", response_type);
     }
   }
@@ -382,7 +397,7 @@ void SmartmicroRadarNode::sensor_response(
   {
     for (auto & resp : myResp_1)
     {
-      response_type = resp->GetValue();
+      response_type = resp->GetResponseType();
       RCLCPP_INFO(this->get_logger(), "Response from range_toggle_mode service: %i", response_type);
     }
   }
@@ -393,17 +408,14 @@ void SmartmicroRadarNode::sensor_response_ip(
   const std::shared_ptr<com::master::ResponseBatch> & response)
 {
   std::vector<std::shared_ptr<Response<uint32_t>>> myResp_2;
-  std::uint64_t value {};
   if (response->GetResponse<uint32_t>(
       "auto_interface_0dim", "ip_source_address",
       myResp_2))
   {
-    for (auto & resp : myResp_2) {
-      if (resp->GetConvertValue(value))
-      {
-        response_type = resp->GetConvertValue(value);
-        RCLCPP_INFO(this->get_logger(), "Response from sensor for ip change: %i", response_type);
-      }
+    for (auto & resp : myResp_2)
+    {
+      response_type = resp->GetResponseType();
+      RCLCPP_INFO(this->get_logger(), "Response from sensor for ip change: %i", response_type);
     }
   }
 }
