@@ -33,7 +33,7 @@ PACKAGE_NAME = 'umrr_ros2_driver'
 
 @pytest.mark.launch_test
 def generate_test_description():
-    
+
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',

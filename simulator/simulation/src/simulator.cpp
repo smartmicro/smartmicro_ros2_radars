@@ -60,11 +60,13 @@ void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer) {
       instruction->SetValue(minorVersion);
     } else if (instruction->GetSectionId() == 2010 &&
                instruction->GetId() == 0) {
-      std::cout << "Instruction for mode change tx_antenna answered!" << std::endl;
+      std::cout << "Instruction for mode change tx_antenna answered!"
+                << std::endl;
       instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else if (instruction->GetSectionId() == 2010 &&
                instruction->GetId() == 2) {
-      std::cout << "Instruction for mode change sweep_idx answered!" << std::endl;
+      std::cout << "Instruction for mode change sweep_idx answered!"
+                << std::endl;
       instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else {
       std::cout << "Unknown instruction received from ROS driver!" << std::endl;
@@ -118,7 +120,7 @@ int main(int argc, char *argv[]) {
     ifs.close();
     delete[] filebuffer;
 
-    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(50))
+    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(40))
       break;
   }
   return 0;

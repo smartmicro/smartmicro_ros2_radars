@@ -16,6 +16,7 @@
 
 #include <umrr_ros2_driver/smartmicro_radar_node.hpp>
 #include <umrr_ros2_driver/config_path.hpp>
+#include <umrr_ros2_driver/sensor_params.hpp>
 
 #include <point_cloud_msg_wrapper/point_cloud_msg_wrapper.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
@@ -40,7 +41,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
-#include <experimental/filesystem>
 
 #include <limits>
 #include <memory>
@@ -145,7 +145,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
 : rclcpp::Node{"smartmicro_radar_node", node_options}
 {
   update_config_files_from_params();
-
+  
   const auto override = false;
   setenv("SMART_ACCESS_CFG_FILE_PATH", kConfigFilePath, override);
 
@@ -202,24 +202,13 @@ void SmartmicroRadarNode::radar_mode(
   const std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Request> request,
   std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> result)
 {
-  std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
-  timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
-    &SmartmicroRadarNode::my_timer_callback, this));
   
   std::string instruction_name {};
   std::uint16_t check_value {};
   bool check_flag_param = false;
   bool check_flag_id = false; 
 
-  std::experimental::filesystem::path p_test = std::experimental::filesystem::path("..") / ".." / "umrr_ros2_driver/config/sensor_params.json";
-  std::string FilePath = std::experimental::filesystem::canonical(p_test);
-  if(!std::experimental::filesystem::exists(FilePath))
-  {
-    result->res = "FIle Path invalid! ";
-    return;
-  }
-  
-  std::ifstream instr_file(FilePath);
+  std::ifstream instr_file(KSensorParamFilePath);
   auto param_table = nlohmann::json::parse(instr_file);
   
   instruction_name = request->param;
@@ -227,21 +216,25 @@ void SmartmicroRadarNode::radar_mode(
   client_id = request->sensor_id;
 
   for(const auto & item : param_table.items())
-  {
+  { 
     for(const auto & param : item.value().items()) {
       if(instruction_name == param.value()["name"])
+      {
         if(check_value <= param.value()["max"])
         {
           check_flag_param = true;
           break;
         }
+      } 
     }
   }
+  std::ofstream{KSensorParamFilePath, std::ios::trunc} << param_table;
+  
   if(!check_flag_param){
     result->res = "Invalid instruction name or value! ";
     return;
   }
-    
+  
   for(auto & sensor : m_sensors) {
     if(client_id == sensor.id)
       {
@@ -255,6 +248,10 @@ void SmartmicroRadarNode::radar_mode(
     return;
   }
 
+  std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
+  timer = this->create_wall_timer(std::chrono::seconds(2), std::bind(
+    &SmartmicroRadarNode::my_timer_callback, this));
+  
   std::shared_ptr<InstructionBatch> batch;
   
   if(!inst->AllocateInstructionBatch(client_id, batch))
@@ -359,6 +356,16 @@ void SmartmicroRadarNode::sensor_response(
       {
         response_type = resp->GetConvertValue(value);
         RCLCPP_INFO(this->get_logger(), "Response from frequency_sweep service: %i", response_type);
+      }
+    }
+  }
+  if (response->GetResponse<uint8_t>("auto_interface_0dim", "center_frequency_idx", myResp_1))
+  {
+    for (auto & resp : myResp_1) {
+      if (resp->GetConvertValue(value))
+      {
+        response_type = resp->GetConvertValue(value);
+        RCLCPP_INFO(this->get_logger(), "Response from center frequency service: %i", response_type);
       }
     }
   }

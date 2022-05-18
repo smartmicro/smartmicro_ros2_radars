@@ -62,11 +62,15 @@ set(CONFIG_FOLDER_PATH "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/config")
 set(CONFIG_FILE_PATH "${CONFIG_FOLDER_PATH}/smart_access_config.json")
 set(HW_INVENTORY_FILE_PATH "${CONFIG_FOLDER_PATH}/hw_inventory.json")
 set(ROUTING_TABLE_FILE_PATH "${CONFIG_FOLDER_PATH}/routing_table.json")
+set(SENSOR_PARAM_FILE_PATH "${PROJECT_SOURCE_DIR}/config/sensor_params.json")
 configure_file(
     "${PROJECT_SOURCE_DIR}/cmake/smart_access_config.json.in" "${CONFIG_FILE_PATH}" @ONLY)
 configure_file(
     "${PROJECT_SOURCE_DIR}/cmake/config_path.hpp.in"
     "${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}/config_path.hpp" @ONLY)
+configure_file(
+    "${PROJECT_SOURCE_DIR}/cmake/sensor_params.hpp.in"
+    "${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/sensor_params.hpp" @ONLY)
 
 ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.cpp")
 
