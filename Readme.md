@@ -64,13 +64,37 @@ For more details, see the [`radar.template.yaml`](param/radar.template.yaml) fil
 - `history_size`: size of history for the message publisher
 - `model`: the model of the sensor being used 
 
+## Mode of operations of the sensors
+The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
+may access these modes. A list of available sensor modes is given in the [`sensor_params.json`](config/sensor_params.json).
+
+A ros2 `SetMode` service should be called to implement these mode changes. There are three inputs to a ros2 service call:
+- `param`: name of the mode instruction (specific to the sensor)
+- `value`: the mode of operation (specific to sensor where the modes are same) 
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+
+For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMRR-11 sensor to `AEB (2)` mode would require the following call:
+`ros2 service call /smartmicro_radar_node/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
+
 ## Configuration of the sensors
 In order to use multiple sensors (maximum of up to ten sensors) with the node the sensors should be configured separately.
 The IP addresses of the sensors could be assigned using:
 - The smartmicro tool `DriveRecorder`.
 - Using the `Smart Access C++ API`
+- Using sensor services provided by the node
 
 Each sensor has to be assigned a unique IP address!
+
+To use the ros2 `SetIp`service we require to inputs:
+-`value_ip`: the value of the ip address in decimal. For instance to set the IP to `192.168.11.64` its corresponding
+value in decimal `3232238400` should be used.
+-`sensor_id`: the sensor whose ip address is to be changed.
+
+The call for such a service would be as follows:
+`ros2 service call /smartmicro_radar_node/set_ip_address umrr_ros2_msgs/srv/SetIp "{value_ip: 3232238400, sensor_id: 100}"`
+
+Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
+[`radar.template.yaml`](param/radar.template.yaml) is updated and the driver is build again.
 
 ## Development
 The dockerfile can be used to build and test the ros driver.
