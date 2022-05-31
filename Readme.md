@@ -96,6 +96,21 @@ The call for such a service would be as follows:
 Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
 
+## Sensor Service Responses
+
+The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
+
+**Value**   |   **Description**
+--- | ---
+0   |    No instruction Response
+1   |    Instruction Response was processed successfully
+2   |    General error
+3   |    Invalid request
+6   |    Invalid protection
+7   |    Value out of minimal bounds
+8   |    Value out of maximal bounds
+9   |    Value is not a number
+
 ## Development
 The dockerfile can be used to build and test the ros driver.
 

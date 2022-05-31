@@ -20,7 +20,6 @@ import launch
 import launch_testing
 import launch_testing.actions
 from launch.actions import ExecuteProcess
-from launch.substitutions import LaunchConfiguration
 
 import pytest
 import rclpy

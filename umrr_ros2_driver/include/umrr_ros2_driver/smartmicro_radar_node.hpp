@@ -17,39 +17,33 @@
 #ifndef UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
 #define UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
 
-
-#include "umrr_ros2_msgs/srv/set_mode.hpp"
 #include "umrr_ros2_msgs/srv/set_ip.hpp"
+#include "umrr_ros2_msgs/srv/set_mode.hpp"
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <umrr_ros2_driver/visibility_control.hpp>
 
-#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
-#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
 #include <CommunicationServicesIface.h>
 #include <Instruction.h>
 #include <InstructionBatch.h>
 #include <InstructionServiceIface.h>
+#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
+#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
 
 #include <array>
 #include <memory>
 #include <string>
 
-namespace smartmicro
-{
-namespace drivers
-{
-namespace radar
-{
+namespace smartmicro {
+namespace drivers {
+namespace radar {
 
-namespace detail
-{
+namespace detail {
 
 constexpr auto kMaxSensorCount = 10UL;
 
-struct SensorConfig
-{
+struct SensorConfig {
   std::uint32_t id{};
   std::string ip{};
   std::uint32_t port{};
@@ -58,99 +52,101 @@ struct SensorConfig
   std::uint32_t history_size{};
   std::string model{};
 };
-}  // namespace detail
+} // namespace detail
 
 ///
 /// @brief      The class for the Smartmicro radar node.
 ///
-class UMRR_ROS2_DRIVER_PUBLIC SmartmicroRadarNode : public ::rclcpp::Node
-{
+class UMRR_ROS2_DRIVER_PUBLIC SmartmicroRadarNode : public ::rclcpp::Node {
 public:
   ///
   /// ROS 2 parameter constructor.
   ///
   /// @param[in]  node_options  Node options for this node.
   ///
-  explicit SmartmicroRadarNode(const rclcpp::NodeOptions & node_options);
+  explicit SmartmicroRadarNode(const rclcpp::NodeOptions &node_options);
 
 private:
   ///
-  /// @brief      A callback that is called when a new target list port for umrr11 arrives.
+  /// @brief      A callback that is called when a new target list port for
+  /// umrr11 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port
   ///
   void targetlist_callback_umrr11(
-    const std::uint32_t sensor_idx,
-    const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::comtargetlistport::ComTargetListPort> & target_list_port);
+      const std::uint32_t sensor_idx,
+      const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::
+                                comtargetlistport::ComTargetListPort>
+          &target_list_port);
 
   ///
-  /// @brief      A callback that is called when a new target list port for umrr96 arrives.
+  /// @brief      A callback that is called when a new target list port for
+  /// umrr96 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port
   ///
   void targetlist_callback_umrr96(
-    const std::uint32_t sensor_idx,
-    const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::comtargetlistport::ComTargetListPort> & target_list_port);
+      const std::uint32_t sensor_idx,
+      const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::
+                                comtargetlistport::ComTargetListPort>
+          &target_list_port);
 
   ///
-  /// @brief      Read parameters and update the json config files required by Smart Access C++ API.
+  /// @brief      Read parameters and update the json config files required by
+  /// Smart Access C++ API.
   ///
   void update_config_files_from_params();
 
-   ///
+  ///
   /// @brief      Callaback for getting the instruction response.
   ///
-  void sensor_response(
-    const com::types::ClientId client_id,
-    const std::shared_ptr<com::master::ResponseBatch> & response);
-  
+  void
+  sensor_response(const com::types::ClientId client_id,
+                  const std::shared_ptr<com::master::ResponseBatch> &response);
+
   ///
   /// @brief      Callback for changing IP address.
   ///
   void sensor_response_ip(
-    const com::types::ClientId client_id,
-    const std::shared_ptr<com::master::ResponseBatch> & response);
-  
+      const com::types::ClientId client_id,
+      const std::shared_ptr<com::master::ResponseBatch> &response);
+
   ///
   /// @brief      Send instructions to the sensor.
   ///
   void radar_mode(
-    const std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Request> request,
-    std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> response);
+      const std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Request> request,
+      std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> response);
 
   ///
   /// @brief      Configure the sensor ip address.
   ///
-  void ip_address(
-    const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,
-    std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response);
+  void
+  ip_address(const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,
+             std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response);
 
   ///
   /// @brief      A timer to handle the initialization.
   ///
-  void my_timer_callback()
-  {
-    timer->cancel();
-  }
-  
+  void my_timer_callback() { timer->cancel(); }
+
   rclcpp::Service<umrr_ros2_msgs::srv::SetMode>::SharedPtr mode_srv_;
   rclcpp::Service<umrr_ros2_msgs::srv::SetIp>::SharedPtr ip_addr_srv_;
   std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
   std::array<detail::SensorConfig, detail::kMaxSensorCount> m_sensors{};
-  std::array<
-    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
-    detail::kMaxSensorCount> m_publishers{};
+  std::array<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
+             detail::kMaxSensorCount>
+      m_publishers{};
   std::size_t m_number_of_sensors{};
   rclcpp::TimerBase::SharedPtr timer;
   com::types::ClientId client_id;
-  std::uint64_t response_type {};
-  
+  std::uint64_t response_type{};
 };
 
-}  // namespace radar
-}  // namespace drivers
-}  // namespace smartmicro
+} // namespace radar
+} // namespace drivers
+} // namespace smartmicro
 
-#endif  // UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
+#endif // UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
