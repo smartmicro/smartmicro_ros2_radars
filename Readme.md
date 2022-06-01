@@ -26,7 +26,7 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `March 25, 2022`
+- Date of release: `June 06, 2022`
 - Smart Access Automotive version: `v1.1.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
@@ -105,11 +105,9 @@ The sensor services respond with certain value codes. The following is a lookup 
 0   |    No instruction Response
 1   |    Instruction Response was processed successfully
 2   |    General error
-3   |    Invalid request
 6   |    Invalid protection
 7   |    Value out of minimal bounds
 8   |    Value out of maximal bounds
-9   |    Value is not a number
 
 ## Development
 The dockerfile can be used to build and test the ros driver.
@@ -144,7 +142,7 @@ Stop and remove docker containers and networks
 docker-compose down
 ```
 ## ARMv8 Support
-The Smart Access release which will be downloaded using the script also offers platform support for armv8. In order to build the driver on an armv8 machine, the `CmakeLists.txt` should be adopted.
+The Smart Access release which will be downloaded using the script also offers platform support for armv8. In order to build the driver on an armv8 machine, the [`CMakeLists.txt`](umrr_ros2_driver/CMakeLists.txt) should be adopted.
 Instead of using the default `lib-linux-x86_64_gcc_9` the user should plugin the `lib-linux-armv8-gcc_9` for armv8.
  
 ## Contribution

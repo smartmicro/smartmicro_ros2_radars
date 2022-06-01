@@ -8,4 +8,9 @@ This is the first official versioned release of the `smartmicro_ros2_radars`. It
 ## v2.0.0 - 2022-05-05
 
 This major release of the driver includes multi-user interfaces. The driver now supports and publishes data from UMRR96 and UMRR11.
-A new test approach has been implemented which simulates the sensors and interfaces with the node hence making the tests more robust. 
+A new test approach has been implemented which simulates the sensors and interfaces with the node hence making the tests more robust.
+
+## v2.1.0 - 2022-06-06
+
+This minor release of the driver offer ros2 services to communicate with the sensor. The driver now supports mode changes for UMRR96 and UMRR11.
+This release also offers the possibilty of configuring the ip addresses of the sensor using ros2 services. The tests are further extended to inlcude ros2 services check.
