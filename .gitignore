@@ -5,6 +5,7 @@ log
 umrr_ros2_driver/__pycache__
 simulator/simulation/build_dir
 simulator/simulation/out
+umrr_ros2_driver/include/umrr_ros2_driver/sensor_params.hpp
 umrr_ros2_driver/smartmicro/*
 !umrr_ros2_driver/smartmicro/include
 umrr_ros2_driver/smartmicro/include/*
