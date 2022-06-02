@@ -19,6 +19,8 @@ import unittest
 import launch
 import launch_testing
 import launch_testing.actions
+from launch.actions import ExecuteProcess
+
 import pytest
 import rclpy
 import sensor_msgs.msg as sensor_msgs
@@ -42,9 +44,33 @@ def generate_test_description():
         ],
     )
 
+    send_tx_service = ExecuteProcess(
+        cmd = [[
+            'ros2 service call ',
+            '/smartmicro_radar_node/set_radar_mode ',
+            'umrr_ros2_msgs/srv/SetMode ', 
+            '"{param: "tx_antenna_idx", value: 2, sensor_id: 100}"'
+        ]],
+        output='screen',
+        shell = True
+    )
+
+    send_sweep_service = ExecuteProcess(
+        cmd = [[
+            'ros2 service call ',
+            '/smartmicro_radar_node/set_radar_mode ',
+            'umrr_ros2_msgs/srv/SetMode ', 
+            '"{param: "frequency_sweep_idx", value: 1, sensor_id: 200}"'
+        ]],
+        output='screen',
+        shell = True
+    )
+
     return (
         launch.LaunchDescription([
             radar_node,
+            send_tx_service,
+            send_sweep_service,
             launch_testing.actions.ReadyToTest(),
         ]),
         {
