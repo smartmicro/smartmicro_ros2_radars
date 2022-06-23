@@ -14,3 +14,7 @@ A new test approach has been implemented which simulates the sensors and interfa
 
 This minor release of the driver offer ros2 services to communicate with the sensor. The driver now supports mode changes for UMRR96 and UMRR11.
 This release also offers the possibilty of configuring the ip addresses of the sensor using ros2 services. The tests are further extended to inlcude ros2 services check.
+
+## v2.2.0 - 2022-06-27
+
+The driver supports the new smartmicro sensor type UMRR9F T169. The driver offers mode changes and configuartion of the sensor along with the targets as pointcloud data.

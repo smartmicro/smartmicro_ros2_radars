@@ -1,53 +1,252 @@
 {
     "parameters": [
         {
-            "model": "umrr11/umrr96",
             "name": "tx_antenna_idx",
-            "comment": "Index of Transmit Antenna (UMRR11 : 0 and 1 are ACC, 2 is AEB)",
-            "min": 0,
-            "max": 2,
-            "default": 2
+            "comment": "Index of Transmit Antenna",
+            "sensors": [
+                {
+                    "model" : "umrr11", 
+                    "comment": "0 and 1 are ACC, 2 is AEB",
+                    "min": 0,
+                    "max": 2
+                },
+                {    
+                    "model" : "umrr96",
+                    "min": 0,
+                    "max": 2,
+                    "default": 0
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": 0,
+                    "max": 2,
+                    "default": 0
+                }
+            ]
         },
         {
-            "model": "umrr11/umrr96",
             "name": "center_frequency_idx",
-            "type": "u8",
-            "comment": "Index of center frequency (UMRR11: 0..3 in ACC selectable. In AEB mode values 2 and 3 are similar to 1.)",
-            "min": 0,
-            "max": 3,
-            "default": 0
+            "comment": "Index of center frequency",
+            "sensors": [
+                {
+                    "model": "umrr11",
+                    "comment": " 0..3 in ACC selectable. In AEB mode values 2 and 3 are similar to 1.",
+                    "min": 0,
+                    "max": 3
+                },
+                {
+                    "model" : "umrr96",
+                    "min": 0,
+                    "max": 2,
+                    "default": 0
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": 1,
+                    "max": 2,
+                    "default": 1
+                }
+            ]
         },
-        {   
-            "model": "umrr11/umrr96",
+        {
             "name": "frequency_sweep_idx",
-            "comment": "Index of sweep (UMRR11: currently always 0 because only one sweep for every TX-antenna. UMRR96: 0=226MHz, 1=512MHz, 2=1536MHz)",
-            "min": 0,
-            "max": 2,
-            "default": 0
+            "comment": "Index of sweep",
+            "sensors": [
+                {
+                    "model" :"umrr11",
+                    "comment": " currently always 0 because only one sweep for every TX-antenna",
+                    "min": 0,
+                    "max": 0
+                },
+                {
+                    "model" : "umrr96",
+                    "comment": "0=226MHz, 1=512MHz, 2=1536MHz",
+                    "min": 0,
+                    "max": 2,
+                    "default": 2
+                },
+                {
+                    "model": "umrr9f",
+                    "comment": "0=226MHz, 1=512MHz, 2=1536MHz, 3=3072MHz",
+                    "min": 0,
+                    "max": 3,
+                    "default": 1
+                }
+            ]
         },
-        {   
-            "model": "umrr11",
+        {
             "name": "enable_tx_ant_toggle",
             "comment": "Automatic toggle of TX-Antenna 0->2->0 every radar cycle",
-            "min": 0,
-            "max": 1,
-            "default": 0
+            "sensors": [
+                {
+                    "model" : "umrr11",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0
+                }
+            ]
         },
-        {   
-            "model": "umrr11",
+        {
             "name": "angular_separation",
             "comment": "0 = Disable Angular Separation, 1 = Enable Angular Separation",
-            "min": 0,
-            "max": 1,
-            "default": 0
+            "sensors": [
+                {
+                    "model" : "umrr11",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0
+                }
+            ]
         },
-        {   
-            "model": "umrr96",
+        {
             "name": "range_toggle_mode",
-            "comment": "Automatic toggle of range:0=off, 1=Short-Med, 2=Short-Long, 3=Med-Long",
-            "min": 0,
-            "max": 3,
-            "default": 0
+            "comment": "Automatic toggle of range:",
+            "sensors": [
+                {
+                    "model" : "umrr96",
+                    "comment": "0=off, 1=Short-Med, 2=Short-Long, 3=Med-Long",
+                    "min": 0,
+                    "max": 3,
+                    "default": 0
+                },
+                {
+                    "model" : "umrr9f",
+                    "comment": " 0=off, 1=Short-Med, 2=Short-Long, 3=Med-Long, 4=Long-UltraShort, 5=Medium-UltraShort, 6=Short-UltraShort",
+                    "min": 0,
+                    "max": 6,
+                    "default": 0
+                }
+            ]
+        },
+        {
+            "name": "tv_min_speed_sweep_idx_0",
+            "comment": "Target Validation: minimum speed of target at first sweep",
+            "sensors": [
+                {
+                    "model": "umrr96",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": -20
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": -20
+                }
+            ]
+        },
+        {
+            "name": "tv_min_speed_sweep_idx_1",
+            "comment": "Target Validation: minimum speed of target at second sweep",
+            "sensors": [
+                {
+                    "model" : "umrr96",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": -20
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": -20
+                }
+            ]
+        },
+        {
+            "name": "tv_min_speed_sweep_idx_2",
+            "comment": "Target Validation: minimum speed of target at third sweep",
+            "sensors": [
+                {
+                    "model" : "umrr96",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": -20
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": -20
+                }
+            ]
+        },
+        {
+            "name": "tv_min_speed_sweep_idx_3",
+            "comment": "Target Validation: minimum speed of target at fourth sweep",
+            "sensors": [
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0
+                }
+            ]
+        },
+        {
+            "name": "tv_max_speed_sweep_idx_0",
+            "comment": "Target Validation: maximum speed of target at first sweep",
+            "sensors": [
+                {
+                    "model" : "umrr96",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": 20
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": 20
+                }
+            ]
+        },
+        {
+            "name": "tv_max_speed_sweep_idx_1",
+            "comment": "Target Validation: maximum speed of target at second sweep",
+            "sensors": [
+                {
+                    "model" : "umrr96",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": 20
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": 20
+                }
+            ]
+        },
+        {
+            "name": "tv_max_speed_sweep_idx_2",
+            "comment": "Target Validation: maximum speed of target at third sweep",
+            "sensors": [
+                {
+                    "model" : "umrr96",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": 20
+                },
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0,
+                    "default": 20
+                }
+            ]
+        },
+        {
+            "name": "tv_max_speed_sweep_idx_3",
+            "comment": "Target Validation: maximum speed of target at fourth sweep",
+            "sensors": [
+                {
+                    "model" : "umrr9f",
+                    "min": -150.0,
+                    "max": 150.0
+                }
+            ]
         },
         {
             "name": "ip_source_address",

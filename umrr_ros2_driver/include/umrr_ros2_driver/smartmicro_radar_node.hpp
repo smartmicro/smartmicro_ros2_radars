@@ -30,6 +30,7 @@
 #include <InstructionServiceIface.h>
 #include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
+#include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
 
 #include <array>
 #include <memory>
@@ -92,6 +93,19 @@ private:
       const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::
                                 comtargetlistport::ComTargetListPort>
           &target_list_port);
+  
+  ///
+  /// @brief      A callback that is called when a new target list port for
+  /// umrr9f arrives.
+  ///
+  /// @param[in]  sensor_idx   The sensor id for respective published topic.
+  /// @param[in]  target_list_port  The target list port
+  ///
+  void targetlist_callback_umrr9f(
+      const std::uint32_t sensor_idx,
+      const std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::
+                                comtargetlistport::ComTargetListPort>
+          &target_list_port);
 
   ///
   /// @brief      Read parameters and update the json config files required by
@@ -104,7 +118,8 @@ private:
   ///
   void
   sensor_response(const com::types::ClientId client_id,
-                  const std::shared_ptr<com::master::ResponseBatch> &response);
+                  const std::shared_ptr<com::master::ResponseBatch> &response,
+                  std::string instruction_name);
 
   ///
   /// @brief      Callback for changing IP address.

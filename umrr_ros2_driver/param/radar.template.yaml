@@ -39,3 +39,16 @@
               frame_id: "umrr"
               # Specify the history size.
               history_size: 10
+          sensor_2:
+              # The model of the connected sensor.
+              model: "umrr9f"
+              # The client_id of the sensor/source, must be a unique integer.
+              id: 300
+              # The ip address of the sensor or of the source acting as a sensor.
+              ip: "172.22.10.103"
+              # The port to be used.
+              port: 55555
+              # The frame_id to be set to the published messages.
+              frame_id: "umrr"
+              # Specify the history size.
+              history_size: 10
