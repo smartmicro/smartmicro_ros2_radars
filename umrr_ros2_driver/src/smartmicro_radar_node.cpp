@@ -160,7 +160,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(
           DataStreamServiceIface::Get();
   std::cout << "Data stream services have been received!" << std::endl;
   // Wait init time
-  std::this_thread::sleep_for(std::chrono::seconds(5));
+  std::this_thread::sleep_for(std::chrono::seconds(2));
 
   for (auto i = 0UL; i < m_number_of_sensors; ++i) {
     const auto &sensor = m_sensors[i];

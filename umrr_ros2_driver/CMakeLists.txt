@@ -100,7 +100,7 @@ if(BUILD_TESTING)
    
     find_package(launch_testing_ament_cmake)
     add_launch_test(test/radar_node_test.launch.py
-        TIMEOUT "100"
+        TIMEOUT "150"
     )
     
     find_package(ament_cmake_gtest REQUIRED)
