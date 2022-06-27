@@ -26,7 +26,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter)
+    add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter -g)
 endif()
 
 find_package(ament_cmake_auto REQUIRED)
@@ -100,7 +100,7 @@ if(BUILD_TESTING)
    
     find_package(launch_testing_ament_cmake)
     add_launch_test(test/radar_node_test.launch.py
-        TIMEOUT "150"
+        TIMEOUT "200"
     )
     
     find_package(ament_cmake_gtest REQUIRED)

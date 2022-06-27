@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import launch_ros
 
 from ament_index_python import get_package_share_directory
 from launch_ros.actions import Node
@@ -39,7 +40,9 @@ def generate_launch_description():
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
         name='smartmicro_radar_node',
-        parameters=[LaunchConfiguration('radar_param_file')]
+        prefix=['xterm -e gdb -ex run --args'],
+        parameters=[LaunchConfiguration('radar_param_file')],
+        output='screen'
     )
 
     return LaunchDescription([

@@ -158,9 +158,10 @@ SmartmicroRadarNode::SmartmicroRadarNode(
       com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface>
       data_umrr9f = com::master::umrr9f_t169_automotive_v1_1_1::
           DataStreamServiceIface::Get();
-  std::cout << "Data stream services have been received!" << std::endl;
+  RCLCPP_INFO(this->get_logger(), "Data stream services have been received!");
+  //std::cout << "Data stream services have been received!" << std::endl;
   // Wait init time
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::this_thread::sleep_for(std::chrono::seconds(5));
 
   for (auto i = 0UL; i < m_number_of_sensors; ++i) {
     const auto &sensor = m_sensors[i];
@@ -352,7 +353,7 @@ void SmartmicroRadarNode::sensor_response(
   std::vector<std::shared_ptr<Response<uint8_t>>> myResp_1;
   std::vector<std::shared_ptr<Response<float>>> myResp_2;
 
-  if (response->GetResponse<uint8_t>("auto_interface_0dim", instruction_name, myResp_1))
+  if (response->GetResponse<uint8_t>("auto_interface_0dim", instruction_name.c_str(), myResp_1))
   {
     for (auto &resp : myResp_1) {
       response_type = resp->GetResponseType();
@@ -387,6 +388,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
     const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::
                               comtargetlistport::ComTargetListPort>
         &target_list_port) {
+  
   std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::
                       comtargetlistport::GenericPortHeader>
       port_header = target_list_port->GetGenericPortHeader();
@@ -449,6 +451,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f(
     const std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::
                               comtargetlistport::ComTargetListPort>
         &target_list_port) {
+
   std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::
                       comtargetlistport::GenericPortHeader>
       port_header = target_list_port->GetGenericPortHeader();
