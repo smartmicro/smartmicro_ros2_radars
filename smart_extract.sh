@@ -40,7 +40,7 @@ esac
 echo
 
 function getSmartaccessBinaries {
-    wget -c $URL_smartbinaries
+    wget -c $URL_smartbinaries --no-check-certificate
     echo "extracting smart access"
     tar xfz $smart_pack -C umrr_ros2_driver/smartmicro/
 }

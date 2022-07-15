@@ -39,10 +39,8 @@ def generate_launch_description():
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
-        name='smartmicro_radar_node',
-        prefix=['xterm -e gdb -ex run --args'],
         parameters=[LaunchConfiguration('radar_param_file')],
-        output='screen'
+        name='smartmicro_radar_node'
     )
 
     return LaunchDescription([

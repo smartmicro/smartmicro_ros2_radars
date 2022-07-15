@@ -34,7 +34,7 @@ find_package(Threads REQUIRED)
 
 FetchContent_Declare(json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG v3.10.4
+    GIT_TAG v3.10.5
 )
 
 FetchContent_GetProperties(json)
@@ -100,7 +100,7 @@ if(BUILD_TESTING)
    
     find_package(launch_testing_ament_cmake)
     add_launch_test(test/radar_node_test.launch.py
-        TIMEOUT "200"
+        TIMEOUT "150"
     )
     
     find_package(ament_cmake_gtest REQUIRED)

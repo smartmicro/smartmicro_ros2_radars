@@ -36,6 +36,7 @@
 #include <memory>
 #include <string>
 
+
 namespace smartmicro {
 namespace drivers {
 namespace radar {
@@ -48,7 +49,6 @@ struct SensorConfig {
   std::uint32_t id{};
   std::string ip{};
   std::uint32_t port{};
-  std::string iface_name{};
   std::string frame_id{};
   std::uint32_t history_size{};
   std::string model{};
@@ -67,6 +67,12 @@ public:
   ///
   explicit SmartmicroRadarNode(const rclcpp::NodeOptions &node_options);
 
+protected:
+  ///
+  /// @brief      A timer to handle the initialization.
+  ///
+  void my_timer_callback() { timer->cancel(); }
+
 private:
   ///
   /// @brief      A callback that is called when a new target list port for
@@ -79,7 +85,7 @@ private:
       const std::uint32_t sensor_idx,
       const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::
                                 comtargetlistport::ComTargetListPort>
-          &target_list_port);
+          &targetlist_port_umrr11);
 
   ///
   /// @brief      A callback that is called when a new target list port for
@@ -92,7 +98,7 @@ private:
       const std::uint32_t sensor_idx,
       const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::
                                 comtargetlistport::ComTargetListPort>
-          &target_list_port);
+          &targetlist_port_umrr96);
   
   ///
   /// @brief      A callback that is called when a new target list port for
@@ -105,7 +111,7 @@ private:
       const std::uint32_t sensor_idx,
       const std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::
                                 comtargetlistport::ComTargetListPort>
-          &target_list_port);
+          &targetlist_port_umrr9f);
 
   ///
   /// @brief      Read parameters and update the json config files required by
@@ -119,7 +125,7 @@ private:
   void
   sensor_response(const com::types::ClientId client_id,
                   const std::shared_ptr<com::master::ResponseBatch> &response,
-                  std::string instruction_name);
+                  const std::string instruction_name);
 
   ///
   /// @brief      Callback for changing IP address.
@@ -142,10 +148,8 @@ private:
   ip_address(const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,
              std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response);
 
-  ///
-  /// @brief      A timer to handle the initialization.
-  ///
-  void my_timer_callback() { timer->cancel(); }
+  
+  
 
   rclcpp::Service<umrr_ros2_msgs::srv::SetMode>::SharedPtr mode_srv_;
   rclcpp::Service<umrr_ros2_msgs::srv::SetIp>::SharedPtr ip_addr_srv_;
@@ -158,6 +162,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer;
   com::types::ClientId client_id;
   std::uint64_t response_type{};
+  
 };
 
 } // namespace radar
