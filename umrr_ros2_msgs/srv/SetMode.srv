@@ -1,5 +1,5 @@
 string param
-int32 value 
+float32 value 
 uint32 sensor_id
 ---
 string res

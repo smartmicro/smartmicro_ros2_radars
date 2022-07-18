@@ -22,14 +22,15 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR-96 radar and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or both are 
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or UMRR9F radar are 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `June 02, 2022`
+- Date of release: `June 25, 2022`
 - Smart Access Automotive version: `v1.1.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
+- User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -112,6 +113,12 @@ The sensor services respond with certain value codes. The following is a lookup 
 ## Development
 The dockerfile can be used to build and test the ros driver.
 
+### Prerequisites
+
+- Docker version: 20.10.14
+- Docker compose version: 1.29.2
+
+## Building and Testing
 Accept the agreement and get the smartaccess release
 ```bash
 ./smart_extract.sh

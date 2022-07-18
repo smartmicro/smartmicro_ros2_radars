@@ -26,7 +26,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter)
+    add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter -g)
 endif()
 
 find_package(ament_cmake_auto REQUIRED)
@@ -34,7 +34,7 @@ find_package(Threads REQUIRED)
 
 FetchContent_Declare(json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG v3.10.4
+    GIT_TAG v3.10.5
 )
 
 FetchContent_GetProperties(json)
@@ -55,6 +55,7 @@ install(FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libbasev1.0.2_user_interface.so"
     "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr11_t132_automotivev1.1.1_user_interface.so"
     "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr96_t153_automotivev1.2.1_user_interface.so"
+    "${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9f_t169_automotivev1.1.1_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -77,7 +78,8 @@ ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.c
 target_include_directories(smartmicro_radar_node PUBLIC ${CMAKE_INSTALL_PREFIX}/include/
 smartmicro/include/
 smartmicro/include/umrr11_t132_automotive_v1_1_1
-smartmicro/include/umrr96_t153_automotive_v1_2_1)
+smartmicro/include/umrr96_t153_automotive_v1_2_1
+smartmicro/include/umrr9f_t169_automotive_v1_1_1)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node 
@@ -86,7 +88,8 @@ target_link_libraries(smartmicro_radar_node
     com_lib
     osal
     umrr11_t132_automotivev1.1.1_user_interface
-    umrr96_t153_automotivev1.2.1_user_interface)
+    umrr96_t153_automotivev1.2.1_user_interface
+    umrr9f_t169_automotivev1.1.1_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"
