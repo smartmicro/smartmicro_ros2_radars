@@ -36,5 +36,9 @@ TEST(SmartmicroRadarNodeTest, Create) {
   node_options.append_parameter_override("sensors.sensor_2.id", 30);
   node_options.append_parameter_override("sensors.sensor_2.ip", "172.22.10.103");
   auto node = std::make_shared<SmartmicroRadarNode>(node_options);
-  
+  ASSERT_TRUE(node != nullptr);
+  rclcpp::Rate sleepRate(std::chrono::seconds(5));
+  sleepRate.sleep();
+  rclcpp::shutdown();
+  this->TearDown();
 }

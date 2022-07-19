@@ -28,14 +28,16 @@
 #include <Instruction.h>
 #include <InstructionBatch.h>
 #include <InstructionServiceIface.h>
+#include <umrr11_t132_automotive_v1_1_1/DataStreamServiceIface.h>
 #include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
+#include <umrr96_t153_automotive_v1_2_1/DataStreamServiceIface.h>
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
+#include <umrr9f_t169_automotive_v1_1_1/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
 
 #include <array>
 #include <memory>
 #include <string>
-
 
 namespace smartmicro {
 namespace drivers {
@@ -43,7 +45,7 @@ namespace radar {
 
 namespace detail {
 
-constexpr auto kMaxSensorCount = 10UL;
+constexpr auto kMaxSensorCount = 8UL;
 
 struct SensorConfig {
   std::uint32_t id{};
@@ -73,6 +75,11 @@ protected:
   ///
   void my_timer_callback() { timer->cancel(); }
 
+  ///
+  /// @brief      Callback triggered on shutdown call.
+  ///
+  void shutdown_call();
+
 private:
   ///
   /// @brief      A callback that is called when a new target list port for
@@ -99,7 +106,7 @@ private:
       const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::
                                 comtargetlistport::ComTargetListPort>
           &targetlist_port_umrr96);
-  
+
   ///
   /// @brief      A callback that is called when a new target list port for
   /// umrr9f arrives.
@@ -148,13 +155,19 @@ private:
   ip_address(const std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Request> request,
              std::shared_ptr<umrr_ros2_msgs::srv::SetIp::Response> response);
 
-  
-  
-
   rclcpp::Service<umrr_ros2_msgs::srv::SetMode>::SharedPtr mode_srv_;
   rclcpp::Service<umrr_ros2_msgs::srv::SetIp>::SharedPtr ip_addr_srv_;
   std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
   std::array<detail::SensorConfig, detail::kMaxSensorCount> m_sensors{};
+  std::shared_ptr<
+      com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface>
+      data_umrr11{};
+  std::shared_ptr<
+      com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface>
+      data_umrr96{};
+  std::shared_ptr<
+      com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface>
+      data_umrr9f{};
   std::array<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
              detail::kMaxSensorCount>
       m_publishers{};
@@ -162,7 +175,6 @@ private:
   rclcpp::TimerBase::SharedPtr timer;
   com::types::ClientId client_id;
   std::uint64_t response_type{};
-  
 };
 
 } // namespace radar
