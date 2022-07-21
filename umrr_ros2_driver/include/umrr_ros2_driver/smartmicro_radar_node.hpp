@@ -169,8 +169,14 @@ private:
       com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface>
       data_umrr9f{};
   std::array<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
-             detail::kMaxSensorCount>
-      m_publishers{};
+            detail::kMaxSensorCount>
+      m_publishers_11{};
+  std::array<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
+            detail::kMaxSensorCount>
+      m_publishers_96{};
+  std::array<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
+            detail::kMaxSensorCount>
+      m_publishers_9f{};
   std::size_t m_number_of_sensors{};
   rclcpp::TimerBase::SharedPtr timer;
   com::types::ClientId client_id;

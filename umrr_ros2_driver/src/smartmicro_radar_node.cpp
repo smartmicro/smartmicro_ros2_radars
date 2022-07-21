@@ -172,20 +172,23 @@ SmartmicroRadarNode::SmartmicroRadarNode(
       data_umrr11->RegisterComTargetListPortReceiveCallback(
           sensor.id, std::bind(&SmartmicroRadarNode::targetlist_callback_umrr11,
                                this, i, std::placeholders::_1));
+      m_publishers_11[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
+        "umrr/targets_" + std::to_string(i), sensor.history_size);
     }
     if (sensor.model == "umrr96") {
       data_umrr96->RegisterComTargetListPortReceiveCallback(
           sensor.id, std::bind(&SmartmicroRadarNode::targetlist_callback_umrr96,
                                this, i, std::placeholders::_1));
+      m_publishers_96[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
+        "umrr/targets_" + std::to_string(i), sensor.history_size);
     }
     if (sensor.model == "umrr9f") {
       data_umrr9f->RegisterComTargetListPortReceiveCallback(
           sensor.id, std::bind(&SmartmicroRadarNode::targetlist_callback_umrr9f,
                                this, i, std::placeholders::_1));
-    }
-
-    m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
+      m_publishers_9f[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
         "umrr/targets_" + std::to_string(i), sensor.history_size);
+    }
   }
 
   // create a ros2 service to change the radar parameters
@@ -203,13 +206,16 @@ SmartmicroRadarNode::SmartmicroRadarNode(
   RCLCPP_INFO(this->get_logger(), "Radar services are ready.");
 
   rclcpp::on_shutdown(std::bind(&SmartmicroRadarNode::shutdown_call, this));
+
 }
 
 void SmartmicroRadarNode::shutdown_call() {
-  rclcpp::Rate sleepRate(std::chrono::seconds(1));
+  rclcpp::Rate sleepRate(std::chrono::seconds(2));
   sleepRate.sleep();
-  m_publishers.fill(0);
   m_services.reset();
+  data_umrr11.reset();
+  data_umrr96.reset();
+  data_umrr9f.reset();
 }
 
 void SmartmicroRadarNode::radar_mode(
@@ -422,7 +428,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
          target->GetRCS(), target->GetTgtNoise(), target->GetPower()});
   }
 
-  m_publishers[sensor_idx]->publish(msg);
+  m_publishers_11[sensor_idx]->publish(msg);
 }
 
 void SmartmicroRadarNode::targetlist_callback_umrr96(
@@ -453,7 +459,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
          target->GetRCS(), target->GetTgtNoise(), target->GetPower()});
   }
 
-  m_publishers[sensor_idx]->publish(msg);
+  m_publishers_96[sensor_idx]->publish(msg);
 }
 
 void SmartmicroRadarNode::targetlist_callback_umrr9f(
@@ -485,7 +491,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f(
          target->GetRCS(), target->GetTgtNoise(), target->GetPower()});
   }
 
-  m_publishers[sensor_idx]->publish(msg);
+  m_publishers_9f[sensor_idx]->publish(msg);
 }
 
 void SmartmicroRadarNode::update_config_files_from_params() {
