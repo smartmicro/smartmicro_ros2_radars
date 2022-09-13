@@ -107,6 +107,22 @@ if(BUILD_TESTING)
     ament_add_gtest(test_smartmicro_radar_node test/test_smartmicro_radar_node.cpp)
     target_link_libraries(test_smartmicro_radar_node smartmicro_radar_node)
 
+    list(APPEND AMENT_LINT_AUTO_EXCLUDE
+        ament_cmake_copyright
+        ament_cmake_lint_cmake
+        ament_cmake_uncrustify
+        ament_cmake_cpplint
+        ament_cmake_flake8
+        ament_cmake_cppcheck
+        ament_cmake_pep257
+    )
+
+    find_package(ament_lint_auto REQUIRED)
+    ament_lint_auto_find_test_dependencies()
+    ament_copyright("src/smartmicro_radar_node.cpp")
+    ament_cpplint("src/smartmicro_radar_node.cpp")
+    ament_cppcheck("src/smartmicro_radar_node.cpp")
+
 endif()
 
 ament_auto_package(INSTALL_TO_SHARE config launch param)

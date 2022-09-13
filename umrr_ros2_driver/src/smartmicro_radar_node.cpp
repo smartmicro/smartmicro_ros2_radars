@@ -16,29 +16,25 @@
 
 #include "umrr_ros2_driver/smartmicro_radar_node.hpp"
 
-#include <CommunicationServicesIface.h>
-#include <Instruction.h>
-#include <InstructionBatch.h>
-#include <InstructionServiceIface.h>
-#include <signal.h>
-#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
+#include <point_cloud_msg_wrapper/point_cloud_msg_wrapper.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
+
 #include <umrr11_t132_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr11_t132_automotive_v1_1_1/comtargetlistport/Target.h>
-#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/Target.h>
-#include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/Target.h>
+
+#include <signal.h>
+
+#include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <limits>
 #include <memory>
-#include <nlohmann/json.hpp>
-#include <point_cloud_msg_wrapper/point_cloud_msg_wrapper.hpp>
-#include <rclcpp_components/register_node_macro.hpp>
 #include <set>
 #include <string>
 #include <thread>

@@ -17,6 +17,12 @@
 #ifndef UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
 #define UMRR_ROS2_DRIVER__SMARTMICRO_RADAR_NODE_HPP_
 
+
+#include <rclcpp/publisher.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <umrr_ros2_driver/visibility_control.hpp>
+
 #include <CommunicationServicesIface.h>
 #include <Instruction.h>
 #include <InstructionBatch.h>
@@ -30,11 +36,7 @@
 
 #include <array>
 #include <memory>
-#include <rclcpp/publisher.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/msg/point_cloud2.hpp>
 #include <string>
-#include <umrr_ros2_driver/visibility_control.hpp>
 
 #include "umrr_ros2_msgs/srv/set_ip.hpp"
 #include "umrr_ros2_msgs/srv/set_mode.hpp"
