@@ -32,14 +32,14 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 find_package(Threads REQUIRED)
 
-FetchContent_Declare(json
+fetchcontent_declare(json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG v3.10.5
 )
 
-FetchContent_GetProperties(json)
+fetchcontent_getproperties(json)
 if(NOT json_POPULATED)
-    FetchContent_Populate(json)
+    fetchcontent_populate(json)
     add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
@@ -55,7 +55,7 @@ install(FILES
     "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libbasev1.0.2_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr11_t132_automotivev1.1.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr96_t153_automotivev1.2.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9f_t169_automotivev1.1.1_user_interface.so"   
+    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9f_t169_automotivev1.1.1_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -82,7 +82,7 @@ smartmicro/include/umrr96_t153_automotive_v1_2_1
 smartmicro/include/umrr9f_t169_automotive_v1_1_1)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
-target_link_libraries(smartmicro_radar_node 
+target_link_libraries(smartmicro_radar_node
     smart_access
     nlohmann_json::nlohmann_json
     com_lib
@@ -97,16 +97,14 @@ rclcpp_components_register_node(smartmicro_radar_node
 )
 
 if(BUILD_TESTING)
-   
     find_package(launch_testing_ament_cmake)
-    add_launch_test(test/radar_node_test.launch.py
-        TIMEOUT "150"
-    )
-    
+    add_launch_test(test/radar_node_test.launch.py TIMEOUT "150")
+
     find_package(ament_cmake_gtest REQUIRED)
     ament_add_gtest(test_smartmicro_radar_node test/test_smartmicro_radar_node.cpp)
     target_link_libraries(test_smartmicro_radar_node smartmicro_radar_node)
 
+    # Not applying ros2 linters on external sources
     list(APPEND AMENT_LINT_AUTO_EXCLUDE
         ament_cmake_copyright
         ament_cmake_lint_cmake

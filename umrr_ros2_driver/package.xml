@@ -15,7 +15,7 @@
   <depend>sensor_msgs</depend>
   <depend>point_cloud_msg_wrapper</depend>
   <depend>umrr_ros2_msgs</depend>
-  
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ros_testing</test_depend>
   <test_depend>ament_lint_common</test_depend>

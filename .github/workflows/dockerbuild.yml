@@ -21,7 +21,7 @@ jobs:
       run:  docker build . -t umrr-ros:latest
 
     - name: Building the driver with the docker container
-      run:  docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver umrr_ros2_msgs
+      run:  docker run --rm -v`pwd`:/code umrr-ros colcon build
 
     - name: Running the unit/integration tests via the docker container and exit
       run:  docker-compose up
