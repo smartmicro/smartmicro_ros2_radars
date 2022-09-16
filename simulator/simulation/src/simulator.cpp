@@ -135,11 +135,11 @@ int main(int argc, char *argv[]) {
   while (1) {
 
     if(port == "A") {
-      std::string portFile = "/code/simulator/targetlist_port_a.bin";
+      std::string portFile = "/code/simulator/targetlist_port_v2_1_0.bin";
       stream_port(portFile);
     }
     else if(port == "B") {
-      std::string portFile = "/code/simulator/targetlist_port_b.bin";
+      std::string portFile = "/code/simulator/targetlist_port_v3_0_0.bin";
       stream_port(portFile);
     }
     else {

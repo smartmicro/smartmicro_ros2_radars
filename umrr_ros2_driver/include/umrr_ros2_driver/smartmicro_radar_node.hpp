@@ -24,15 +24,10 @@
 #include <umrr_ros2_driver/visibility_control.hpp>
 
 #include <CommunicationServicesIface.h>
-#include <Instruction.h>
-#include <InstructionBatch.h>
 #include <InstructionServiceIface.h>
 #include <umrr11_t132_automotive_v1_1_1/DataStreamServiceIface.h>
-#include <umrr11_t132_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
 #include <umrr96_t153_automotive_v1_2_1/DataStreamServiceIface.h>
-#include <umrr96_t153_automotive_v1_2_1/comtargetlistport/ComTargetListPort.h>
 #include <umrr9f_t169_automotive_v1_1_1/DataStreamServiceIface.h>
-#include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/ComTargetListPort.h>
 
 #include <array>
 #include <memory>
