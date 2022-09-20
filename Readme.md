@@ -26,11 +26,16 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `September 15, 2022`
+- Date of release: `September 22, 2022`
 - Smart Access Automotive version: `v2.0.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
+
+### Sensor Firmwares
+This ROS2 driver release is compatible with the following sensor firmwares:
+- UMRR11 Type 132: V5.1.4
+- UMRR96 Type 153: V5.2.4
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
