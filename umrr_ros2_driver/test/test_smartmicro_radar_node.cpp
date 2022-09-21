@@ -38,5 +38,4 @@ TEST(SmartmicroRadarNodeTest, Create)
   rclcpp::Rate sleepRate(std::chrono::seconds(5));
   sleepRate.sleep();
   rclcpp::shutdown();
-  this->TearDown();
 }

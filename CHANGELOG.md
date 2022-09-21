@@ -18,4 +18,4 @@ This release also offers the possibilty of configuring the ip addresses of the s
 
 ## v3.0.0 - 2022-09-15
 
-The driver supports the new smartmicro sensor DRVEGRD 169. The driver offers mode changes and configuartion of the sensor along with the publishing the radar targets as pointcloud data. The callbacks for datastream now require a clientID. 
+Major release includes the new smartmicro sensor DRVEGRD 169. The driver offers mode changes and configuration of the DRVEGRD 169 along with publishing the radar targets as pointcloud data. The callbacks for datastream now require a clientID. 

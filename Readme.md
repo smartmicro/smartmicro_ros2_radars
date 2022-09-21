@@ -121,8 +121,8 @@ The dockerfile can be used to build and test the ros driver.
 
 ### Prerequisites
 
-- Docker version: 20.10.14
-- Docker compose version: 1.29.2
+- Docker version >= 20.10.14
+- Docker compose version >= 1.29.2
 
 ## Building and Testing
 Accept the agreement and get the smartaccess release
