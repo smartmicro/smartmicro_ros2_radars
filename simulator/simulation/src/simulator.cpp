@@ -22,6 +22,9 @@ using namespace com::types;
 uint64_t identifier;
 uint64_t majorVersion;
 uint64_t minorVersion;
+std::string port;
+std::string portFile;
+
 
 std::shared_ptr<com::common::DataServicesIface> dataServices =
     com::common::DataServicesIface::Get();
@@ -59,13 +62,18 @@ void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer) {
       instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
       instruction->SetValue(minorVersion);
     } else if (instruction->GetSectionId() == 2010 &&
-               instruction->GetId() == 0) {
-      std::cout << "Instruction for mode change tx_antenna answered!"
+               instruction->GetId() == 2) {
+      std::cout << "UMRR96 mode frequency_sweep set!"
                 << std::endl;
       instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else if (instruction->GetSectionId() == 2010 &&
-               instruction->GetId() == 2) {
-      std::cout << "Instruction for mode change sweep_idx answered!"
+               instruction->GetId() == 4) {
+      std::cout << "UMRR11 mode angular_separation set!"
+                << std::endl;
+      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
+    } else if (instruction->GetSectionId() == 2010 &&
+               instruction->GetId() == 5) {
+      std::cout << "UMRR9F mode range_toggle_mode set!"
                 << std::endl;
       instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else {
@@ -76,8 +84,39 @@ void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer) {
   dataServices->SetInstructionBuffer(clientId, *receive, nullptr);
 }
 
+void stream_port(std::string portFile) {
+
+  dataServices->RegisterInstRecvCallback(slave_callback);
+
+  ClientId masterId = 1;
+  PortId portTargetListId = 66;
+  std::ifstream ifs(portFile, std::ifstream::binary | std::ios::binary);
+  std::filebuf *pbuf = ifs.rdbuf();
+  int size = pbuf->pubseekoff(0, ifs.end, ifs.in);
+  pbuf->pubseekpos(0, ifs.in);
+  char *filebuffer = new (std::nothrow) char[size];
+
+  if (filebuffer == nullptr) {
+    std::cout << "error assigning memory!" << std::endl;
+  }
+
+  pbuf->sgetn(filebuffer, size);
+  BufferDescriptor bufferdesc((uint8_t *)filebuffer, size);
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+
+  if (ERROR_CODE_OK !=
+      dataServices->StreamDataPort(masterId, portTargetListId, bufferdesc)) {
+    return;
+  }
+
+  std::cout << "sensor is transmitting data! " << std::endl;
+  ifs.close();
+  delete[] filebuffer;
+    
+}
+  
 int main(int argc, char *argv[]) {
-  if (argc != 4) {
+  if (argc != 5) {
     std::cout << "Specifiy User Interface for the sensor" << std::endl;
     return 1;
   }
@@ -85,42 +124,28 @@ int main(int argc, char *argv[]) {
   identifier = strtoll(argv[1], nullptr, 10);
   majorVersion = strtoll(argv[2], nullptr, 10);
   minorVersion = strtoll(argv[3], nullptr, 10);
-
+  port = argv[4];
+  
   if (!dataServices->Init()) {
     throw std::runtime_error("Data services have not been initialized!");
   }
-
-  dataServices->RegisterInstRecvCallback(slave_callback);
+  
   auto Start = std::chrono::steady_clock::now();
 
   while (1) {
-    ClientId masterId = 1;
-    PortId portTargetListId = 66;
-    std::string portFile = "/code/simulator/targetlist_port.bin";
-    std::ifstream ifs(portFile, std::ifstream::binary | std::ios::binary);
-    std::filebuf *pbuf = ifs.rdbuf();
-    int size = pbuf->pubseekoff(0, ifs.end, ifs.in);
-    pbuf->pubseekpos(0, ifs.in);
-    char *filebuffer = new (std::nothrow) char[size];
 
-    if (filebuffer == nullptr) {
-      std::cout << "error assigning memory!" << std::endl;
+    if(port == "A") {
+      std::string portFile = "/code/simulator/targetlist_port_v2_1_0.bin";
+      stream_port(portFile);
     }
-
-    pbuf->sgetn(filebuffer, size);
-    BufferDescriptor bufferdesc((uint8_t *)filebuffer, size);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    if (ERROR_CODE_OK !=
-        dataServices->StreamDataPort(masterId, portTargetListId, bufferdesc)) {
-      return -1;
+    else if(port == "B") {
+      std::string portFile = "/code/simulator/targetlist_port_v3_0_0.bin";
+      stream_port(portFile);
     }
-
-    std::cout << "sensor is transmitting data! " << std::endl;
-    ifs.close();
-    delete[] filebuffer;
-
-    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(40))
+    else {
+      std::cout << "Invalid input!" << std::endl;
+    }
+    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(30))
       break;
   }
   return 0;
