@@ -16,6 +16,6 @@ Requires new sensor firmware, if using UMRR11-T132: V5.1.4 and if using UMRR96-T
 This minor release of the driver offer ros2 services to communicate with the sensor. The driver now supports mode changes for UMRR96 and UMRR11.
 This release also offers the possibilty of configuring the ip addresses of the sensor using ros2 services. The tests are further extended to inlcude ros2 services check. Requires new sensor firmware, if using UMRR11-T132: V5.1.4 and if using UMRR96-T153: V5.2.4.
 
-## v3.0.0 - 2022-09-15
+## v3.0.0 - 2022-09-23
 
 Major release includes the new smartmicro sensor DRVEGRD 169. The driver offers mode changes and configuration of the DRVEGRD 169 along with publishing the radar targets as pointcloud data. The callbacks for datastream now require a clientID. 
