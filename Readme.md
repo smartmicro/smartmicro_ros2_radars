@@ -21,15 +21,21 @@ ros2 launch umrr_ros2_driver radar.launch.py
 ### Supported ROS distributions:
 - ROS2 foxy
 
-### UMRR-96 radar and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or both are 
+### UMRR radars and Smart Access API version
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or UMRR9F radar are 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `June 02, 2022`
-- Smart Access Automotive version: `v1.1.0`
+- Date of release: `September 22, 2022`
+- Smart Access Automotive version: `v2.0.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
+- User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
+
+### Sensor Firmwares
+This ROS2 driver release is compatible with the following sensor firmwares:
+- UMRR11 Type 132: V5.1.4
+- UMRR96 Type 153: V5.2.4
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -45,6 +51,7 @@ sudo apt install ros-foxy-point-cloud-msg-wrapper
 The inputs are coming as network packages generated in either of the following two ways:
 - Through directly interfacing with the sensor
 - Through a provided pcap file
+- Through using the sensor simulators
 
 These inputs are processed through the Smart Access C++ API and trigger a callback. Every time this
 callback is triggered a new point cloud message is created and published.
@@ -77,7 +84,7 @@ For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMR
 `ros2 service call /smartmicro_radar_node/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
 
 ## Configuration of the sensors
-In order to use multiple sensors (maximum of up to ten sensors) with the node the sensors should be configured separately.
+In order to use multiple sensors (maximum of up to eight sensors) with the node the sensors should be configured separately.
 The IP addresses of the sensors could be assigned using:
 - The smartmicro tool `DriveRecorder`.
 - Using the `Smart Access C++ API`
@@ -112,6 +119,12 @@ The sensor services respond with certain value codes. The following is a lookup 
 ## Development
 The dockerfile can be used to build and test the ros driver.
 
+### Prerequisites
+
+- Docker version >= 20.10.14
+- Docker compose version >= 1.29.2
+
+## Building and Testing
 Accept the agreement and get the smartaccess release
 ```bash
 ./smart_extract.sh
@@ -124,7 +137,7 @@ docker build . -t umrr-ros:latest
 
 Building the driver with the docker container
 ```bash
-docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-select umrr_ros2_driver umrr_ros2_msgs
+docker run --rm -v`pwd`:/code umrr-ros colcon build
 ```
 
 Running the unit and integration tests via the docker compose

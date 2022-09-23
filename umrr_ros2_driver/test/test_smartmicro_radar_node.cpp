@@ -13,14 +13,15 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include <umrr_ros2_driver/smartmicro_radar_node.hpp>
 
 #include <memory>
+#include <umrr_ros2_driver/smartmicro_radar_node.hpp>
 
 using smartmicro::drivers::radar::SmartmicroRadarNode;
 
 /// @test Test that if we publish one message, it generates a state estimate which is sent out.
-TEST(SmartmicroRadarNodeTest, Create) {
+TEST(SmartmicroRadarNodeTest, Create)
+{
   rclcpp::init(0, nullptr);
   ASSERT_TRUE(rclcpp::ok());
   rclcpp::NodeOptions node_options{};
@@ -30,9 +31,11 @@ TEST(SmartmicroRadarNodeTest, Create) {
   node_options.append_parameter_override("hw_port", 55555);
   node_options.append_parameter_override("hw_iface_name", "eth0");
   node_options.append_parameter_override("sensors.sensor_0.id", 10);
-  node_options.append_parameter_override("sensors.sensor_0.ip", "172.22.10.101");
-  node_options.append_parameter_override("sensors.sensor_1.id", 20);
-  node_options.append_parameter_override("sensors.sensor_1.ip", "172.22.10.102");
+  node_options.append_parameter_override("sensors.sensor_0.ip", "172.22.10.102");
+  node_options.append_parameter_override("sensors.sensor_0.model", "umrr96");
   auto node = std::make_shared<SmartmicroRadarNode>(node_options);
   ASSERT_TRUE(node != nullptr);
+  rclcpp::Rate sleepRate(std::chrono::seconds(5));
+  sleepRate.sleep();
+  rclcpp::shutdown();
 }

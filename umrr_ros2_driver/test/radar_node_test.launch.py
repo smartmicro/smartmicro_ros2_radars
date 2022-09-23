@@ -44,18 +44,7 @@ def generate_test_description():
         ],
     )
 
-    send_tx_service = ExecuteProcess(
-        cmd = [[
-            'ros2 service call ',
-            '/smartmicro_radar_node/set_radar_mode ',
-            'umrr_ros2_msgs/srv/SetMode ', 
-            '"{param: "tx_antenna_idx", value: 2, sensor_id: 100}"'
-        ]],
-        output='screen',
-        shell = True
-    )
-
-    send_sweep_service = ExecuteProcess(
+    frequency_sweep_service = ExecuteProcess(
         cmd = [[
             'ros2 service call ',
             '/smartmicro_radar_node/set_radar_mode ',
@@ -66,11 +55,34 @@ def generate_test_description():
         shell = True
     )
 
+    angular_separation_service = ExecuteProcess(
+        cmd = [[
+            'ros2 service call ',
+            '/smartmicro_radar_node/set_radar_mode ',
+            'umrr_ros2_msgs/srv/SetMode ', 
+            '"{param: "angular_separation", value: 1, sensor_id: 100}"'
+        ]],
+        output='screen',
+        shell = True
+    )
+
+    range_toggle_mode_service = ExecuteProcess(
+        cmd = [[
+            'ros2 service call ',
+            '/smartmicro_radar_node/set_radar_mode ',
+            'umrr_ros2_msgs/srv/SetMode ', 
+            '"{param: "range_toggle_mode", value: 4, sensor_id: 300}"'
+        ]],
+        output='screen',
+        shell = True
+    )
+
     return (
         launch.LaunchDescription([
             radar_node,
-            send_tx_service,
-            send_sweep_service,
+            frequency_sweep_service,
+            angular_separation_service,
+            range_toggle_mode_service,
             launch_testing.actions.ReadyToTest(),
         ]),
         {
@@ -105,12 +117,16 @@ class TestSmartNode(unittest.TestCase):
         # Expect the smartnode to publish strings on '/umrr/targets_'
         data_rx_s1 = []
         data_rx_s2 = []
+        data_rx_s3 = []
 
         def data_rx_s1_callback(msg):
             data_rx_s1.append(msg)
 
         def data_rx_s2_callback(msg):
             data_rx_s2.append(msg)
+
+        def data_rx_s3_callback(msg):
+            data_rx_s3.append(msg)
 
         sub_s1 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
@@ -124,6 +140,12 @@ class TestSmartNode(unittest.TestCase):
             data_rx_s2_callback,
             10
         )
+        sub_s3 = self.test_node.create_subscription(
+            sensor_msgs.PointCloud2,
+            '/umrr/targets_2',
+            data_rx_s3_callback,
+            10
+        )
         try:
             # Wait until the publisher publishes
             end_time = time.time() + 20
@@ -134,10 +156,13 @@ class TestSmartNode(unittest.TestCase):
                     print(f"Data from S1 received at {time.time()}")
                 if len(data_rx_s2) > 1:
                     print(f"Data from S2 received at {time.time()}")
-
+                if len(data_rx_s3) > 1:
+                    print(f"Data from S3 received at {time.time()}")
             self.assertGreater(len(data_rx_s1), 1)
             self.assertGreater(len(data_rx_s2), 1)
+            self.assertGreater(len(data_rx_s3), 1)
 
         finally:
             self.test_node.destroy_subscription(sub_s1)
             self.test_node.destroy_subscription(sub_s2)
+            self.test_node.destroy_subscription(sub_s3)
