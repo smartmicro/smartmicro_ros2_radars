@@ -25,6 +25,8 @@
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/Target.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/Target.h>
+#include <umrr9d_t152_automotive_v0_9_0/comtargetlistport/GenericPortHeader.h>
+#include <umrr9d_t152_automotive_v0_9_0/comtargetlistport/Target.h>
 
 #include <signal.h>
 
@@ -138,6 +140,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   data_umrr11 = com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface::Get();
   data_umrr96 = com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface::Get();
   data_umrr9f = com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface::Get();
+  data_umrr9d = com::master::umrr9d_t152_automotive_v0_9_0::DataStreamServiceIface::Get();
 
   RCLCPP_INFO(this->get_logger(), "Data stream services have been received!");
   // Wait init time
