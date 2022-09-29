@@ -85,6 +85,9 @@ void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer)
     } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 5) {
       std::cout << "UMRR9F mode range_toggle_mode set!" << std::endl;
       instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
+    } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 1) {
+      std::cout << "UMRR9D mode center_frequency_idx set!" << std::endl;
+      instruction->SetResponse(COM_INSTR_PORT_SUCCESS); 
     } else {
       std::cout << "Unknown instruction received from ROS driver!" << std::endl;
     }
@@ -146,6 +149,9 @@ int main(int argc, char * argv[])
       stream_port(portFile);
     } else if (port == "B") {
       std::string portFile = "/code/simulator/targetlist_port_v3_0_0.bin";
+      stream_port(portFile);
+    } else if (port == "C") {
+      std::string portFile = "/code/simulator/targetlist_port_v4_0_0.bin";
       stream_port(portFile);
     } else {
       std::cout << "Invalid input!" << std::endl;

@@ -77,12 +77,24 @@ def generate_test_description():
         shell = True
     )
 
+    center_frequency_idx_service = ExecuteProcess(
+        cmd = [[
+            'ros2 service call ',
+            '/smartmicro_radar_node/set_radar_mode ',
+            'umrr_ros2_msgs/srv/SetMode ', 
+            '"{param: "center_frequency_idx", value: 1, sensor_id: 400}"'
+        ]],
+        output='screen',
+        shell = True
+    )
+
     return (
         launch.LaunchDescription([
             radar_node,
             frequency_sweep_service,
             angular_separation_service,
             range_toggle_mode_service,
+            center_frequency_idx_service,
             launch_testing.actions.ReadyToTest(),
         ]),
         {
