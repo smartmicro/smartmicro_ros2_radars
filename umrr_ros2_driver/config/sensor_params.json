@@ -45,6 +45,12 @@
                     "min": 1,
                     "max": 2,
                     "default": 1
+                },
+                {
+                    "model": "umrr9d",
+                    "min": 0,
+                    "max": 3,
+                    "default": 1
                 }
             ]
         },
@@ -71,6 +77,13 @@
                     "min": 0,
                     "max": 3,
                     "default": 1
+                },
+                {
+                    "model": "umrr9d",
+                    "comment": "0=medium-range, 1=long-range",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0
                 }
             ]
         },
@@ -88,7 +101,7 @@
         },
         {
             "name": "angular_separation",
-            "comment": "0 = Disable Angular Separation, 1 = Enable Angular Separation",
+            "comment": "0=Disable Angular Separation, 1=Enable Angular Separation",
             "sensors": [
                 {
                     "model": "umrr11",
@@ -115,6 +128,25 @@
                     "min": 0,
                     "max": 6,
                     "default": 0
+                },
+                {
+                    "model": "umrr9d",
+                    "comment": " 0=off, 1=Med-Long",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0
+                }
+            ]
+        },
+        {
+            "name": "detection_sensitivity",
+            "comment": "Detection sensitivity: 0=low, 1=normal, 2=high",
+            "sensors": [
+                {
+                    "model": "umrr9d",
+                    "min": 0,
+                    "max": 2,
+                    "default": 1
                 }
             ]
         },
@@ -133,6 +165,12 @@
                     "min": -150.0,
                     "max": 150.0,
                     "default": -20
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
                 }
             ]
         },
@@ -151,6 +189,12 @@
                     "min": -150.0,
                     "max": 150.0,
                     "default": -20
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
                 }
             ]
         },
@@ -169,6 +213,12 @@
                     "min": -150.0,
                     "max": 150.0,
                     "default": -20
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
                 }
             ]
         },
@@ -180,6 +230,12 @@
                     "model": "umrr9f",
                     "min": -150.0,
                     "max": 150.0
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
                 }
             ]
         },
@@ -198,6 +254,12 @@
                     "min": -150.0,
                     "max": 150.0,
                     "default": 20
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
                 }
             ]
         },
@@ -216,6 +278,12 @@
                     "min": -150.0,
                     "max": 150.0,
                     "default": 20
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
                 }
             ]
         },
@@ -234,6 +302,12 @@
                     "min": -150.0,
                     "max": 150.0,
                     "default": 20
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
                 }
             ]
         },
@@ -245,6 +319,12 @@
                     "model": "umrr9f",
                     "min": -150.0,
                     "max": 150.0
+                },
+                {
+                    "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
                 }
             ]
         },

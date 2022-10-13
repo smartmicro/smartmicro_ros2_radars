@@ -22,15 +22,16 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR radars and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96 radar, UMRR11 radar or UMRR9F radar are 
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 152 or DRVEGRD 169 radar are 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `September 22, 2022`
-- Smart Access Automotive version: `v2.0.0`
+- Date of release: `October 14, 2022`
+- Smart Access Automotive version: `v2.1.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
+- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.1`
 
 ### Sensor Firmwares
 This ROS2 driver release is compatible with the following sensor firmwares:
