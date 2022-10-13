@@ -12,18 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <filesystem>
-#include <chrono>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <thread>
-#include <memory>
-
 #include <CommunicationServicesIface.h>
 #include <DataServicesIface.h>
 #include <DeviceMonitorServiceIface.h>
@@ -31,6 +19,17 @@
 #include <InstructionBatch.h>
 #include <InstructionBuffer.h>
 #include <InstructionServiceIface.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
 
 using namespace com::common;
 using namespace com::master;
@@ -38,12 +37,12 @@ using namespace com::types;
 
 namespace
 {
-  uint64_t identifier;
-  uint64_t majorVersion;
-  uint64_t minorVersion;
-  std::string port;
-  std::string portFile;
-}
+uint64_t identifier;
+uint64_t majorVersion;
+uint64_t minorVersion;
+std::string port;
+std::string portFile;
+}  // namespace
 
 std::shared_ptr<com::common::DataServicesIface> dataServices =
   com::common::DataServicesIface::Get();
@@ -87,7 +86,7 @@ void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer)
       instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 1) {
       std::cout << "UMRR9D mode center_frequency_idx set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS); 
+      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else {
       std::cout << "Unknown instruction received from ROS driver!" << std::endl;
     }
@@ -156,7 +155,9 @@ int main(int argc, char * argv[])
     } else {
       std::cout << "Invalid input!" << std::endl;
     }
-    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(30)) break;
+    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(30)) {
+      break;
+    }
   }
   return 0;
 }
