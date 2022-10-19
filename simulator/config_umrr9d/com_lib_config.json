@@ -1,0 +1,16 @@
+{
+    "name": "Com Lib Config",
+    "version": "1.0.0",
+    "client_id": 400,
+    "role": "slave",
+    "shared_lib_path": "/code/umrr_ros2_driver/smartmicro/lib-linux-x86_64-gcc_9",
+    "config_path": "/code/simulator/config_umrr9d",
+    "user_interface_name": "umrr9d_t152_automotive",
+    "user_interface_major_v": 1,
+    "user_interface_minor_v": 0,
+    "user_interface_patch_v": 1,
+    "download_path": "",
+    "instruction_serialization_type": "port_based",
+    "data_serialization_type": "port_based",
+    "alive": false
+}

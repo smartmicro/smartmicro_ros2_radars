@@ -64,12 +64,28 @@ services:
         networks:
             device_network:
                 ipv4_address: 172.22.10.103
+    sensor_3:
+        depends_on:
+            build_simulator:
+                condition: service_completed_successfully
+        image: umrr-ros:latest
+        volumes:
+            - .:/code
+        environment:
+            - SMART_ACCESS_CFG_FILE_PATH=/code/simulator/config_umrr9d/com_lib_config.json
+            - LD_LIBRARY_PATH=/code/umrr_ros2_driver/smartmicro/lib-linux-x86_64-gcc_9
+        entrypoint: ["/code/simulator/simulation/out/bin/simulator"]
+        command:    ["11", "1", "0", "C"]
+        networks:
+            device_network:
+                ipv4_address: 172.22.10.104
     ros_node:
         image: umrr-ros:latest
         depends_on:
             - "sensor_0"
             - "sensor_1"
             - "sensor_2"
+            - "sensor_3"
         volumes:
             - .:/code
         command: ["colcon", "test", "--packages-above", "umrr_ros2_driver"]
