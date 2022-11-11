@@ -45,7 +45,7 @@ namespace radar
 {
 namespace detail
 {
-constexpr auto kMaxSensorCount = 8UL;
+constexpr auto kMaxSensorCount = 10UL;
 
 struct SensorConfig
 {
