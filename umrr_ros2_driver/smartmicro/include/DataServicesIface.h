@@ -99,9 +99,23 @@ public:
      * Return: ErrorCode
      * Description: Streams a data port to input client id
      */
-    virtual  ErrorCode StreamDataPort(IN ClientId clientId, 
+    virtual ErrorCode StreamDataPort(IN ClientId clientId, 
                                       IN PortId   portId,
                                       IN BufferDescriptor& buffer) = 0;
+
+    /*  
+     * Function: StreamInternalDataPort
+     * Arguments: ClientId clientId - destination client id.
+     *            PortId   portId - id of the streamed port.
+     *            BufferDescriptor& buffer - data buffer
+     * Return: ErrorCode
+     * Description: Streams a internal data port to input client id.
+     *              This will return with an error code if the port is
+     *              content of client user interface
+     */
+    virtual ErrorCode StreamInternalDataPort(
+       ClientId clientId, PortId portId, BufferDescriptor& buffer) = 0;
+
     /*  
      * Function: Init
      * Arguments: none

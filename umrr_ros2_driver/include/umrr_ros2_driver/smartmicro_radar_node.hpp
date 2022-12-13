@@ -28,7 +28,7 @@
 #include <umrr11_t132_automotive_v1_1_1/DataStreamServiceIface.h>
 #include <umrr96_t153_automotive_v1_2_1/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v1_1_1/DataStreamServiceIface.h>
-#include <umrr9d_t152_automotive_v1_0_1/DataStreamServiceIface.h>
+#include <umrr9d_t152_automotive_v1_0_2/DataStreamServiceIface.h>
 
 #include <array>
 #include <memory>
@@ -136,7 +136,7 @@ private:
   void targetlist_callback_umrr9d(
     const std::uint32_t sensor_idx,
     const std::shared_ptr<
-      com::master::umrr9d_t152_automotive_v1_0_1::comtargetlistport::ComTargetListPort> &
+      com::master::umrr9d_t152_automotive_v1_0_2::comtargetlistport::ComTargetListPort> &
       targetlist_port_umrr9d,
     const com::types::ClientId client_id);
 
@@ -198,7 +198,7 @@ std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
 std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface> data_umrr11{};
 std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface> data_umrr96{};
 std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface> data_umrr9f{};
-std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_1::DataStreamServiceIface> data_umrr9d{};
+std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_2::DataStreamServiceIface> data_umrr9d{};
 
 }  // namespace radar
 }  // namespace drivers
