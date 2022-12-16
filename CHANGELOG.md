@@ -28,6 +28,6 @@ This release includes the new smartmicro sensor DRVEGRD 152. The driver offers m
 
 This minor release introduces signal-to-noise field in the pointclouds and also fixes the max number of sensors that could be connected at once.
 
-## v3.3.0 - 2022-12-16
+## v3.2.1 - 2022-12-16
 
 This release fixes the offset which causes anomaly in pointclouds from DRVEGRD 152 sensor. It also fixes the timestamp calculation bug which causes rviz to crash and updates the simulator source files.
