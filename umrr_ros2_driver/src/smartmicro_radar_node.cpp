@@ -23,8 +23,8 @@
 #include <umrr11_t132_automotive_v1_1_1/comtargetlistport/Target.h>
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/Target.h>
-#include <umrr9d_t152_automotive_v1_0_1/comtargetlistport/GenericPortHeader.h>
-#include <umrr9d_t152_automotive_v1_0_1/comtargetlistport/Target.h>
+#include <umrr9d_t152_automotive_v1_0_2/comtargetlistport/GenericPortHeader.h>
+#include <umrr9d_t152_automotive_v1_0_2/comtargetlistport/Target.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/Target.h>
 
@@ -143,7 +143,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   data_umrr11 = com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface::Get();
   data_umrr96 = com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface::Get();
   data_umrr9f = com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface::Get();
-  data_umrr9d = com::master::umrr9d_t152_automotive_v1_0_1::DataStreamServiceIface::Get();
+  data_umrr9d = com::master::umrr9d_t152_automotive_v1_0_2::DataStreamServiceIface::Get();
 
   RCLCPP_INFO(this->get_logger(), "Data stream services have been received!");
   // Wait init time
@@ -498,20 +498,20 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f(
 void SmartmicroRadarNode::targetlist_callback_umrr9d(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
-    com::master::umrr9d_t152_automotive_v1_0_1::comtargetlistport::ComTargetListPort> &
+    com::master::umrr9d_t152_automotive_v1_0_2::comtargetlistport::ComTargetListPort> &
     targetlist_port_umrr9d,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist callback is being called for umrr9d" << std::endl;
   if (!check_signal) {
     std::shared_ptr<
-      com::master::umrr9d_t152_automotive_v1_0_1::comtargetlistport::GenericPortHeader>
+      com::master::umrr9d_t152_automotive_v1_0_2::comtargetlistport::GenericPortHeader>
       port_header;
     port_header = targetlist_port_umrr9d->GetGenericPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
-    const auto sec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp);
+    const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
