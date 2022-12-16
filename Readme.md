@@ -26,12 +26,12 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVE
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `December 13, 2022`
+- Date of release: `December 16, 2022`
 - Smart Access Automotive version: `v2.2.3`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
-- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.1`
+- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.2`
 
 ### Sensor Firmwares
 This ROS2 driver release is compatible with the following sensor firmwares:
