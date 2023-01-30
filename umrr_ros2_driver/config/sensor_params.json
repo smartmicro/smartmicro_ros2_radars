@@ -17,7 +17,7 @@
                     "default": 0
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": 0,
                     "max": 2,
                     "default": 0
@@ -41,7 +41,7 @@
                     "default": 0
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": 1,
                     "max": 2,
                     "default": 1
@@ -72,7 +72,7 @@
                     "default": 2
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "comment": "0=226MHz, 1=512MHz, 2=1536MHz, 3=3072MHz",
                     "min": 0,
                     "max": 3,
@@ -123,7 +123,7 @@
                     "default": 0
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "comment": " 0=off, 1=Short-Med, 2=Short-Long, 3=Med-Long, 4=Long-UltraShort, 5=Medium-UltraShort, 6=Short-UltraShort",
                     "min": 0,
                     "max": 6,
@@ -147,6 +147,12 @@
                     "min": 0,
                     "max": 2,
                     "default": 1
+                },
+                {
+                    "model": "umrr9f_v2_0_0",
+                    "min": 0,
+                    "max": 2,
+                    "default": 1
                 }
             ]
         },
@@ -161,7 +167,7 @@
                     "default": -20
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0,
                     "default": -20
@@ -185,7 +191,7 @@
                     "default": -20
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0,
                     "default": -20
@@ -209,7 +215,7 @@
                     "default": -20
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0,
                     "default": -20
@@ -227,7 +233,7 @@
             "comment": "Target Validation: minimum speed of target at fourth sweep",
             "sensors": [
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0
                 },
@@ -250,7 +256,7 @@
                     "default": 20
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0,
                     "default": 20
@@ -274,7 +280,7 @@
                     "default": 20
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0,
                     "default": 20
@@ -298,7 +304,7 @@
                     "default": 20
                 },
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0,
                     "default": 20
@@ -316,7 +322,7 @@
             "comment": "Target Validation: maximum speed of target at fourth sweep",
             "sensors": [
                 {
-                    "model": "umrr9f",
+                    "model": "umrr9f_v1_1_1",
                     "min": -150.0,
                     "max": 150.0
                 },
