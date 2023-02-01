@@ -428,6 +428,7 @@ void SmartmicroRadarNode::radar_command(
 
   if (!batch->AddRequest(radar_command)) {
     result->res = "Failed to add instruction to the batch! ";
+    return;
   }
 
   if (
@@ -435,7 +436,7 @@ void SmartmicroRadarNode::radar_command(
                                    batch, std::bind(
                                             &SmartmicroRadarNode::command_response, this, client_id,
                                             std::placeholders::_2, command_name))) {
-    result->res = "Check command is listed!";
+    result->res = "Error in sending command to the sensor!";
     return;
   }
   result->res = "Service conducted successfully";

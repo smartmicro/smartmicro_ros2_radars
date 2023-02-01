@@ -22,7 +22,7 @@ namespace drivers
 namespace radar
 {
 
-constexpr auto KSensorCommandFilePath ="/code/umrr_ros2_driver/config/sensor_commands.json";
+constexpr auto KSensorCommandFilePath ="/home/shah/ROS2_OFFIICAL_WS/src/smartmicro_ros2_radars/umrr_ros2_driver/config/sensor_commands.json";
 
 }  // namespace radar
 }  // namespace drivers
