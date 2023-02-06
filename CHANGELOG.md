@@ -31,3 +31,7 @@ This minor release introduces signal-to-noise field in the pointclouds and also 
 ## v3.2.1 - 2022-12-16
 
 This release fixes the offset which causes anomaly in pointclouds from DRVEGRD 152 sensor. It also fixes the timestamp calculation bug which causes rviz to crash and updates the simulator source files.
+
+## v4.0.0 - 2023-02-06
+
+This release includes the new DRVEGRD 169 user-interface. The release includes new modes for DRVEGRD 169 and also introduces an additional ros2 service to save configurations. Previously used model 'UMRR9F' in radar parameters has been divided into two versions, the 'UMRR9F_V1_1_1' and 'UMRR9F_V2_0_0'.

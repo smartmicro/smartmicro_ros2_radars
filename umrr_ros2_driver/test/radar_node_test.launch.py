@@ -36,7 +36,7 @@ def generate_test_description():
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
-        name='smartmicro_radar_node',
+        name='smart_radar',
         output='screen',
         parameters=[
             os.path.join(get_package_share_directory(PACKAGE_NAME),
@@ -47,7 +47,7 @@ def generate_test_description():
     frequency_sweep_service = ExecuteProcess(
         cmd = [[
             'ros2 service call ',
-            '/smartmicro_radar_node/set_radar_mode ',
+            '/smart_radar/set_radar_mode ',
             'umrr_ros2_msgs/srv/SetMode ', 
             '"{param: "frequency_sweep_idx", value: 1, sensor_id: 200}"'
         ]],
@@ -58,7 +58,7 @@ def generate_test_description():
     angular_separation_service = ExecuteProcess(
         cmd = [[
             'ros2 service call ',
-            '/smartmicro_radar_node/set_radar_mode ',
+            '/smart_radar/set_radar_mode ',
             'umrr_ros2_msgs/srv/SetMode ', 
             '"{param: "angular_separation", value: 1, sensor_id: 100}"'
         ]],
@@ -69,7 +69,7 @@ def generate_test_description():
     range_toggle_mode_service = ExecuteProcess(
         cmd = [[
             'ros2 service call ',
-            '/smartmicro_radar_node/set_radar_mode ',
+            '/smart_radar/set_radar_mode ',
             'umrr_ros2_msgs/srv/SetMode ', 
             '"{param: "range_toggle_mode", value: 4, sensor_id: 300}"'
         ]],
@@ -80,7 +80,7 @@ def generate_test_description():
     center_frequency_idx_service = ExecuteProcess(
         cmd = [[
             'ros2 service call ',
-            '/smartmicro_radar_node/set_radar_mode ',
+            '/smart_radar/set_radar_mode ',
             'umrr_ros2_msgs/srv/SetMode ', 
             '"{param: "center_frequency_idx", value: 1, sensor_id: 400}"'
         ]],
@@ -142,19 +142,19 @@ class TestSmartNode(unittest.TestCase):
 
         sub_s1 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
-            '/umrr/targets_0',
+            '/smart_radar/targets_0',
             data_rx_s1_callback,
             10
         )
         sub_s2 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
-            '/umrr/targets_1',
+            '/smart_radar/targets_1',
             data_rx_s2_callback,
             10
         )
         sub_s3 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
-            '/umrr/targets_2',
+            '/smart_radar/targets_2',
             data_rx_s3_callback,
             10
         )

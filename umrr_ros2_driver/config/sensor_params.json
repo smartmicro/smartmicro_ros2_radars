@@ -147,6 +147,12 @@
                     "min": 0,
                     "max": 2,
                     "default": 1
+                },
+                {
+                    "model": "umrr9f_v2_0_0",
+                    "min": 0,
+                    "max": 2,
+                    "default": 1
                 }
             ]
         },

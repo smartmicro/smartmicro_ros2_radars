@@ -27,6 +27,8 @@
 #include <umrr9d_t152_automotive_v1_0_2/comtargetlistport/Target.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/Target.h>
+#include <umrr9f_t169_automotive_v2_0_0/comtargetlistport/GenericPortHeader.h>
+#include <umrr9f_t169_automotive_v2_0_0/comtargetlistport/Target.h>
 
 #include <signal.h>
 
@@ -46,6 +48,7 @@
 
 #include "umrr_ros2_driver/config_path.hpp"
 #include "umrr_ros2_driver/sensor_params.hpp"
+#include "umrr_ros2_driver/sensor_commands.hpp"
 
 using com::common::Instruction;
 using com::master::CmdRequest;
@@ -142,7 +145,8 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   // Getting the data stream service
   data_umrr11 = com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface::Get();
   data_umrr96 = com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface::Get();
-  data_umrr9f = com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface::Get();
+  data_umrr9f_v1_1_1 = com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface::Get();
+  data_umrr9f_v2_0_0 = com::master::umrr9f_t169_automotive_v2_0_0::DataStreamServiceIface::Get();
   data_umrr9d = com::master::umrr9d_t152_automotive_v1_0_2::DataStreamServiceIface::Get();
 
   RCLCPP_INFO(this->get_logger(), "Data stream services have been received!");
@@ -170,13 +174,22 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
       std::cout << "Failed to register targetlist callback for sensor umrr96" << std::endl;
     }
     if (
-      sensor.model == "umrr9f" &&
+      sensor.model == "umrr9f_v1_1_1" &&
       com::types::ERROR_CODE_OK !=
-        data_umrr9f->RegisterComTargetListPortReceiveCallback(
+        data_umrr9f_v1_1_1->RegisterComTargetListPortReceiveCallback(
           sensor.id, std::bind(
-                       &SmartmicroRadarNode::targetlist_callback_umrr9f, this, i,
+                       &SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register targetlist callback for sensor umrr9f" << std::endl;
+      std::cout << "Failed to register targetlist callback for sensor umrr9f_v1_1_1" << std::endl;
+    }
+    if (
+      sensor.model == "umrr9f_v2_0_0" &&
+      com::types::ERROR_CODE_OK !=
+        data_umrr9f_v2_0_0->RegisterComTargetListPortReceiveCallback(
+          sensor.id, std::bind(
+                       &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0, this, i,
+                       std::placeholders::_1, std::placeholders::_2))) {
+      std::cout << "Failed to register targetlist callback for sensor umrr9f_v2_0_0" << std::endl;
     }
     if (
       sensor.model == "umrr9d" &&
@@ -189,21 +202,26 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
     }
 
     m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
-      "umrr/targets_" + std::to_string(i), sensor.history_size);
+      "smart_radar/targets_" + std::to_string(i), sensor.history_size);
   }
 
   // create a ros2 service to change the radar parameters
   mode_srv_ = create_service<umrr_ros2_msgs::srv::SetMode>(
-    "smartmicro_radar_node/set_radar_mode",
+    "smart_radar/set_radar_mode",
     std::bind(
       &SmartmicroRadarNode::radar_mode, this, std::placeholders::_1, std::placeholders::_2));
 
   // create a ros2 service to change the IP address
   ip_addr_srv_ = create_service<umrr_ros2_msgs::srv::SetIp>(
-    "smartmicro_radar_node/set_ip_address",
+    "smart_radar/set_ip_address",
     std::bind(
       &SmartmicroRadarNode::ip_address, this, std::placeholders::_1, std::placeholders::_2));
 
+  // create a ros2 service to send command to radar
+  command_srv_ = create_service<umrr_ros2_msgs::srv::SendCommand>(
+    "smart_radar/send_command",
+    std::bind(
+      &SmartmicroRadarNode::radar_command, this, std::placeholders::_1, std::placeholders::_2));
   RCLCPP_INFO(this->get_logger(), "Radar services are ready.");
 
   std::signal(SIGINT, [](int signal) { return terminate_on_receive(signal); });
@@ -285,7 +303,7 @@ void SmartmicroRadarNode::radar_mode(
   if (
     com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
                                    batch, std::bind(
-                                            &SmartmicroRadarNode::sensor_response, this, client_id,
+                                            &SmartmicroRadarNode::mode_response, this, client_id,
                                             std::placeholders::_2, instruction_name))) {
     result->res = "Check param is listed for sensor type and the min/max values!";
     return;
@@ -351,7 +369,80 @@ void SmartmicroRadarNode::ip_address(
   }
 }
 
-void SmartmicroRadarNode::sensor_response(
+void SmartmicroRadarNode::radar_command(
+  const std::shared_ptr<umrr_ros2_msgs::srv::SendCommand::Request> request,
+  std::shared_ptr<umrr_ros2_msgs::srv::SendCommand::Response> result)
+{
+  std::string command_name{};
+  bool check_flag_command = false;
+  bool check_flag_id = false;
+
+  std::ifstream command_file(KSensorCommandFilePath);
+  if (!command_file)
+  {
+    std::cout << "File is not present" << std::endl;
+  }
+  auto command_table = nlohmann::json::parse(command_file);
+
+  command_name = request->command;
+  client_id = request->sensor_id;
+
+  for (const auto & item : command_table.items()) {
+    for (const auto & command : item.value().items()) {
+      if (command_name == command.value()["name"]) {
+        check_flag_command = true;
+        break;
+      }
+    }
+  }
+
+  if (!check_flag_command) {
+    result->res = "Invalid command name! ";
+    return;
+  }
+
+  for (auto & sensor : m_sensors) {
+    if (client_id == sensor.id) {
+      check_flag_id = true;
+      break;
+    }
+  }
+  if (!check_flag_id) {
+    result->res = "The sensor ID value entered is invalid! ";
+    return;
+  }
+
+  std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
+  timer = this->create_wall_timer(
+    std::chrono::seconds(2), std::bind(&SmartmicroRadarNode::my_timer_callback, this));
+
+  std::shared_ptr<InstructionBatch> batch;
+
+  if (!inst->AllocateInstructionBatch(client_id, batch)) {
+    result->res = "Failed to allocate instruction batch! ";
+    return;
+  }
+
+  std::shared_ptr<CmdRequest> radar_command = std::make_shared<CmdRequest>(
+    "auto_interface_command", request->command, 2010);
+
+  if (!batch->AddRequest(radar_command)) {
+    result->res = "Failed to add instruction to the batch! ";
+    return;
+  }
+
+  if (
+    com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
+                                   batch, std::bind(
+                                            &SmartmicroRadarNode::command_response, this, client_id,
+                                            std::placeholders::_2, command_name))) {
+    result->res = "Error in sending command to the sensor!";
+    return;
+  }
+  result->res = "Service conducted successfully";
+}
+
+void SmartmicroRadarNode::mode_response(
   const com::types::ClientId client_id,
   const std::shared_ptr<com::master::ResponseBatch> & response, const std::string instruction_name)
 {
@@ -383,6 +474,20 @@ void SmartmicroRadarNode::sensor_response_ip(
     for (auto & resp : myResp_2) {
       response_type = resp->GetResponseType();
       RCLCPP_INFO(this->get_logger(), "Response from sensor for ip change: %i", response_type);
+    }
+  }
+}
+
+void SmartmicroRadarNode::command_response(
+  const com::types::ClientId client_id,
+  const std::shared_ptr<com::master::ResponseBatch> & response, const std::string command_name)
+{
+  std::vector<std::shared_ptr<Response<uint32_t>>> command_resp;
+  if (response->GetResponse<uint32_t>("auto_interface_command", command_name.c_str(), command_resp))
+  {
+    for (auto & resp : command_resp) {
+      response_type = resp->GetResponseType();
+      RCLCPP_INFO(this->get_logger(), "Response from sensor to command: %i", response_type);
     }
   }
 }
@@ -459,19 +564,19 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
   }
 }
 
-void SmartmicroRadarNode::targetlist_callback_umrr9f(
+void SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v1_1_1::comtargetlistport::ComTargetListPort> &
-    targetlist_port_umrr9f,
+    targetlist_port_umrr9f_v1_1_1,
   const com::types::ClientId client_id)
 {
-  std::cout << "Targetlist callback is being called for umrr9f" << std::endl;
+  std::cout << "Targetlist callback is being called for umrr9f_v1_1_1" << std::endl;
   if (!check_signal) {
     std::shared_ptr<
       com::master::umrr9f_t169_automotive_v1_1_1::comtargetlistport::GenericPortHeader>
       port_header;
-    port_header = targetlist_port_umrr9f->GetGenericPortHeader();
+    port_header = targetlist_port_umrr9f_v1_1_1->GetGenericPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
@@ -479,7 +584,43 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f(
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
-    for (const auto & target : targetlist_port_umrr9f->GetTargetList()) {
+    for (const auto & target : targetlist_port_umrr9f_v1_1_1->GetTargetList()) {
+      const auto range = target->GetRange();
+      const auto elevation_angle = target->GetElevationAngle();
+      const auto range_2d = range * std::cos(elevation_angle);
+      const auto azimuth_angle = target->GetAzimuthAngle();
+      const auto snr = target->GetPower() - target->GetTgtNoise();
+      modifier.push_back(
+        {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
+         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+         target->GetRCS(), target->GetTgtNoise(), snr});
+    }
+
+    m_publishers[sensor_idx]->publish(msg);
+  }
+}
+
+void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0(
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<
+    com::master::umrr9f_t169_automotive_v2_0_0::comtargetlistport::ComTargetListPort> &
+    targetlist_port_umrr9f_v2_0_0,
+  const com::types::ClientId client_id)
+{
+  std::cout << "Targetlist callback is being called for umrr9f_v2_0_0" << std::endl;
+  if (!check_signal) {
+    std::shared_ptr<
+      com::master::umrr9f_t169_automotive_v2_0_0::comtargetlistport::GenericPortHeader>
+      port_header;
+    port_header = targetlist_port_umrr9f_v2_0_0->GetGenericPortHeader();
+    sensor_msgs::msg::PointCloud2 msg;
+    RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
+    const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
+    const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
+    const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
+    msg.header.stamp.sec = sec.count();
+    msg.header.stamp.nanosec = nanosec.count();
+    for (const auto & target : targetlist_port_umrr9f_v2_0_0->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);

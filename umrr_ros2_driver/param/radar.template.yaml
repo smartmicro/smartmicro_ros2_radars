@@ -14,7 +14,8 @@
           # As many as 10 sensors all named as "sensor_<number>" in increasing order of numbers,
           # e.g., sensor_0, sensor_1, etc. The list must start with sensor_0.
           sensor_0:
-              # The model of the connected sensor.
+              # The model of the connected sensor. Available models umrr11, umrr9d, umrr96,
+              # umrr9f_v1_1_1, umrr9f_v2_0_0
               model: "umrr11"
               # The client_id of the sensor/source, must be a unique integer.
               id: 100
@@ -41,7 +42,7 @@
               history_size: 10
           sensor_2:
               # The model of the connected sensor.
-              model: "umrr9f"
+              model: "umrr9f_v1_1_1"
               # The client_id of the sensor/source, must be a unique integer.
               id: 300
               # The ip address of the sensor or of the source acting as a sensor.

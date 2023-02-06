@@ -1,0 +1,4 @@
+string command
+uint32 sensor_id
+---
+string res
