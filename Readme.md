@@ -74,7 +74,7 @@ For more details, see the [`radar.template.yaml`](umrr_ros2_driver/param/radar.t
 - `iface_name`: name of the used network interface
 - `frame_id`: name of the frame in which the messages will be published
 - `history_size`: size of history for the message publisher
-- `model`: the model of the sensor being used 
+- `model`: the model('umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_0_0') of the sensor being used
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
