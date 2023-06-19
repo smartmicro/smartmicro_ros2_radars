@@ -44,20 +44,21 @@ if(NOT json_POPULATED)
 endif()
 
 ament_auto_find_build_dependencies()
+set(SMARTMICRO_LIB_DIR "lib-linux-x86_64-gcc_7")
 
 # specify the path to search for the libraries
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR})
 
 install(FILES
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libsmart_access.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libosal.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libcom_lib.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libbasev1.0.2_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr11_t132_automotivev1.1.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr96_t153_automotivev1.2.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9f_t169_automotivev1.1.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9f_t169_automotivev2.0.0_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9d_t152_automotivev1.0.2_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libsmart_access.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libosal.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libcom_lib.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libbasev1.0.2_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr11_t132_automotivev1.1.2_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr96_t153_automotivev1.2.2_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev1.1.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.1.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.0.3_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -83,11 +84,11 @@ ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.c
 
 target_include_directories(smartmicro_radar_node PUBLIC ${CMAKE_INSTALL_PREFIX}/include/
 smartmicro/include/
-smartmicro/include/umrr11_t132_automotive_v1_1_1
-smartmicro/include/umrr96_t153_automotive_v1_2_1
+smartmicro/include/umrr11_t132_automotive_v1_1_2
+smartmicro/include/umrr96_t153_automotive_v1_2_2
 smartmicro/include/umrr9f_t169_automotive_v1_1_1
-smartmicro/include/umrr9f_t169_automotive_v2_0_0
-smartmicro/include/umrr9d_t152_automotive_v1_0_2)
+smartmicro/include/umrr9f_t169_automotive_v2_1_1
+smartmicro/include/umrr9d_t152_automotive_v1_0_3)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node
@@ -95,11 +96,11 @@ target_link_libraries(smartmicro_radar_node
     nlohmann_json::nlohmann_json
     com_lib
     osal
-    umrr11_t132_automotivev1.1.1_user_interface
-    umrr96_t153_automotivev1.2.1_user_interface
+    umrr11_t132_automotivev1.1.2_user_interface
+    umrr96_t153_automotivev1.2.2_user_interface
     umrr9f_t169_automotivev1.1.1_user_interface
-    umrr9f_t169_automotivev2.0.0_user_interface
-    umrr9d_t152_automotivev1.0.2_user_interface)
+    umrr9f_t169_automotivev2.1.1_user_interface
+    umrr9d_t152_automotivev1.0.3_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"

@@ -1,0 +1,31 @@
+---
+/**:
+  ros__parameters:
+      # This sets the iface_name in the hw_inventory.json
+      # sudo slcand -o -s6 -t hw -S 3000000 /dev/ttyUSBx
+      # sudo ip link set up slcan0
+      # One sensor per interface
+      master_inst_serial_type: "can_based"
+      master_data_serial_type: "can_based"
+      adapters:
+          adapter_0:
+              hw_type: "can"
+              hw_dev_id: 2
+              hw_iface_name: "slcan0"
+              baudrate: 500000
+          adapter_1:
+              hw_type: "eth"
+              hw_dev_id: 3
+              hw_iface_name: "enx002432163c8d"
+              port: 55555
+          adapter_2:
+              hw_type: "can"
+              hw_dev_id: 4
+              hw_iface_name: "slcan1"
+              baudrate: 500000
+          #adapter_3:
+          #    hw_type: "can"
+          #    hw_dev_id: 5
+          #    hw_iface_name: "can0"
+          #    baudrate: 500000
+     
