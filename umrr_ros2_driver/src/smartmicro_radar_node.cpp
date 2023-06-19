@@ -25,6 +25,8 @@
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/Target.h>
 #include <umrr9d_t152_automotive_v1_0_2/comtargetlistport/GenericPortHeader.h>
 #include <umrr9d_t152_automotive_v1_0_2/comtargetlistport/Target.h>
+#include <umrr9d_t152_automotive_v1_2_0/comtargetlistport/GenericPortHeader.h>
+#include <umrr9d_t152_automotive_v1_2_0/comtargetlistport/Target.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr9f_t169_automotive_v1_1_1/comtargetlistport/Target.h>
 #include <umrr9f_t169_automotive_v2_0_0/comtargetlistport/GenericPortHeader.h>
@@ -147,7 +149,8 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   data_umrr96 = com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface::Get();
   data_umrr9f_v1_1_1 = com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface::Get();
   data_umrr9f_v2_0_0 = com::master::umrr9f_t169_automotive_v2_0_0::DataStreamServiceIface::Get();
-  data_umrr9d = com::master::umrr9d_t152_automotive_v1_0_2::DataStreamServiceIface::Get();
+  data_umrr9d_v1_0_2 = com::master::umrr9d_t152_automotive_v1_0_2::DataStreamServiceIface::Get();
+  data_umrr9d_v1_2_0 = com::master::umrr9d_t152_automotive_v1_2_0::DataStreamServiceIface::Get();
 
   RCLCPP_INFO(this->get_logger(), "Data stream services have been received!");
   // Wait init time
@@ -192,11 +195,20 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
       std::cout << "Failed to register targetlist callback for sensor umrr9f_v2_0_0" << std::endl;
     }
     if (
-      sensor.model == "umrr9d" &&
+      sensor.model == "umrr9d_v1_0_2" &&
       com::types::ERROR_CODE_OK !=
-        data_umrr9d->RegisterComTargetListPortReceiveCallback(
+        data_umrr9d_v1_0_2->RegisterComTargetListPortReceiveCallback(
           sensor.id, std::bind(
-                       &SmartmicroRadarNode::targetlist_callback_umrr9d, this, i,
+                       &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_2, this, i,
+                       std::placeholders::_1, std::placeholders::_2))) {
+      std::cout << "Failed to register targetlist callback for sensor umrr9d" << std::endl;
+    }
+    if (
+      sensor.model == "umrr9d_v1_2_0" &&
+      com::types::ERROR_CODE_OK !=
+        data_umrr9d_v1_2_0->RegisterComTargetListPortReceiveCallback(
+          sensor.id, std::bind(
+                       &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_0, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
       std::cout << "Failed to register targetlist callback for sensor umrr9d" << std::endl;
     }
@@ -636,11 +648,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0(
   }
 }
 
-void SmartmicroRadarNode::targetlist_callback_umrr9d(
+void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_2(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9d_t152_automotive_v1_0_2::comtargetlistport::ComTargetListPort> &
-    targetlist_port_umrr9d,
+    targetlist_port_umrr9d_v1_0_2,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist callback is being called for umrr9d" << std::endl;
@@ -648,7 +660,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d(
     std::shared_ptr<
       com::master::umrr9d_t152_automotive_v1_0_2::comtargetlistport::GenericPortHeader>
       port_header;
-    port_header = targetlist_port_umrr9d->GetGenericPortHeader();
+    port_header = targetlist_port_umrr9d_v1_0_2->GetGenericPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
@@ -656,7 +668,43 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d(
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
-    for (const auto & target : targetlist_port_umrr9d->GetTargetList()) {
+    for (const auto & target : targetlist_port_umrr9d_v1_0_2->GetTargetList()) {
+      const auto range = target->GetRange();
+      const auto elevation_angle = target->GetElevationAngle();
+      const auto range_2d = range * std::cos(elevation_angle);
+      const auto azimuth_angle = target->GetAzimuthAngle();
+      const auto snr = target->GetPower() - target->GetTgtNoise();
+      modifier.push_back(
+        {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
+         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+         target->GetRCS(), target->GetTgtNoise(), snr});
+    }
+
+    m_publishers[sensor_idx]->publish(msg);
+  }
+}
+
+void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_0(
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<
+    com::master::umrr9d_t152_automotive_v1_2_0::comtargetlistport::ComTargetListPort> &
+    targetlist_port_umrr9d_v1_2_0,
+  const com::types::ClientId client_id)
+{
+  std::cout << "Targetlist callback is being called for umrr9d" << std::endl;
+  if (!check_signal) {
+    std::shared_ptr<
+      com::master::umrr9d_t152_automotive_v1_2_0::comtargetlistport::GenericPortHeader>
+      port_header;
+    port_header = targetlist_port_umrr9d_v1_2_0->GetGenericPortHeader();
+    sensor_msgs::msg::PointCloud2 msg;
+    RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
+    const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
+    const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
+    const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
+    msg.header.stamp.sec = sec.count();
+    msg.header.stamp.nanosec = nanosec.count();
+    for (const auto & target : targetlist_port_umrr9d_v1_2_0->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
