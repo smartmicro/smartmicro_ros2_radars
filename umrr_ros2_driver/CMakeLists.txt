@@ -45,20 +45,22 @@ endif()
 
 ament_auto_find_build_dependencies()
 
+set(SMARTMICRO_LIB_DIR "lib-linux-x86_64-gcc_9")
+
 # specify the path to search for the libraries
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR})
 
 install(FILES
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libsmart_access.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libosal.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libcom_lib.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libbasev1.0.2_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr11_t132_automotivev1.1.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr96_t153_automotivev1.2.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9f_t169_automotivev1.1.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9f_t169_automotivev2.0.0_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9d_t152_automotivev1.0.2_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/lib-linux-x86_64-gcc_9/libumrr9d_t152_automotivev1.2.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libsmart_access.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libosal.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libcom_lib.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libbasev1.0.2_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr11_t132_automotivev1.1.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr96_t153_automotivev1.2.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev1.1.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.0.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.0.2_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.2.0_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
