@@ -25,12 +25,13 @@
 
 #include <CommunicationServicesIface.h>
 #include <InstructionServiceIface.h>
+#include <umrra4_automotive_v0_5_0/DataStreamServiceIface.h>
 #include <umrr11_t132_automotive_v1_1_1/DataStreamServiceIface.h>
 #include <umrr96_t153_automotive_v1_2_1/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v1_1_1/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v2_0_0/DataStreamServiceIface.h>
 #include <umrr9d_t152_automotive_v1_0_2/DataStreamServiceIface.h>
-#include <umrr9d_t152_automotive_v1_2_0/DataStreamServiceIface.h>
+#include <umrr9d_t152_automotive_v1_2_1/DataStreamServiceIface.h>
 
 #include <array>
 #include <memory>
@@ -167,11 +168,27 @@ private:
   /// @param[in]  client_id  The client_id of the sensor
   ///
 
-  void targetlist_callback_umrr9d_v1_2_0(
+  void targetlist_callback_umrr9d_v1_2_1(
     const std::uint32_t sensor_idx,
     const std::shared_ptr<
-      com::master::umrr9d_t152_automotive_v1_2_0::comtargetlistport::ComTargetListPort> &
-      targetlist_port_umrr9d_v1_2_0,
+      com::master::umrr9d_t152_automotive_v1_2_1::comtargetlistport::ComTargetListPort> &
+      targetlist_port_umrr9d_v1_2_1,
+    const com::types::ClientId client_id);
+  
+  ///
+  /// @brief      A callback that is called when a new target list port for
+  /// umrr9d_v1_2_0 arrives.
+  ///
+  /// @param[in]  sensor_idx   The sensor id for respective published topic.
+  /// @param[in]  target_list_port  The target list port
+  /// @param[in]  client_id  The client_id of the sensor
+  ///
+
+  void targetlist_callback_umrra4(
+    const std::uint32_t sensor_idx,
+    const std::shared_ptr<
+      com::master::umrra4automotive_v0_5_0::comtargetlistport::ComTargetListPort> &
+      targetlist_port_umrra4,
     const com::types::ClientId client_id);
 
   ///
@@ -245,12 +262,13 @@ void terminate_on_receive(int signal);
 
 bool check_signal = false;
 std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
+std::shared_ptr<com::master::umrra4_automotive_v0_5_0::DataStreamServiceIface> data_umrra4{};
 std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface> data_umrr11{};
 std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface> data_umrr96{};
 std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface> data_umrr9f_v1_1_1{};
 std::shared_ptr<com::master::umrr9f_t169_automotive_v2_0_0::DataStreamServiceIface> data_umrr9f_v2_0_0{};
 std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_2::DataStreamServiceIface> data_umrr9d_v1_0_2{};
-std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_0::DataStreamServiceIface> data_umrr9d_v1_2_0{};
+std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_1::DataStreamServiceIface> data_umrr9d_v1_2_1{};
 
 }  // namespace radar
 }  // namespace drivers
