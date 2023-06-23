@@ -187,7 +187,7 @@ private:
   void targetlist_callback_umrra4(
     const std::uint32_t sensor_idx,
     const std::shared_ptr<
-      com::master::umrra4automotive_v0_5_0::comtargetlistport::ComTargetListPort> &
+      com::master::umrra4_automotive_v0_5_0::comtargetlistport::ComTargetListPort> &
       targetlist_port_umrra4,
     const com::types::ClientId client_id);
 
