@@ -335,6 +335,36 @@
             ]
         },
         {
+            "name": "output_control_target_list_can",
+            "comment": "send raw targets via CAN, 0 = disabled, 1 = enabled",
+            "sensors": [
+                {
+                    "model": "umrr9f",
+                    "min": 0,
+                    "max": 1,
+                    "default": 1
+                },
+                {
+                    "model": "umrr9d",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0
+                },
+                {
+                    "model": "umrr96",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0
+                },
+                {
+                    "model": "umrr11",
+                    "min": 0,
+                    "max": 1,
+                    "default": 0
+                }
+            ]
+        },
+        {
             "name": "ip_source_address",
             "comment": "IP source address (32bit)",
             "default": 3232238347

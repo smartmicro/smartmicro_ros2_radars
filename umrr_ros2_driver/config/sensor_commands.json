@@ -3,15 +3,38 @@
    [
       {
          "name": "comp_eeprom_ctrl_save_param_sec",
-         "comment": "Save the parameter inside the EEPROM. (3102.3)"
+         "comment": "Save the parameter inside the EEPROM."
       },
       {
          "name": "comp_eeprom_ctrl_reset_param_sec",
-         "comment": "Restore default values in RAM. EEPROM content is not changed. (3102.2)"
+         "comment": "Restore default values in RAM. EEPROM content is not changed."
       },
       {
          "name": "comp_eeprom_ctrl_default_param_sec",
-         "comment": "Restore default values in RAM and EEPROM. (3102.1)"
+         "comment": "Restore default values in RAM and EEPROM."
+      },
+      {  "name": "comp_fsm_core0_opmode",
+         "comment": "Select top level FSM operation mode."
+      },
+      {
+         "name": "comp_sensor_reset_delayed_app_start",
+         "comment": "Perform a device reset and stay the given value [seconds] in the bootloader at next startup."
+      },
+      {
+         "name": "comp_fsm_core0_opmode",
+         "comment": "Select top level FSM operation mode."
+      },
+      {
+         "name": "comp_eeprom_ctrl_factory_reset",
+         "comment": "Performs factory reset."
+      },
+      {
+         "name": "comp_sensor_reset",
+         "comment": "Reset command which starts from BIOS (if available) or bootloader."
+      },
+      {
+         "name": "comp_pdi_requestor_can",
+         "comment": "Send PDI data to client."
       }
    ]
 }
