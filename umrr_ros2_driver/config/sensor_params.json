@@ -51,6 +51,12 @@
                     "min": 0,
                     "max": 3,
                     "default": 1
+                },
+                {
+                    "model": "umrra4",
+                    "min": 0,
+                    "max": 3,
+                    "default": 1
                 }
             ]
         },
@@ -83,6 +89,13 @@
                     "comment": "0=medium-range, 1=long-range",
                     "min": 0,
                     "max": 1,
+                    "default": 0
+                },
+                {
+                    "model": "umrra4",
+                    "comment": "0=medium-range, 1=long-range, 2=X long range, 3=X medium range, 4=short range",
+                    "min": 0,
+                    "max": 4,
                     "default": 0
                 }
             ]
@@ -135,6 +148,13 @@
                     "min": 0,
                     "max": 1,
                     "default": 0
+                },
+                {
+                    "model": "umrra4",
+                    "comment": " 0=off, 1=X long-X medium, 2=X long-short, 3=X medium-short",
+                    "min": 0,
+                    "max": 3,
+                    "default": 0
                 }
             ]
         },
@@ -150,6 +170,12 @@
                 },
                 {
                     "model": "umrr9f_v2_0_0",
+                    "min": 0,
+                    "max": 2,
+                    "default": 1
+                },
+                {
+                    "model": "umrra4",
                     "min": 0,
                     "max": 2,
                     "default": 1
@@ -177,6 +203,12 @@
                     "min": -112.0,
                     "max": 56.0,
                     "default": -112.0
+                },
+                {
+                    "model": "umrra4",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
                 }
             ]
         },
@@ -198,6 +230,12 @@
                 },
                 {
                     "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
+                },
+                {
+                    "model": "umrra4",
                     "min": -112.0,
                     "max": 56.0,
                     "default": -112.0
@@ -225,6 +263,12 @@
                     "min": -112.0,
                     "max": 56.0,
                     "default": -112.0
+                },
+                {
+                    "model": "umrra4",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
                 }
             ]
         },
@@ -239,6 +283,24 @@
                 },
                 {
                     "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
+                },
+                {
+                    "model": "umrra4",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": -112.0
+                }
+            ]
+        },
+        {
+            "name": "tv_min_speed_sweep_idx_4",
+            "comment": "Target Validation: minimum speed of target at fourth sweep",
+            "sensors": [
+                {
+                    "model": "umrra4",
                     "min": -112.0,
                     "max": 56.0,
                     "default": -112.0
@@ -266,6 +328,12 @@
                     "min": -112.0,
                     "max": 56.0,
                     "default": 56.0
+                },
+                {
+                    "model": "umrra4",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
                 }
             ]
         },
@@ -287,6 +355,12 @@
                 },
                 {
                     "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
+                },
+                {
+                    "model": "umrra4",
                     "min": -112.0,
                     "max": 56.0,
                     "default": 56.0
@@ -314,6 +388,12 @@
                     "min": -112.0,
                     "max": 56.0,
                     "default": 56.0
+                },
+                {
+                    "model": "umrra4",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
                 }
             ]
         },
@@ -328,6 +408,24 @@
                 },
                 {
                     "model": "umrr9d",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
+                },
+                {
+                    "model": "umrra4",
+                    "min": -112.0,
+                    "max": 56.0,
+                    "default": 56.0
+                }
+            ]
+        },
+        {
+            "name": "tv_max_speed_sweep_idx_3",
+            "comment": "Target Validation: maximum speed of target at fourth sweep",
+            "sensors": [
+                {
+                    "model": "umrra4",
                     "min": -112.0,
                     "max": 56.0,
                     "default": 56.0
@@ -361,6 +459,13 @@
                     "min": 0,
                     "max": 1,
                     "default": 0
+                }
+                ,
+                {
+                    "model": "umrra4",
+                    "min": 0,
+                    "max": 1,
+                    "default": 1
                 }
             ]
         },
