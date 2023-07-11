@@ -89,16 +89,16 @@ For the setting up the ***sensors***:
 - `port`: port to be used to receive the packets, default is _55555_
 - `frame_id`: name of the frame in which the messages will be published
 - `history_size`: size of history for the message publisher
-- `inst_type`: the type of instruction serialization type, relevant to sensors using ethernet and should be _port_based_
-- `data_type`: the type of data serialization type, relevant to sensors using ethernet and should be _port_based_
+- `inst_type`: the type of instruction serialization type, relevant to sensors using ethernet and should be 'port_based'
+- `data_type`: the type of data serialization type, relevant to sensors using ethernet and should be 'port_based'
 - `uifname`: the user interface name of the sensor
 - `uifmajorv`: the major version of the sensor user interface
 - `uifminorv`: the minor version of the sensor user interface
 - `uifpatchv`: the patch version of the sensor user interface
 
 For setting up the ***adapters***:
-- `master_inst_serial_type`: the instruction serilization type of the master. When using a hybrid of 'can' and 'port' use _can_based_
-- `master_data_serial_type`: the data serilization type of the master. When using a hybrid of 'can' and 'port' use _can_based_
+- `master_inst_serial_type`: the instruction serilization type of the master. When using a hybrid of 'can' and 'port' use 'can_based'
+- `master_data_serial_type`: the data serilization type of the master. When using a hybrid of 'can' and 'port' use 'can_based'
 - `hw_type`: the type of the hardware connection
 - `hw_dev_id`: adapter id of the hardware, the sensor and ***adapter should use the same id***
 - `hw_iface_name`: name of the used network interface
