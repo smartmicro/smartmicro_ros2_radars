@@ -33,6 +33,8 @@ sure the version used to publish the data is compatible with this version:
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.0.0`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.2`
+- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.2.1`
+- User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.0.0`
 
 ### Sensor Firmwares
 This ROS2 driver release is compatible with the following sensor firmwares:
@@ -41,6 +43,7 @@ This ROS2 driver release is compatible with the following sensor firmwares:
 - UMRR9D Type 152: V2.1.0
 - UMRR9F Type 169: V1.3.0
 - UMRR9F Type 169: V2.0.2
+- UMRRA4 Type 171: V1.0.0
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a

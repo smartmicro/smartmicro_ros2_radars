@@ -19,8 +19,8 @@
 #include <point_cloud_msg_wrapper/point_cloud_msg_wrapper.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 
-#include <umrra4_automotive_v0_5_0/comtargetlistport/GenericPortHeader.h>
-#include <umrra4_automotive_v0_5_0/comtargetlistport/Target.h>
+#include <umrra4_automotive_v1_0_0/comtargetlistport/GenericPortHeader.h>
+#include <umrra4_automotive_v1_0_0/comtargetlistport/Target.h>
 #include <umrr11_t132_automotive_v1_1_1/comtargetlistport/GenericPortHeader.h>
 #include <umrr11_t132_automotive_v1_1_1/comtargetlistport/Target.h>
 #include <umrr96_t153_automotive_v1_2_1/comtargetlistport/GenericPortHeader.h>
@@ -147,7 +147,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
   }
 
   // Getting the data stream service
-  data_umrra4 = com::master::umrra4_automotive_v0_5_0::DataStreamServiceIface::Get();
+  data_umrra4 = com::master::umrra4_automotive_v1_0_0::DataStreamServiceIface::Get();
   data_umrr11 = com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface::Get();
   data_umrr96 = com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface::Get();
   data_umrr9f_v1_1_1 = com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface::Get();
@@ -521,14 +521,14 @@ void SmartmicroRadarNode::command_response(
 void SmartmicroRadarNode::targetlist_callback_umrra4(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
-    com::master::umrra4_automotive_v0_5_0::comtargetlistport::ComTargetListPort> &
+    com::master::umrra4_automotive_v1_0_0::comtargetlistport::ComTargetListPort> &
     targetlist_port_umrra4,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist callback is being called for umrra4" << std::endl;
   if (!check_signal) {
     std::shared_ptr<
-      com::master::umrra4_automotive_v0_5_0::comtargetlistport::GenericPortHeader>
+      com::master::umrra4_automotive_v1_0_0::comtargetlistport::GenericPortHeader>
       port_header;
     port_header = targetlist_port_umrra4->GetGenericPortHeader();
     sensor_msgs::msg::PointCloud2 msg;

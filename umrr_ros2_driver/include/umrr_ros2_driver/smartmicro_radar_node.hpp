@@ -25,7 +25,7 @@
 
 #include <CommunicationServicesIface.h>
 #include <InstructionServiceIface.h>
-#include <umrra4_automotive_v0_5_0/DataStreamServiceIface.h>
+#include <umrra4_automotive_v1_0_0/DataStreamServiceIface.h>
 #include <umrr11_t132_automotive_v1_1_1/DataStreamServiceIface.h>
 #include <umrr96_t153_automotive_v1_2_1/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v1_1_1/DataStreamServiceIface.h>
@@ -187,7 +187,7 @@ private:
   void targetlist_callback_umrra4(
     const std::uint32_t sensor_idx,
     const std::shared_ptr<
-      com::master::umrra4_automotive_v0_5_0::comtargetlistport::ComTargetListPort> &
+      com::master::umrra4_automotive_v1_0_0::comtargetlistport::ComTargetListPort> &
       targetlist_port_umrra4,
     const com::types::ClientId client_id);
 
@@ -262,7 +262,7 @@ void terminate_on_receive(int signal);
 
 bool check_signal = false;
 std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
-std::shared_ptr<com::master::umrra4_automotive_v0_5_0::DataStreamServiceIface> data_umrra4{};
+std::shared_ptr<com::master::umrra4_automotive_v1_0_0::DataStreamServiceIface> data_umrra4{};
 std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIface> data_umrr11{};
 std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface> data_umrr96{};
 std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface> data_umrr9f_v1_1_1{};
