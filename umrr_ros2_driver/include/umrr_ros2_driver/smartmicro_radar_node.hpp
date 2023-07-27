@@ -30,6 +30,7 @@
 #include <umrr96_t153_automotive_v1_2_1/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v1_1_1/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v2_0_0/DataStreamServiceIface.h>
+#include <umrr9f_t169_automotive_v2_2_0/DataStreamServiceIface.h>
 #include <umrr9d_t152_automotive_v1_0_2/DataStreamServiceIface.h>
 #include <umrr9d_t152_automotive_v1_2_1/DataStreamServiceIface.h>
 
@@ -114,7 +115,7 @@ private:
 
   ///
   /// @brief      A callback that is called when a new target list port for
-  /// umrr9f arrives.
+  /// umrr9f_v1_1_1 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port
@@ -129,7 +130,7 @@ private:
     const com::types::ClientId client_id);
   ///
   /// @brief      A callback that is called when a new target list port for
-  /// umrr9f arrives.
+  /// umrr9f_v2_0_0 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port
@@ -145,7 +146,23 @@ private:
   
   ///
   /// @brief      A callback that is called when a new target list port for
-  /// umrr9d arrives.
+  /// umrr9f_v2_2_0 arrives.
+  ///
+  /// @param[in]  sensor_idx   The sensor id for respective published topic.
+  /// @param[in]  target_list_port  The target list port
+  /// @param[in]  client_id  The client_id of the sensor
+  ///
+
+  void targetlist_callback_umrr9f_v2_2_0(
+    const std::uint32_t sensor_idx,
+    const std::shared_ptr<
+      com::master::umrr9f_t169_automotive_v2_2_0::comtargetlistport::ComTargetListPort> &
+      targetlist_port_umrr9f_v2_2_0,
+    const com::types::ClientId client_id);
+  
+  ///
+  /// @brief      A callback that is called when a new target list port for
+  /// umrr9d_v1_0_2 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port
@@ -161,7 +178,7 @@ private:
   
   ///
   /// @brief      A callback that is called when a new target list port for
-  /// umrr9d_v1_2_0 arrives.
+  /// umrr9d_v1_2_1 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port
@@ -177,7 +194,7 @@ private:
   
   ///
   /// @brief      A callback that is called when a new target list port for
-  /// umrr9d_v1_2_0 arrives.
+  /// umrra4 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port

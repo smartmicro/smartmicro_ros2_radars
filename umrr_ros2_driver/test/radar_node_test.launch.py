@@ -114,6 +114,7 @@ class TestSmartNode(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # Shutdown the ROS context
+        print("Shutdown node")
         rclpy.shutdown()
 
     def setUp(self):
