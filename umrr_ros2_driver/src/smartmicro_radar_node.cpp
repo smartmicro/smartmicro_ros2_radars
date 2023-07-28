@@ -51,8 +51,6 @@
 #include <vector>
 
 #include "umrr_ros2_driver/config_path.hpp"
-#include "umrr_ros2_driver/sensor_params.hpp"
-#include "umrr_ros2_driver/sensor_commands.hpp"
 
 using com::common::Instruction;
 using com::master::CmdRequest;
@@ -276,28 +274,10 @@ void SmartmicroRadarNode::radar_mode(
   std::shared_ptr<umrr_ros2_msgs::srv::SetMode::Response> result)
 {
   std::string instruction_name{};
-  bool check_flag_param = false;
   bool check_flag_id = false;
-
-  std::ifstream instr_file(KSensorParamFilePath);
-  auto param_table = nlohmann::json::parse(instr_file);
 
   instruction_name = request->param;
   client_id = request->sensor_id;
-
-  for (const auto & item : param_table.items()) {
-    for (const auto & param : item.value().items()) {
-      if (instruction_name == param.value()["name"]) {
-        check_flag_param = true;
-        break;
-      }
-    }
-  }
-
-  if (!check_flag_param) {
-    result->res = "Invalid instruction name or value! ";
-    return;
-  }
 
   for (auto & sensor : m_sensors) {
     if (client_id == sensor.id) {
@@ -409,32 +389,10 @@ void SmartmicroRadarNode::radar_command(
   std::shared_ptr<umrr_ros2_msgs::srv::SendCommand::Response> result)
 {
   std::string command_name{};
-  bool check_flag_command = false;
   bool check_flag_id = false;
-
-  std::ifstream command_file(KSensorCommandFilePath);
-  if (!command_file)
-  {
-    std::cout << "File is not present" << std::endl;
-  }
-  auto command_table = nlohmann::json::parse(command_file);
 
   command_name = request->command;
   client_id = request->sensor_id;
-
-  for (const auto & item : command_table.items()) {
-    for (const auto & command : item.value().items()) {
-      if (command_name == command.value()["name"]) {
-        check_flag_command = true;
-        break;
-      }
-    }
-  }
-
-  if (!check_flag_command) {
-    result->res = "Invalid command name! ";
-    return;
-  }
 
   for (auto & sensor : m_sensors) {
     if (client_id == sensor.id) {

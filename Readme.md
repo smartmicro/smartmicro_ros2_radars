@@ -81,7 +81,7 @@ For more details, see the [`radar.template.yaml`](umrr_ros2_driver/param/radar.t
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
-may access these modes. A list of available sensor modes is given in the [`sensor_params.json`](umrr_ros2_driver/config/sensor_params.json).
+may access these modes and send commands to the sensor. A list of available sensor operations is given in the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/).
 
 A ros2 `SetMode` service should be called to implement these mode changes. There are three inputs to a ros2 service call:
 - `param`: name of the mode instruction (specific to the sensor)
@@ -90,6 +90,13 @@ A ros2 `SetMode` service should be called to implement these mode changes. There
 
 For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMRR-11 sensor to `AEB (2)` mode would require the following call:
 `ros2 service call /smart_radar/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
+
+Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are two inputs for sending a command:
+- `command`: name of the command (specific to the sensor interface)
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+
+The call for such a service would be as follows:
+`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
 
 ## Configuration of the sensors
 In order to use multiple sensors (maximum of up to eight sensors) with the node the sensors should be configured separately.
@@ -111,15 +118,7 @@ The call for such a service would be as follows:
 Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
 
-## Saving mode changes
-In order to save the mode changes, an additional service if provided. This service offers different save options and also the possibility to
-set the default values for the sensors. The list of all the options could be found in the [`sensor_commands.json`](umrr_ros2_driver/config/sensor_commands.json).
-
-The call for such a service would be as follows:
-`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
-
 ## Sensor Service Responses
-
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
 
 **Value**   |   **Description**
