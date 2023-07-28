@@ -284,6 +284,7 @@ std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_1::DataStreamServiceIfa
 std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_1::DataStreamServiceIface> data_umrr96{};
 std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface> data_umrr9f_v1_1_1{};
 std::shared_ptr<com::master::umrr9f_t169_automotive_v2_0_0::DataStreamServiceIface> data_umrr9f_v2_0_0{};
+std::shared_ptr<com::master::umrr9f_t169_automotive_v2_2_0::DataStreamServiceIface> data_umrr9f_v2_2_0{};
 std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_2::DataStreamServiceIface> data_umrr9d_v1_0_2{};
 std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_1::DataStreamServiceIface> data_umrr9d_v1_2_1{};
 

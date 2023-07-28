@@ -120,7 +120,7 @@ rclcpp_components_register_node(smartmicro_radar_node
 if(BUILD_TESTING)
     find_package(launch_testing_ament_cmake)
     add_launch_test(test/radar_node_test.launch.py TIMEOUT "150")
-
+       
     # Not applying ros2 linters on external sources
     list(APPEND AMENT_LINT_AUTO_EXCLUDE
         ament_cmake_copyright
