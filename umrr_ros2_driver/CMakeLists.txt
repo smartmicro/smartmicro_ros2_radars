@@ -58,7 +58,10 @@ install(FILES
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr96_t153_automotivev1.2.2_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev1.1.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.1.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.2.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.0.3_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.2.2_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.0.1_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -66,19 +69,11 @@ set(CONFIG_FOLDER_PATH "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/config")
 set(CONFIG_FILE_PATH "${CONFIG_FOLDER_PATH}/smart_access_config.json")
 set(HW_INVENTORY_FILE_PATH "${CONFIG_FOLDER_PATH}/hw_inventory.json")
 set(ROUTING_TABLE_FILE_PATH "${CONFIG_FOLDER_PATH}/routing_table.json")
-set(SENSOR_PARAM_FILE_PATH "${PROJECT_SOURCE_DIR}/config/sensor_params.json")
-set(SENSOR_COMMAND_FILE_PATH "${PROJECT_SOURCE_DIR}/config/sensor_commands.json")
 configure_file(
     "${PROJECT_SOURCE_DIR}/cmake/smart_access_config.json.in" "${CONFIG_FILE_PATH}" @ONLY)
 configure_file(
     "${PROJECT_SOURCE_DIR}/cmake/config_path.hpp.in"
     "${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}/config_path.hpp" @ONLY)
-configure_file(
-    "${PROJECT_SOURCE_DIR}/cmake/sensor_params.hpp.in"
-    "${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/sensor_params.hpp" @ONLY)
-configure_file(
-    "${PROJECT_SOURCE_DIR}/cmake/sensor_commands.hpp.in"
-    "${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/sensor_commands.hpp" @ONLY)
 
 ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.cpp")
 
@@ -88,7 +83,10 @@ smartmicro/include/umrr11_t132_automotive_v1_1_2
 smartmicro/include/umrr96_t153_automotive_v1_2_2
 smartmicro/include/umrr9f_t169_automotive_v1_1_1
 smartmicro/include/umrr9f_t169_automotive_v2_1_1
-smartmicro/include/umrr9d_t152_automotive_v1_0_3)
+smartmicro/include/umrr9f_t169_automotive_v2_2_1
+smartmicro/include/umrr9d_t152_automotive_v1_0_3
+smartmicro/include/umrr9d_t152_automotive_v1_2_2
+smartmicro/include/umrra4_automotive_v1_0_1)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node
@@ -100,7 +98,10 @@ target_link_libraries(smartmicro_radar_node
     umrr96_t153_automotivev1.2.2_user_interface
     umrr9f_t169_automotivev1.1.1_user_interface
     umrr9f_t169_automotivev2.1.1_user_interface
-    umrr9d_t152_automotivev1.0.3_user_interface)
+    umrr9f_t169_automotivev2.2.1_user_interface
+    umrr9d_t152_automotivev1.0.3_user_interface
+    umrr9d_t152_automotivev1.2.2_user_interface
+    umrra4_automotivev1.0.1_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"

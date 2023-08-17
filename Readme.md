@@ -70,8 +70,8 @@ For setting up a sensor with ethernet or can, the interfaces of the should be se
 The sensor came equiped with two protocols:
 - ethernet: to set-up an ethernet interface the following command could be used `ifconfig my_interface_name 192.168.11.17 netmask 255.255.255.0`.
 The command above uses the default source ip address used by the sensors.
-- can: to set-up a can interface the following commands could be used `slcand -o -s6 -t hw -S 3000000 /dev/ttyUSBx`and than `ip link set up my_interace_name`.
-This uses the default baudrate of _500000_.  
+- can: if using LAWICEL to set-up a can interface the following commands could be used `slcand -o -s6 -t hw -S 3000000 /dev/ttyUSBx`and than `ip link set up my_interace_name`.
+This uses the default baudrate of _500000_. When using Peak CAN the interfaces are recognized by linux and is only needed to set the baudrate.  
 
 ### Node Configuration:
 The node is configured through the parameters. Here is a short recap of the most important parts.
@@ -81,8 +81,8 @@ For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/r
 For the setting up the ***sensors***:
 - `link_type`: the type of hardware connection
 - `model`: the model of the sensor being used
-  - can: 'umrr11_can', 'umrr9d_can', 'umrr96_can', 'umrr9f_can_v1_1_1', 'umrr9f_can_v2_1_1'
-  - port: 'umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1'
+  - can: 'umrra4_can', 'umrr11_can', 'umrr9d_can', 'umrr96_can', 'umrr9f_can_v1_1_1', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
+  - port: 'umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrra4'
 - `dev_id`: adapter id to which sensor is connected. ***The adapter and sensor should have the same dev_id***
 - `id`: the client_id of the sensor/source, ***must be a _unique_ integer***.
 - `ip`: the ***_unique_*** ip address of the sensor or of the source acting as a sensor, required only for sensors using _ethernet_.
@@ -105,10 +105,9 @@ For setting up the ***adapters***:
 - `baudrate`: the baudrate of the sensor connected with can, default is _500000_
 - `port`: port to be used to receive the packets, default is _55555_
 
-
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
-may access these modes. A list of available sensor modes is given in the [`sensor_params.json`](umrr_ros2_driver/config/sensor_params.json).
+may access these modes and send commands to the sensor. A list of available sensor operations is given in the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/).
 
 A ros2 `SetMode` service should be called to implement these mode changes. There are three inputs to a ros2 service call:
 - `param`: name of the mode instruction (specific to the sensor)
@@ -117,6 +116,13 @@ A ros2 `SetMode` service should be called to implement these mode changes. There
 
 For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMRR-11 sensor to `AEB (2)` mode would require the following call:
 `ros2 service call /smart_radar/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
+
+Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are two inputs for sending a command:
+- `command`: name of the command (specific to the sensor interface)
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+
+The call for such a service would be as follows:
+`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
 
 ## Configuration of the sensors
 In order to use multiple sensors (maximum of up to eight sensors) with the node the sensors should be configured separately.
@@ -137,6 +143,7 @@ The call for such a service would be as follows:
 
 Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
+
 
 ## Saving mode changes
 In order to save the mode changes, an additional service if provided. This service offers different save options and also the possibility to
