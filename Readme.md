@@ -22,11 +22,11 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR radars and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, UMRRA4, DRVEGRD 152 or DRVEGRD 169 radar are 
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152 or DRVEGRD 169 radar are 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `February 06, 2023`
+- Date of release: `August 18, 2023`
 - Smart Access Automotive version: `v3.2.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
@@ -43,7 +43,7 @@ This ROS2 driver release is compatible with the following sensor firmwares:
 - UMRR96 Type 153: V5.2.4
 - UMRR9D Type 152: V2.1.0
 - UMRR9F Type 169: V1.3.0
-- UMRR9F Type 169: V2.0.1
+- UMRR9F Type 169: V2.0.2
 - UMRR9F Type 169: V2.2.0
 - UMRRA4 Type 171: V1.0.0
 
@@ -79,7 +79,7 @@ For more details, see the [`radar.template.yaml`](umrr_ros2_driver/param/radar.t
 - `iface_name`: name of the used network interface
 - `frame_id`: name of the frame in which the messages will be published
 - `history_size`: size of history for the message publisher
-- `model`: the model('umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_0_0') of the sensor being used
+- `model`: the model('umrra4_v1_0_0', 'umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_0_0') of the sensor being used
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
