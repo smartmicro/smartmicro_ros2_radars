@@ -27,7 +27,7 @@ required to run this node. This code is bundled with a version of Smart Access A
 sure the version used to publish the data is compatible with this version:
 
 - Date of release: `February 06, 2023`
-- Smart Access Automotive version: `v3.1.0`
+- Smart Access Automotive version: `v3.2.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
