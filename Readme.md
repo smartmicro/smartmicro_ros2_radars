@@ -22,17 +22,20 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR radars and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 152 or DRVEGRD 169 radar are 
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152 or DRVEGRD 169 radar are 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `February 06, 2023`
-- Smart Access Automotive version: `v3.0.0`
+- Date of release: `August 21, 2023`
+- Smart Access Automotive version: `v3.2.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.1`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.0.0`
+- User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.2.0`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.2`
+- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.2.1`
+- User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.0.0`
 
 ### Sensor Firmwares
 This ROS2 driver release is compatible with the following sensor firmwares:
@@ -41,6 +44,8 @@ This ROS2 driver release is compatible with the following sensor firmwares:
 - UMRR9D Type 152: V2.1.0
 - UMRR9F Type 169: V1.3.0
 - UMRR9F Type 169: V2.0.2
+- UMRR9F Type 169: V2.2.0
+- UMRRA4 Type 171: V1.0.0
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -74,11 +79,11 @@ For more details, see the [`radar.template.yaml`](umrr_ros2_driver/param/radar.t
 - `iface_name`: name of the used network interface
 - `frame_id`: name of the frame in which the messages will be published
 - `history_size`: size of history for the message publisher
-- `model`: the model('umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_0_0') of the sensor being used
+- `model`: the model('umrra4_v1_0_0', 'umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_0_0') of the sensor being used
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
-may access these modes. A list of available sensor modes is given in the [`sensor_params.json`](umrr_ros2_driver/config/sensor_params.json).
+may access these modes and send commands to the sensor. A list of available sensor operations is given in the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/).
 
 A ros2 `SetMode` service should be called to implement these mode changes. There are three inputs to a ros2 service call:
 - `param`: name of the mode instruction (specific to the sensor)
@@ -87,6 +92,13 @@ A ros2 `SetMode` service should be called to implement these mode changes. There
 
 For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMRR-11 sensor to `AEB (2)` mode would require the following call:
 `ros2 service call /smart_radar/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
+
+Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are two inputs for sending a command:
+- `command`: name of the command (specific to the sensor interface)
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+
+The call for such a service would be as follows:
+`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
 
 ## Configuration of the sensors
 In order to use multiple sensors (maximum of up to eight sensors) with the node the sensors should be configured separately.
@@ -108,15 +120,7 @@ The call for such a service would be as follows:
 Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
 
-## Saving mode changes
-In order to save the mode changes, an additional service if provided. This service offers different save options and also the possibility to
-set the default values for the sensors. The list of all the options could be found in the [`sensor_commands.json`](umrr_ros2_driver/config/sensor_commands.json).
-
-The call for such a service would be as follows:
-`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
-
 ## Sensor Service Responses
-
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
 
 **Value**   |   **Description**

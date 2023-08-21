@@ -108,7 +108,6 @@ class TestSmartNode(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Initialize the ROS context for the test node
-        print("Initialize")
         rclpy.init()
 
     @classmethod
@@ -118,11 +117,9 @@ class TestSmartNode(unittest.TestCase):
 
     def setUp(self):
         # Create a ROS node for tests
-        print("setUp")
         self.test_node = rclpy.create_node('test_node')
 
     def tearDown(self):
-        print("Destroy node")
         self.test_node.destroy_node()
 
     def test_smart_node_publishes(self):
