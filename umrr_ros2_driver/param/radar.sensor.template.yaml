@@ -86,7 +86,7 @@
           sensor_3:
               link_type: "eth"
               # The model of the connected sensor.
-              model: "umrr9d"
+              model: "umrr9d_v1_0_3"
               # Adapter id to which sensor is connected
               dev_id: 3
               # The client_id of the sensor/source, must be a unique integer.

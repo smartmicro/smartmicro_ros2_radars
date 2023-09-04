@@ -22,17 +22,20 @@ ros2 launch umrr_ros2_driver radar.launch.py
 - ROS2 foxy
 
 ### UMRR radars and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 152 or DRVEGRD 169 radar are 
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152 or DRVEGRD 169 radar are 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `February 06, 2023`
-- Smart Access Automotive version: `v3.0.0`
+- Date of release: `September 15, 2023`
+- Smart Access Automotive version: `v3.3.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.2`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.2`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.1.1`
+- User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.2.1`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.3`
+- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.2.2`
+- User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.0.1`
 
 ### Sensor Firmwares
 This ROS2 driver release is compatible with the following sensor firmwares:
@@ -41,6 +44,8 @@ This ROS2 driver release is compatible with the following sensor firmwares:
 - UMRR9D Type 152: V2.1.0
 - UMRR9F Type 169: V1.3.0
 - UMRR9F Type 169: V2.0.2
+- UMRR9F Type 169: V2.2.0
+- UMRRA4 Type 171: V1.0.0
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -81,10 +86,10 @@ For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/r
 For the setting up the ***sensors***:
 - `link_type`: the type of hardware connection
 - `model`: the model of the sensor being used
-  - can: 'umrra4_can', 'umrr11_can', 'umrr9d_can', 'umrr96_can', 'umrr9f_can_v1_1_1', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
-  - port: 'umrr11', 'umrr9d', 'umrr96', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrra4'
+  - can: 'umrra4_can_v1_0_1', 'umrr96_can', 'umrr11_can', 'umrr9d_can_v1_0_3', 'umrr9d_can_v1_2_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
+  - port: 'umrra4_v1_0_1', 'umrr96', 'umrr11', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1',
 - `dev_id`: adapter id to which sensor is connected. ***The adapter and sensor should have the same dev_id***
-- `id`: the client_id of the sensor/source, ***must be a _unique_ integer***.
+- `id`: the client_id of the sensor/source, ***must be a _unique_ integer and non-zero***.
 - `ip`: the ***_unique_*** ip address of the sensor or of the source acting as a sensor, required only for sensors using _ethernet_.
 - `port`: port to be used to receive the packets, default is _55555_
 - `frame_id`: name of the frame in which the messages will be published
@@ -100,7 +105,7 @@ For setting up the ***adapters***:
 - `master_inst_serial_type`: the instruction serilization type of the master. When using a hybrid of 'can' and 'port' use 'can_based'
 - `master_data_serial_type`: the data serilization type of the master. When using a hybrid of 'can' and 'port' use 'can_based'
 - `hw_type`: the type of the hardware connection
-- `hw_dev_id`: adapter id of the hardware, the sensor and ***adapter should use the same id***
+- `hw_dev_id`: adapter id of the hardware, ***the sensor and adapter should use the same id***
 - `hw_iface_name`: name of the used network interface
 - `baudrate`: the baudrate of the sensor connected with can, default is _500000_
 - `port`: port to be used to receive the packets, default is _55555_
@@ -143,14 +148,6 @@ The call for such a service would be as follows:
 
 Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
-
-
-## Saving mode changes
-In order to save the mode changes, an additional service if provided. This service offers different save options and also the possibility to
-set the default values for the sensors. The list of all the options could be found in the [`sensor_commands.json`](umrr_ros2_driver/config/sensor_commands.json).
-
-The call for such a service would be as follows:
-`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
 
 ## Sensor Service Responses
 
