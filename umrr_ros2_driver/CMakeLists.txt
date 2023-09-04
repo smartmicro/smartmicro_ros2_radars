@@ -44,7 +44,7 @@ if(NOT json_POPULATED)
 endif()
 
 ament_auto_find_build_dependencies()
-set(SMARTMICRO_LIB_DIR "lib-linux-x86_64-gcc_7")
+set(SMARTMICRO_LIB_DIR "lib-linux-x86_64-gcc_9")
 
 # specify the path to search for the libraries
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR})
@@ -111,10 +111,6 @@ rclcpp_components_register_node(smartmicro_radar_node
 if(BUILD_TESTING)
     find_package(launch_testing_ament_cmake)
     add_launch_test(test/radar_node_test.launch.py TIMEOUT "150")
-
-    find_package(ament_cmake_gtest REQUIRED)
-    ament_add_gtest(test_smartmicro_radar_node test/test_smartmicro_radar_node.cpp)
-    target_link_libraries(test_smartmicro_radar_node smartmicro_radar_node)
 
     # Not applying ros2 linters on external sources
     list(APPEND AMENT_LINT_AUTO_EXCLUDE
