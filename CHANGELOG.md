@@ -35,3 +35,11 @@ This release fixes the offset which causes anomaly in pointclouds from DRVEGRD 1
 ## v4.0.0 - 2023-02-06
 
 This release includes the new DRVEGRD 169 user-interface. The release includes new modes for DRVEGRD 169 and also introduces an additional ros2 service to save configurations. Previously used model 'UMRR9F' in radar parameters has been divided into two versions, the 'UMRR9F_V1_1_1' and 'UMRR9F_V2_0_0'.
+
+## v4.1.0 - 2023-08-21
+
+This release includes the new DRVEGRD 171 and DRVEGRD 152 user-interface. The release includes a complete list of all params and commands for all sensors which are accessed using the ros2 services.
+
+## v5.0.0 - 2023-09-15
+
+This release includes CAN communication for all the provided sensor types and sensors interfaces. The params are now extended to include the params/setting for the connected adapeters alongwith the sensor params. 

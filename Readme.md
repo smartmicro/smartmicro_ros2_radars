@@ -150,7 +150,6 @@ Note: For successfull execution of this call it is important that the sensor is 
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
 
 ## Sensor Service Responses
-
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
 
 **Value**   |   **Description**
