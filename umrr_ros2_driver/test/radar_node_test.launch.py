@@ -125,7 +125,7 @@ class TestSmartNode(unittest.TestCase):
         self.test_node.destroy_node()
 
     def test_smart_node_publishes(self):
-        # Expect the smartnode to publish strings on '/umrr/targets_'
+        # Expect the smartnode to publish strings on '/smart_radar/targets_'
         data_rx_s1 = []
         data_rx_s2 = []
         data_rx_s3 = []

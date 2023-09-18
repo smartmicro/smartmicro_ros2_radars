@@ -60,7 +60,7 @@ services:
             - SMART_ACCESS_CFG_FILE_PATH=/code/simulator/config_umrr9f/com_lib_config.json
             - LD_LIBRARY_PATH=/code/umrr_ros2_driver/smartmicro/lib-linux-x86_64-gcc_9
         entrypoint: ["/code/simulator/simulation/out/bin/simulator"]
-        command:    ["9", "2", "1", "B"]
+        command:    ["9", "2", "1", "C"]
         networks:
             device_network:
                 ipv4_address: 172.22.10.103
