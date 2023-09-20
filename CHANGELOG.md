@@ -42,4 +42,4 @@ This release includes the new DRVEGRD 171 and DRVEGRD 152 user-interface. The re
 
 ## v5.0.0 - 2023-09-20
 
-This release includes CAN communication for all the provided sensor types and sensors interfaces. The params are now extended to include the params/setting for the connected adapeters alongwith the sensor params. 
+This release includes CAN communication for all the provided sensor types and sensors interfaces. The params are now extended to include the params/setting for the connected adapters alongwith the sensor params. 

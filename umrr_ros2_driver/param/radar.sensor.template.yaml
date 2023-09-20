@@ -5,6 +5,9 @@
       sensors:
           # As many as 10 sensors all named as "sensor_<number>" in increasing order of numbers,
           # e.g., sensor_0, sensor_1, etc. The list must start with sensor_0.
+          # For sensor `model`if using :
+          # can: 'umrra4_can_v1_0_1', 'umrr96_can', 'umrr11_can', 'umrr9d_can_v1_0_3', 'umrr9d_can_v1_2_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
+          # port: 'umrra4_v1_0_1', 'umrr96', 'umrr11', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1'
           sensor_0:
               link_type: "eth"
               # The model of the connected sensor.
@@ -109,4 +112,3 @@
               uifminorv: 0
               # The pathc version of the interface
               uifpatchv: 3
-         
