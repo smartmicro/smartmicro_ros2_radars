@@ -37,10 +37,9 @@ def generate_launch_description():
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
-        name='smart_micro_radars',
+        name='smart_radar',
         parameters=[radar_sensor_params, radar_adapter_params]
     )
-    
     return LaunchDescription([
         radar_node
     ])

@@ -58,6 +58,7 @@ install(FILES
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr11_t132_automotivev1.1.2_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr96_t153_automotivev1.2.2_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev1.1.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.1.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.2.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.0.3_user_interface.so"
@@ -83,6 +84,7 @@ smartmicro/include/
 smartmicro/include/umrr11_t132_automotive_v1_1_2
 smartmicro/include/umrr96_t153_automotive_v1_2_2
 smartmicro/include/umrr9f_t169_automotive_v1_1_1
+smartmicro/include/umrr9f_t169_automotive_v2_0_0
 smartmicro/include/umrr9f_t169_automotive_v2_1_1
 smartmicro/include/umrr9f_t169_automotive_v2_2_1
 smartmicro/include/umrr9d_t152_automotive_v1_0_3
@@ -98,6 +100,7 @@ target_link_libraries(smartmicro_radar_node
     umrr11_t132_automotivev1.1.2_user_interface
     umrr96_t153_automotivev1.2.2_user_interface
     umrr9f_t169_automotivev1.1.1_user_interface
+    umrr9f_t169_automotivev2.0.0_user_interface
     umrr9f_t169_automotivev2.1.1_user_interface
     umrr9f_t169_automotivev2.2.1_user_interface
     umrr9d_t152_automotivev1.0.3_user_interface

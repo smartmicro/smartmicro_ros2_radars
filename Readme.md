@@ -73,10 +73,10 @@ The driver publishes `sensor_msgs::msg::PointCloud2` messages with the radar tar
 
 ### Interface Configuration:
 For setting up a sensor with ethernet or can, the interfaces of the should be set properly prior to configuring the node.
-The sensor came equiped with two protocols:
+The sensor is equipped with three physical layers (RS485, CAN and ethernet) however the driver uses only ethernet and can:
 - ethernet: to set-up an ethernet interface the following command could be used `ifconfig my_interface_name 192.168.11.17 netmask 255.255.255.0`.
 The command above uses the default source ip address used by the sensors.
-- can: if using LAWICEL to set-up a can interface the following commands could be used `slcand -o -s6 -t hw -S 3000000 /dev/ttyUSBx`and than `ip link set up my_interace_name`.
+- can: if using LAWICEL to set-up a can interface the following commands could be used `slcand -o -s6 -t hw -S 3000000 /dev/ttyUSBx`and than `ip link set up my_interface_name`.
 This uses the default baudrate of _500000_. When using Peak CAN the interfaces are recognized by linux and is only needed to set the baudrate.  
 
 ### Node Configuration:
