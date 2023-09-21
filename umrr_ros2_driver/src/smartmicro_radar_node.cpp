@@ -275,7 +275,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
           sensor.id, std::bind(
                        &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_0_1, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register CAN targetlist callback for sensor umrra4" << std::endl;
+      std::cout << "Failed to register CAN targetlist for sensor umrra4" << std::endl;
     }
     if (
       sensor.model == "umrr96_can" &&
@@ -284,7 +284,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
           sensor.id, std::bind(
                        &SmartmicroRadarNode::CAN_targetlist_callback_umrr96, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register CAN targetlist callback for sensor umrr96" << std::endl;
+      std::cout << "Failed to register CAN targetlist for sensor umrr96" << std::endl;
     }
     if (
       sensor.model == "umrr11_can" &&
@@ -293,7 +293,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
           sensor.id, std::bind(
                        &SmartmicroRadarNode::CAN_targetlist_callback_umrr11, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register CAN targetlist callback for sensor umrr11" << std::endl;
+      std::cout << "Failed to register CAN targetlist for sensor umrr11" << std::endl;
     }
     if (
       sensor.model == "umrr9d_can_v1_0_3" &&
@@ -302,7 +302,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
           sensor.id, std::bind(
                        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register CAN targetlist callback for sensor umrr9d_v1_0_3" << std::endl;
+      std::cout << "Failed to register CAN targetlist for sensor umrr9d_v1_0_3" << std::endl;
     }
     if (
       sensor.model == "umrr9d_can_v1_2_2" &&
@@ -311,7 +311,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
           sensor.id, std::bind(
                        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register CAN targetlist callback for sensor umrr9d_v1_2_2" << std::endl;
+      std::cout << "Failed to register CAN targetlist for sensor umrr9d_v1_2_2" << std::endl;
     }
     if (
       sensor.model == "umrr9f_can_v2_1_1" &&
@@ -320,7 +320,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
           sensor.id, std::bind(
                        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_1_1, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register CAN targetlist callback for sensor umrr9f_v2_1_1" << std::endl;
+      std::cout << "Failed to register CAN targetlist for sensor umrr9f_v2_1_1" << std::endl;
     }
     if (
       sensor.model == "umrr9f_can_v2_2_1" &&
@@ -329,7 +329,7 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
           sensor.id, std::bind(
                        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_2_1, this, i,
                        std::placeholders::_1, std::placeholders::_2))) {
-      std::cout << "Failed to register CAN targetlist callback for sensor umrr9f_v2_2_1" << std::endl;
+      std::cout << "Failed to register CAN targetlist for sensor umrr9f_v2_2_1" << std::endl;
     }
   }
 
