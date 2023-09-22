@@ -155,7 +155,7 @@ int main(int argc, char * argv[])
     } else {
       std::cout << "Invalid input!" << std::endl;
     }
-    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(30)) {
+    if (std::chrono::steady_clock::now() - Start > std::chrono::seconds(15)) {
       break;
     }
   }

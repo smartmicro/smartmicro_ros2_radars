@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-smart_pack=SmartAccessAutomotive_3_2_0.tgz
+smart_pack=SmartAccessAutomotive_3_4_0.tgz
 URL_smartbinaries=https://www.smartmicro.com/fileadmin/media/Downloads/Automotive_Radar/Software/${smart_pack}
 
 cat << EOF

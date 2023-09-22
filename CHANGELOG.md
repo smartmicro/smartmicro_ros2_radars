@@ -14,23 +14,23 @@ Requires new sensor firmware, if using UMRR11-T132: V5.1.4 and if using UMRR96-T
 ## v2.1.0 - 2022-06-02
 
 This minor release of the driver offer ros2 services to communicate with the sensor. The driver now supports mode changes for UMRR96 and UMRR11.
-This release also offers the possibilty of configuring the ip addresses of the sensor using ros2 services. The tests are further extended to inlcude ros2 services check. Requires new sensor firmware, if using UMRR11-T132: V5.1.4 and if using UMRR96-T153: V5.2.4.
+This release also offers the possibility of configuring the ip addresses of the sensor using ros2 services. The tests are further extended to include ros2 services check. Requires new sensor firmware, if using UMRR11-T132: V5.1.4 and if using UMRR96-T153: V5.2.4.
 
 ## v3.0.0 - 2022-09-23
 
-Major release includes the new smartmicro sensor DRVEGRD 169. The driver offers mode changes and configuration of the DRVEGRD 169 along with publishing the radar targets as pointcloud data. The callbacks for datastream now require a clientID. 
+Major release includes the new smartmicro sensor DRVEGRD 169. The driver offers mode changes and configuration of the DRVEGRD 169 along with publishing the radar targets as point cloud data. The callbacks for datastream now require a clientID. 
 
 ## v3.1.0 - 2022-10-19
 
-This release includes the new smartmicro sensor DRVEGRD 152. The driver offers mode changes and configuration of the DRVEGRD 152 along with publishing the radar targets as pointcloud data. The callbacks for datastream now require a clientID.
+This release includes the new smartmicro sensor DRVEGRD 152. The driver offers mode changes and configuration of the DRVEGRD 152 along with publishing the radar targets as point cloud data. The callbacks for datastream now require a clientID.
 
 ## v3.2.0 - 2022-11-11
 
-This minor release introduces signal-to-noise field in the pointclouds and also fixes the max number of sensors that could be connected at once.
+This minor release introduces signal-to-noise field in the point clouds and also fixes the max number of sensors that could be connected at once.
 
 ## v3.2.1 - 2022-12-16
 
-This release fixes the offset which causes anomaly in pointclouds from DRVEGRD 152 sensor. It also fixes the timestamp calculation bug which causes rviz to crash and updates the simulator source files.
+This release fixes the offset which causes anomaly in point clouds from DRVEGRD 152 sensor. It also fixes the timestamp calculation bug which causes rviz to crash and updates the simulator source files.
 
 ## v4.0.0 - 2023-02-06
 
@@ -38,4 +38,8 @@ This release includes the new DRVEGRD 169 user-interface. The release includes n
 
 ## v4.1.0 - 2023-08-21
 
-This release includes the new DRVEGRD 171 and DRVEGRD 152 user-interface. The release includes a complete list of all params and commands for all sensors which are accessed using the ros2 services. 
+This release includes the new DRVEGRD 171 and DRVEGRD 152 user-interface. The release includes a complete list of all params and commands for all sensors which are accessed using the ros2 services.
+
+## v5.0.0 - 2023-09-22
+
+This release includes CAN communication for all the provided sensor types and sensors interfaces. The params are now extended to include the params/setting for the connected adapters along with the sensor params. 
