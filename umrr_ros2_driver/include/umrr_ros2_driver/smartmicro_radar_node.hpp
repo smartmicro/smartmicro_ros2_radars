@@ -42,6 +42,7 @@
 #include "umrr_ros2_msgs/srv/send_command.hpp"
 #include "umrr_ros2_msgs/srv/set_ip.hpp"
 #include "umrr_ros2_msgs/srv/set_mode.hpp"
+#include "umrr_ros2_msgs/srv/firmware_download.hpp"
 
 namespace smartmicro {
 namespace drivers {
@@ -383,9 +384,17 @@ private:
       const std::shared_ptr<umrr_ros2_msgs::srv::SendCommand::Request> request,
       std::shared_ptr<umrr_ros2_msgs::srv::SendCommand::Response> response);
 
+  ///
+  /// @brief      Service for firmware download.
+  ///
+  void firmware_download(
+      const std::shared_ptr<umrr_ros2_msgs::srv::FirmwareDownload::Request> request,
+      std::shared_ptr<umrr_ros2_msgs::srv::FirmwareDownload::Response> result);
+
   rclcpp::Service<umrr_ros2_msgs::srv::SetMode>::SharedPtr mode_srv_;
   rclcpp::Service<umrr_ros2_msgs::srv::SetIp>::SharedPtr ip_addr_srv_;
   rclcpp::Service<umrr_ros2_msgs::srv::SendCommand>::SharedPtr command_srv_;
+  rclcpp::Service<umrr_ros2_msgs::srv::FirmwareDownload>::SharedPtr download_srv_;
 
   std::array<detail::SensorConfig, detail::kMaxSensorCount> m_sensors{};
   std::array<detail::HWConfig, detail::kMaxHwCount> m_adapters{};
@@ -401,6 +410,7 @@ private:
 };
 
 bool check_signal = false;
+std::string update_image{};
 std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
 std::shared_ptr<com::master::umrra4_automotive_v1_0_1::DataStreamServiceIface> data_umrra4_v1_0_1{};
 std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_2::DataStreamServiceIface> data_umrr11{};

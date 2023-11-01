@@ -77,7 +77,10 @@ configure_file(
     "${PROJECT_SOURCE_DIR}/cmake/config_path.hpp.in"
     "${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}/config_path.hpp" @ONLY)
 
-ament_auto_add_library(smartmicro_radar_node SHARED "src/smartmicro_radar_node.cpp")
+ament_auto_add_library(smartmicro_radar_node SHARED 
+    "src/smartmicro_radar_node.cpp"
+    "src/UpdateService.cpp"
+    )
 
 target_include_directories(smartmicro_radar_node PUBLIC ${CMAKE_INSTALL_PREFIX}/include/
 smartmicro/include/

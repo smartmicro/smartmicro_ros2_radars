@@ -23,6 +23,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
     "srv/SetMode.srv"
     "srv/SetIp.srv"
     "srv/SendCommand.srv"
+    "srv/FirmwareDownload.srv"
 )
 
 ament_export_dependencies(rosidl_default_runtime)

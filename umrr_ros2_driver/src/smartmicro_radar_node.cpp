@@ -19,8 +19,6 @@
 #include <point_cloud_msg_wrapper/point_cloud_msg_wrapper.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 
-#include <umrra4_automotive_v1_0_1/comtargetlist/PortHeader.h>
-#include <umrra4_automotive_v1_0_1/comtargetlist/Target.h>
 #include <umrr11_t132_automotive_v1_1_2/comtargetlist/PortHeader.h>
 #include <umrr11_t132_automotive_v1_1_2/comtargetlist/Target.h>
 #include <umrr96_t153_automotive_v1_2_2/comtargetlist/PortHeader.h>
@@ -37,6 +35,8 @@
 #include <umrr9f_t169_automotive_v2_1_1/comtargetlist/Target.h>
 #include <umrr9f_t169_automotive_v2_2_1/comtargetlist/PortHeader.h>
 #include <umrr9f_t169_automotive_v2_2_1/comtargetlist/Target.h>
+#include <umrra4_automotive_v1_0_1/comtargetlist/PortHeader.h>
+#include <umrra4_automotive_v1_0_1/comtargetlist/Target.h>
 
 #include <signal.h>
 
@@ -54,6 +54,7 @@
 #include <tuple>
 #include <vector>
 
+#include "umrr_ros2_driver/UpdateService.hpp"
 #include "umrr_ros2_driver/config_path.hpp"
 
 using com::common::Instruction;
@@ -351,6 +352,12 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
     std::bind(
       &SmartmicroRadarNode::radar_command, this, std::placeholders::_1, std::placeholders::_2));
 
+  // create a ros2 service to perform firmware download
+  download_srv_ = create_service<umrr_ros2_msgs::srv::FirmwareDownload>(
+    "smart_radar/firmware_download",
+    std::bind(
+      &SmartmicroRadarNode::firmware_download, this, std::placeholders::_1, std::placeholders::_2));
+
   RCLCPP_INFO(this->get_logger(), "Radar services are ready.");
 
   rclcpp::on_shutdown(std::bind(&SmartmicroRadarNode::on_shutdown_callback, this));
@@ -363,6 +370,29 @@ void SmartmicroRadarNode::on_shutdown_callback()
   rclcpp::Rate sleepRate(std::chrono::milliseconds(100));
   sleepRate.sleep();
   m_services.reset();
+}
+
+void SmartmicroRadarNode::firmware_download(
+  const std::shared_ptr<umrr_ros2_msgs::srv::FirmwareDownload::Request> request,
+  std::shared_ptr<umrr_ros2_msgs::srv::FirmwareDownload::Response> result)
+{
+  bool check_flag_id = false;
+  client_id = request->sensor_id;
+  update_image = request->file_path;
+
+  for (auto & sensor : m_sensors) {
+    if (client_id == sensor.id) {
+      check_flag_id = true;
+      break;
+    }
+  }
+  if (!check_flag_id) {
+    result->res = "The sensor ID value entered is invalid! ";
+    return;
+  }
+
+  StartSoftwareUpdate(client_id, update_image);
+  result->res = "Service ended, check the console output for status! ";
 }
 
 void SmartmicroRadarNode::radar_mode(
@@ -513,7 +543,7 @@ void SmartmicroRadarNode::radar_command(
   }
 
   std::shared_ptr<CmdRequest> radar_command =
-    std::make_shared<CmdRequest>("auto_interface_command", request->command, 2010);
+    std::make_shared<CmdRequest>("auto_interface_command", request->command, request->value);
 
   if (!batch->AddRequest(radar_command)) {
     result->res = "Failed to add instruction to the batch! ";
@@ -589,8 +619,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1(
 {
   std::cout << "Targetlist for umrra4_v1_0_1" << std::endl;
   if (!check_signal) {
-    std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetlist::PortHeader>
-      port_header;
+    std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrra4_v1_0_1->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
@@ -864,7 +893,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1(
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f v2_2_1" << std::endl;
-  if(!check_signal) {
+  if (!check_signal) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_2_1::comtargetlist::PortHeader>
       port_header;
     port_header = targetlist_port_umrr9f_v2_2_1->GetPortHeader();

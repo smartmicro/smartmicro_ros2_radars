@@ -4,6 +4,7 @@
       # This sets the iface_name in the hw_inventory.json
       # sudo slcand -o -s6 -t hw -S 3000000 /dev/ttyUSBx
       # sudo ip link set up slcan0
+      # set buffer length using /sbin/ip link set slcan0 txqueuelen 4096
       # For peak CAN adapters, only required to set baudrate
       # One sensor per interface for can, for ethernet we can use one interface/dev for multiple sensors
       master_inst_serial_type: "can_based"

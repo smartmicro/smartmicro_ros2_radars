@@ -124,12 +124,13 @@ A ros2 `SetMode` service should be called to implement these mode changes. There
 For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMRR-11 sensor to `AEB (2)` mode would require the following call:
 `ros2 service call /smart_radar/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
 
-Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are two inputs for sending a command:
+Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are three inputs for sending a command:
 - `command`: name of the command (specific to the sensor interface)
+- `value`: the value of the command  
 - `sensor_id`: the id of the sensor to which the service call should be sent.
 
 The call for such a service would be as follows:
-`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
+`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", value: 2, sensor_id: 100}"`
 
 ## Configuration of the sensors
 In order to use multiple sensors (maximum of up to eight sensors) with the node the sensors should be configured separately.
@@ -148,8 +149,21 @@ value in decimal `3232238400` should be used.
 The call for such a service would be as follows:
 `ros2 service call /smart_radar/set_ip_address umrr_ros2_msgs/srv/SetIp "{value_ip: 3232238400, sensor_id: 100}"`
 
-Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
+Note: For successful execution of this call it is important that the sensor is restarted, the ip address in the
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
+
+## Firmware download
+All the smartmicro radar sensors have independent firmware which are updated every now and than. To keep the sensor updated a firmware download
+needs to be performed.
+
+A ros2 `FirmwareDownload` service should be called to implement these mode changes. There are two inputs to a ros2 service call:
+- `file_path`: the path where the firmware is located
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+
+The call for such a service would be as follows:
+`ros2 service call /smart_radar/firmware_download umrr_ros2_msgs/srv/FirmwareDownload "{sensor_id: 100, file_path: '/path/to/firmware/file'}"`
+
+Note: The download could be performed only for one sensor at a time!
 
 ## Sensor Service Responses
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
