@@ -43,6 +43,7 @@
 #include "umrr_ros2_msgs/srv/set_ip.hpp"
 #include "umrr_ros2_msgs/srv/set_mode.hpp"
 #include "umrr_ros2_msgs/srv/firmware_download.hpp"
+#include "umrr_ros2_msgs/msg/target_list.hpp"
 
 namespace smartmicro {
 namespace drivers {
@@ -402,6 +403,9 @@ private:
   std::array<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr,
              detail::kMaxSensorCount>
       m_publishers{};
+  std::array<rclcpp::Publisher<umrr_ros2_msgs::msg::TargetList>::SharedPtr,
+             detail::kMaxSensorCount>
+      m_targetlist_publishers{};
   std::size_t m_number_of_sensors{};
   std::size_t m_number_of_adapters{};
   rclcpp::TimerBase::SharedPtr timer;

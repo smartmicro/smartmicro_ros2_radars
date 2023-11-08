@@ -187,6 +187,8 @@ SmartmicroRadarNode::SmartmicroRadarNode(const rclcpp::NodeOptions & node_option
 
     m_publishers[i] = create_publisher<sensor_msgs::msg::PointCloud2>(
       "smart_radar/targets_" + std::to_string(i), sensor.history_size);
+    m_targetlist_publishers[i] = create_publisher<umrr_ros2_msgs::msg::TargetList>(
+      "smart_radar/targetlists_" + std::to_string(i), sensor.history_size);
 
     if (
       sensor.model == "umrra4_v1_0_1" &&
@@ -622,25 +624,38 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1(
     std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrra4_v1_0_1->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrra4_v1_0_1->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.power = target->GetPower();
+      point.rcs = target->GetRcs();
+      point.noise = target->GetNoise();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -656,25 +671,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
       port_header;
     port_header = targetlist_port_umrr96->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr96->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.power = target->GetPower();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -690,25 +718,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
       port_header;
     port_header = targetlist_port_umrr11->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr11->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetPower();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -724,25 +765,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_3(
       port_header;
     port_header = targetlist_port_umrr9d_v1_0_3->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr9d_v1_0_3->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRcs();
+      point.noise = target->GetNoise();
+      point.power = target->GetPower();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -758,25 +812,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_2(
       port_header;
     port_header = targetlist_port_umrr9d_v1_2_2->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr9d_v1_2_2->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRcs();
+      point.noise = target->GetNoise();
+      point.power = target->GetPower();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -794,25 +861,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1(
       port_header;
     port_header = targetlist_port_umrr9f_v1_1_1->GetGenericPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr9f_v1_1_1->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetTgtNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetTgtNoise();
+      point.power = target->GetPower();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetTgtNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -830,25 +910,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0(
       port_header;
     port_header = targetlist_port_umrr9f_v2_0_0->GetGenericPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr9f_v2_0_0->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetTgtNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetTgtNoise();
+      point.power = target->GetPower();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetTgtNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -864,25 +957,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_1_1(
       port_header;
     port_header = targetlist_port_umrr9f_v2_1_1->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr9f_v2_1_1->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRcs();
+      point.noise = target->GetNoise();
+      point.power = target->GetPower();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -898,25 +1004,38 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1(
       port_header;
     port_header = targetlist_port_umrr9f_v2_2_1->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_port_umrr9f_v2_2_1->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetPower() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRcs();
+      point.noise = target->GetNoise();
+      point.power = target->GetPower();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -933,25 +1052,38 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_0_1(
       port_header;
     port_header = targetlist_can_umrra4_v1_0_1->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_can_umrra4_v1_0_1->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetSignalLevel() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetSignalLevel();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -968,25 +1100,38 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr96(
       port_header;
     port_header = targetlist_can_umrr96->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_can_umrr96->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetSignalLevel() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetSignalLevel();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -1003,25 +1148,38 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr11(
       port_header;
     port_header = targetlist_can_umrr11->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_can_umrr11->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetSignalLevel() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetSignalLevel();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -1038,25 +1196,38 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3(
       port_header;
     port_header = targetlist_can_umrr9d_v1_0_3->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_can_umrr9d_v1_0_3->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetSignalLevel() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetSignalLevel();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -1073,25 +1244,38 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2(
       port_header;
     port_header = targetlist_can_umrr9d_v1_2_2->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_can_umrr9d_v1_2_2->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetSignalLevel() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetSignalLevel();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -1108,25 +1292,38 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_1_1(
       port_header;
     port_header = targetlist_can_umrr9f_v2_1_1->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_can_umrr9f_v2_1_1->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetSignalLevel() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetSignalLevel();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 
@@ -1143,25 +1340,38 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_2_1(
       port_header;
     port_header = targetlist_can_umrr9f_v2_2_1->GetPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::TargetList point;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto timestamp = std::chrono::microseconds{port_header->GetTimestamp()};
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
     const auto nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(timestamp - sec);
     msg.header.stamp.sec = sec.count();
     msg.header.stamp.nanosec = nanosec.count();
+    point.header.stamp.sec = sec.count();
+    point.header.stamp.nanosec = nanosec.count();
+    point.header.frame_id = m_sensors[sensor_idx].frame_id;
     for (const auto & target : targetlist_can_umrr9f_v2_2_1->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);
       const auto azimuth_angle = target->GetAzimuthAngle();
       const auto snr = target->GetSignalLevel() - target->GetNoise();
+      point.azimuth_angle = azimuth_angle;
+      point.elevation_angle = elevation_angle;
+      point.range = range;
+      point.radial_speed = target->GetSpeedRadial();
+      point.rcs = target->GetRCS();
+      point.noise = target->GetNoise();
+      point.power = target->GetSignalLevel();
+      point.snr = snr;
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr});
+         range * std::sin(elevation_angle), point.radial_speed, point.power, point.rcs, point.noise,
+         point.snr});
     }
 
     m_publishers[sensor_idx]->publish(msg);
+    m_targetlist_publishers[sensor_idx]->publish(point);
   }
 }
 

@@ -1,0 +1,9 @@
+std_msgs/Header header
+float32 azimuth_angle 
+float32 elevation_angle
+float32 range 
+float32 radial_speed 
+float32 rcs 
+float32 noise 
+float32 power
+float32 snr
