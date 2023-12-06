@@ -26,14 +26,11 @@ PACKAGE_NAME = 'umrr_ros2_driver'
 
 def generate_launch_description():
     """Generate the launch description."""
-    radar_param_file = os.path.join(
-        get_package_share_directory(PACKAGE_NAME), 'param/radar.template.yaml')
-
-    radar_params = DeclareLaunchArgument(
-        'radar_param_file',
-        default_value=radar_param_file,
-        description='Path to param file for the radar node.'
-    )
+    radar_sensor_params = os.path.join(
+        get_package_share_directory(PACKAGE_NAME), 'param/radar.sensor.template.yaml')
+    
+    radar_adapter_params = os.path.join(
+        get_package_share_directory(PACKAGE_NAME), 'param/radar.adapter.template.yaml')
 
     rviz_cfg_path = os.path.join(
         get_package_share_directory(PACKAGE_NAME), 'config/rviz/radar.rviz')
@@ -41,8 +38,8 @@ def generate_launch_description():
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
-        name='smartmicro_radar_node',
-        parameters=[LaunchConfiguration('radar_param_file')]
+        name='smart_radar',
+        parameters=[radar_sensor_params, radar_adapter_params]
     )
 
     rviz2 = Node(
@@ -53,7 +50,6 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        radar_params,
         radar_node,
         rviz2
     ])

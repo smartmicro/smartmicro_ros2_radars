@@ -6,6 +6,7 @@
       # sudo ip link set up slcan0
       # set buffer length using /sbin/ip link set slcan0 txqueuelen 4096
       # For peak CAN adapters, only required to set baudrate
+      # sudo ip link set your_interface up type can bitrate 500000
       # One sensor per interface for can, for ethernet we can use one interface/dev for multiple sensors
       master_inst_serial_type: "can_based"
       master_data_serial_type: "can_based"

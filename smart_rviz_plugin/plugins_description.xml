@@ -1,0 +1,8 @@
+<library path="smart_rviz_plugin">
+  <class
+      name="smart_rviz_plugin/TargetList Recorder"
+      type="smart_rviz_plugin::SmartRadarRecorder"
+      base_class_type="rviz_common::Panel">
+    <description>The Smart TargetList Recorder.</description>
+  </class>
+</library>

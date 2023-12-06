@@ -13,7 +13,13 @@ acquired by the sensor through the ROS2 pipeline. This package implements such a
 
 ## How to launch this node
 ```
-ros2 launch umrr_ros2_driver radar.launch.py
+ros2 launch umrr_ros2_driver radar_rviz.launch.py
+```
+
+## How to launch the target GUI
+From a separate terminal
+```
+ros2 launch umrr_ros2_gui radar_gui.launch.py
 ```
 
 ## Prerequisites
@@ -55,6 +61,11 @@ To add targets to the point cloud in a safe and quick fashion a
 this project's node. This project can be installed either through `rosdep` or manually by executing:
 ```
 sudo apt install ros-foxy-point-cloud-msg-wrapper
+```
+
+To use the GUI provided, it is required to install the following package:
+```
+sudo apt-get install ros-foxy-sensor-msgs-py
 ```
 
 ## Inputs / Outputs / Configuration

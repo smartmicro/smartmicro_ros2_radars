@@ -25,8 +25,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
     "srv/SetIp.srv"
     "srv/SendCommand.srv"
     "srv/FirmwareDownload.srv"
-    "msg/TargetList.msg"
-    DEPENDENCIES builtin_interfaces std_msgs
 )
 
 ament_export_dependencies(rosidl_default_runtime)
