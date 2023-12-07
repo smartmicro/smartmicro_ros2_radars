@@ -13,13 +13,19 @@ acquired by the sensor through the ROS2 pipeline. This package implements such a
 
 ## How to launch this node
 ```
-ros2 launch umrr_ros2_driver radar_rviz.launch.py
+ros2 launch umrr_ros2_driver radar.launch.py
 ```
 
-## How to launch the target GUI
-From a separate terminal
+## How to launch the rviz with recorder plugin
+From a separate terminal and after sourcing workspace
 ```
-ros2 launch umrr_ros2_gui radar_gui.launch.py
+rviz2 -d [`recorder.rviz`](smart_rviz_plugin/config/rviz/recorder.rviz)
+```
+
+## How to start the custom can message sender
+From smart_rviz_plugin folder
+```
+python custom_can_sender.py
 ```
 
 ## Prerequisites
@@ -65,7 +71,7 @@ sudo apt install ros-foxy-point-cloud-msg-wrapper
 
 To use the GUI provided, it is required to install the following package:
 ```
-sudo apt-get install ros-foxy-sensor-msgs-py
+pip install python-can
 ```
 
 ## Inputs / Outputs / Configuration
@@ -109,7 +115,7 @@ For the setting up the ***sensors***:
 - `history_size`: size of history for the message publisher
 - `inst_type`: the type of instruction serialization type, relevant to sensors using ethernet and should be 'port_based'
 - `data_type`: the type of data serialization type, relevant to sensors using ethernet and should be 'port_based'
-- `uifname`: the user interface name of the sensor
+- `uifname`: the user interface name of the sensor (refer to the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/))
 - `uifmajorv`: the major version of the sensor user interface
 - `uifminorv`: the minor version of the sensor user interface
 - `uifpatchv`: the patch version of the sensor user interface
@@ -175,6 +181,7 @@ The call for such a service would be as follows:
 `ros2 service call /smart_radar/firmware_download umrr_ros2_msgs/srv/FirmwareDownload "{sensor_id: 100, file_path: '/path/to/firmware/file'}"`
 
 Note: The download could be performed only for one sensor at a time!
+Important: The download requires that the transfer length of the interface is set to minimum 4k!
 
 ## Sensor Service Responses
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
@@ -187,6 +194,13 @@ The sensor services respond with certain value codes. The following is a lookup 
 6   |    Invalid protection
 7   |    Value out of minimal bounds
 8   |    Value out of maximal bounds
+
+## Recorder plugin and custom CAN sender
+A custom plugin for rviz to log the target list has been provided. A config file is available which adds this plugin to the rviz. WIth the plugin
+it is now possible to view the target list data for the desired sensor. Along with logging the data the plugin also gives the possibility to record
+the target list data, convert it into a csv format and save it.
+
+Separately, a python GUI is also provided with which it is possible to send custom CAN messages. 
 
 ## Development
 The dockerfile can be used to build and test the ros driver.

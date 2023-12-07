@@ -10,6 +10,10 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     ros-foxy-point-cloud-msg-wrapper \
+    ros-foxy-rviz2 \
+    ros-foxy-rviz-common \
+    ros-foxy-rviz-default-plugins \
+    ros-foxy-rviz-rendering \
     wget
 
 WORKDIR /code
