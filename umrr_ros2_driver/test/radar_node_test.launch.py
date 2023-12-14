@@ -33,17 +33,13 @@ PACKAGE_NAME = 'umrr_ros2_driver'
 @pytest.mark.launch_test
 def generate_test_description():
 
-    radar_sensor_params = os.path.join(
-        get_package_share_directory(PACKAGE_NAME), 'param/radar.sensor.template.yaml')
-    
-    radar_adapter_params = os.path.join(
-        get_package_share_directory(PACKAGE_NAME), 'param/radar.adapter.template.yaml')
-
+    radar__params = os.path.join(
+           get_package_share_directory(PACKAGE_NAME), 'param/radar.params.template.yaml')
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
         name='smart_radar',
-        parameters=[radar_sensor_params, radar_adapter_params]
+        parameters=[radar__params]
     )
 
     frequency_sweep_service = ExecuteProcess(
