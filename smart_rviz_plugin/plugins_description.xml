@@ -5,4 +5,16 @@
       base_class_type="rviz_common::Panel">
     <description>The Smart TargetList Recorder.</description>
   </class>
+  <class
+      name="smart_rviz_plugin/Smart Command Configurator"
+      type="smart_rviz_plugin::SmartRadarService"
+      base_class_type="rviz_common::Panel">
+    <description>The Smart Command Controller.</description>
+  </class>
+  <class
+      name="smart_rviz_plugin/Smart Firmware Download"
+      type="smart_rviz_plugin::SmartDownloadService"
+      base_class_type="rviz_common::Panel">
+    <description>The Smart Download.</description>
+  </class>
 </library>

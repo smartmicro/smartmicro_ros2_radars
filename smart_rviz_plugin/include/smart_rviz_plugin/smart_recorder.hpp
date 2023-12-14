@@ -1,4 +1,3 @@
-// SmartRadarRecorder.hpp
 #ifndef SMART_RVIZ_PLUGIN__SMART_RECORDER_HPP_
 #define SMART_RVIZ_PLUGIN__SMART_RECORDER_HPP_
 

@@ -1,5 +1,6 @@
 FROM ros:foxy
 
+## Revert to snapshot once GPG key error is resolved
 RUN rm /etc/apt/sources.list.d/ros2-snapshots.list
 RUN apt-get update && apt-get install curl -y
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg

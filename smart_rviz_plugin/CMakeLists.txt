@@ -16,28 +16,48 @@ add_definitions(-D_BUILD_DIR_PATH="${CMAKE_CURRENT_BINARY_DIR}")
 add_definitions(-D_SRC_DIR_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 find_package(ament_cmake_auto REQUIRED)
-
+find_package(umrr_ros2_msgs REQUIRED)
 find_package(rviz_common REQUIRED)
+find_package(rviz_default_plugins REQUIRED)
 find_package(rviz_rendering REQUIRED)
-
 find_package(Qt5 REQUIRED COMPONENTS Widgets Test)
-
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
+
 
 set(CMAKE_AUTOMOC ON)
 
 set(smart_rviz_plugin_SRCS
   src/smart_recorder.cpp
+  src/smart_services.cpp
+  src/smart_download.cpp
 )
 
 set(smart_rviz_plugin_HDRS
   include/smart_rviz_plugin/smart_recorder.hpp
+  include/smart_rviz_plugin/smart_services.hpp
+  include/smart_rviz_plugin/smart_download.hpp
 )
 
 add_library(smart_rviz_plugin SHARED
   ${smart_rviz_plugin_SRCS}
   ${smart_rviz_plugin_HDRS}
+)
+
+set(dependencies
+  umrr_ros2_msgs
+  pluginlib
+  Qt5
+  rclcpp
+  rviz_common
+  rviz_default_plugins
+  rviz_ogre_vendor
+  rviz_rendering
+  std_msgs
+)
+
+ament_target_dependencies(smart_rviz_plugin
+  ${dependencies}
 )
 
 target_include_directories(smart_rviz_plugin PUBLIC
@@ -46,24 +66,15 @@ target_include_directories(smart_rviz_plugin PUBLIC
   ${Qt5Widgets_INCLUDE_DIRS}
 )
 
-target_link_libraries(smart_rviz_plugin PUBLIC
-  rclcpp::rclcpp
+
+target_link_libraries(smart_rviz_plugin
   rviz_common::rviz_common
-  rviz_ogre_vendor::OgreMain
-  rviz_ogre_vendor::OgreOverlay
-  rviz_rendering::rviz_rendering
 )
+
 
 target_compile_definitions(smart_rviz_plugin PRIVATE "RVIZ_DEFAULT_PLUGINS_BUILDING_LIBRARY")
 
 pluginlib_export_plugin_description_file(rviz_common plugins_description.xml)
-
-ament_export_dependencies(
-  rclcpp
-  rviz_common
-  rviz_ogre_vendor
-  sensor_msgs
-)
 
 install(
   TARGETS smart_rviz_plugin
@@ -79,5 +90,12 @@ install(
 )
 
 ament_export_targets(smart_rviz_plugin HAS_LIBRARY_TARGET)
+ament_export_dependencies(
+  rclcpp
+  rviz_common
+  rviz_ogre_vendor
+  sensor_msgs
+  umrr_ros2_msgs
+)
 
 ament_package()
