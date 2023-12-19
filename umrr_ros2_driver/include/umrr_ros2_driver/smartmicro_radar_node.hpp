@@ -26,6 +26,7 @@
 #include <CommunicationServicesIface.h>
 #include <InstructionServiceIface.h>
 #include <umrra4_automotive_v1_0_1/DataStreamServiceIface.h>
+#include <umrra4_automotive_v1_3_0/DataStreamServiceIface.h>
 #include <umrr11_t132_automotive_v1_1_2/DataStreamServiceIface.h>
 #include <umrr96_t153_automotive_v1_2_2/DataStreamServiceIface.h>
 #include <umrr9f_t169_automotive_v1_1_1/DataStreamServiceIface.h>
@@ -231,6 +232,21 @@ private:
   );
 
   ///
+  /// @brief      A callback that is called when a new target list port for
+  /// umrra4 T171_v1_3_0 arrives.
+  /// @param[in]  sensor_idx  The sensor id for the respected published topic.
+  /// @param[in]  target_list_port  The target list port
+  /// @param[in]  client_id The client_id of the sensor
+  ///
+  void targetlist_callback_umrra4_v1_3_0(
+    const std::uint32_t sensor_idx,
+    const std::shared_ptr<com::master::umrra4_automotive_v1_3_0::
+                              comtargetlist::ComTargetList>
+          &targetlist_port_umrra4_v1_3_0,
+    const com::types::ClientId client_id
+  );
+
+  ///
   /// @brief      A callback that is called when a new CAN target list for
   /// umrr96_v1_0_3 arrives.
   ///
@@ -334,6 +350,21 @@ private:
                                 comtargetbaselist::ComTargetBaseList>
           &targetlist_can_umrra4_v1_0_1,
       const com::types::ClientId client_id);
+  
+  ///
+  /// @brief      A callback that is called when a new CAN target list for
+  /// umrra4 arrives.
+  ///
+  /// @param[in]  sensor_idx   The sensor id for respective published topic.
+  /// @param[in]  target_list_port  The target list port
+  /// @param[in]  client_id  The client_id of the sensor
+  ///
+  void CAN_targetlist_callback_umrra4_v1_3_0(
+      const std::uint32_t sensor_idx,
+      const std::shared_ptr<com::master::umrra4_automotive_v1_3_0::
+                                comtargetbaselist::ComTargetBaseList>
+          &targetlist_can_umrra4_v1_3_0,
+      const com::types::ClientId client_id);
 
   ///
   /// @brief      Read parameters and update the json config files required by
@@ -413,6 +444,7 @@ bool check_signal = false;
 std::string update_image{};
 std::shared_ptr<com::master::CommunicationServicesIface> m_services{};
 std::shared_ptr<com::master::umrra4_automotive_v1_0_1::DataStreamServiceIface> data_umrra4_v1_0_1{};
+std::shared_ptr<com::master::umrra4_automotive_v1_3_0::DataStreamServiceIface> data_umrra4_v1_3_0{};
 std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_2::DataStreamServiceIface> data_umrr11{};
 std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_2::DataStreamServiceIface> data_umrr96{};
 std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::DataStreamServiceIface> data_umrr9f_v1_1_1{};
