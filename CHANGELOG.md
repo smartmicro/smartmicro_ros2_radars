@@ -42,4 +42,8 @@ This release includes the new DRVEGRD 171 and DRVEGRD 152 user-interface. The re
 
 ## v5.0.0 - 2023-09-22
 
-This release includes CAN communication for all the provided sensor types and sensors interfaces. The params are now extended to include the params/setting for the connected adapters along with the sensor params. 
+This release includes CAN communication for all the provided sensor types and sensors interfaces. The params are now extended to include the params/setting for the connected adapters along with the sensor params.
+
+## v6.0.0 - 2023-12-20
+
+This release includes features for downloading sensor firmware on to the sensors. It also provides custom RVIZ plugins to log the target list data, record and save it. It has a plugin to send instructions to the sensors and also it is possible to dowload the firmware too. This release also includes a python GUI to send custom CAN messages. The radar param templates have now been merged into one param file. The pointcloud has been extended to also include the polar coordinates. Additionally, the release also includes new user interface for sensor A4 T171.

@@ -16,6 +16,22 @@ acquired by the sensor through the ROS2 pipeline. This package implements such a
 ros2 launch umrr_ros2_driver radar.launch.py
 ```
 
+## How to launch the rviz with recorder plugin
+From a separate terminal and after sourcing workspace
+```
+rviz2 -d [`recorder.rviz`](smart_rviz_plugin/config/rviz/recorder.rviz)
+```
+
+![Recorder](smart_rviz_plugin/config/images/recorder_rviz.png "Rviz Outlook")
+
+## How to start the custom can message sender
+From smart_rviz_plugin folder
+```
+python custom_can_sender.py
+```
+
+![Sender](smart_rviz_plugin/config/images/can_sender.png "Custom CAN Sender")
+
 ## Prerequisites
 
 ### Supported ROS distributions:
@@ -26,8 +42,8 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVE
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `September 22, 2023`
-- Smart Access Automotive version: `v3.4.0`
+- Date of release: `December 20, 2023`
+- Smart Access Automotive version: `v3.5.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.2`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.2`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
@@ -37,6 +53,7 @@ sure the version used to publish the data is compatible with this version:
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.3`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.2.2`
 - User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.0.1`
+- User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.3.0`
 
 ### Sensor Firmwares
 This ROS2 driver release is compatible with the following sensor firmwares:
@@ -48,6 +65,7 @@ This ROS2 driver release is compatible with the following sensor firmwares:
 - UMRR9F Type 169: V2.0.2
 - UMRR9F Type 169: V2.2.0
 - UMRRA4 Type 171: V1.0.0
+- UMRRA4 Type 171: V1.2.1
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -55,6 +73,11 @@ To add targets to the point cloud in a safe and quick fashion a
 this project's node. This project can be installed either through `rosdep` or manually by executing:
 ```
 sudo apt install ros-foxy-point-cloud-msg-wrapper
+```
+
+To use the GUI provided, it is required to install the following package:
+```
+pip install python-can
 ```
 
 ## Inputs / Outputs / Configuration
@@ -98,7 +121,7 @@ For the setting up the ***sensors***:
 - `history_size`: size of history for the message publisher
 - `inst_type`: the type of instruction serialization type, relevant to sensors using ethernet and should be 'port_based'
 - `data_type`: the type of data serialization type, relevant to sensors using ethernet and should be 'port_based'
-- `uifname`: the user interface name of the sensor
+- `uifname`: the user interface name of the sensor (refer to the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/))
 - `uifmajorv`: the major version of the sensor user interface
 - `uifminorv`: the minor version of the sensor user interface
 - `uifpatchv`: the patch version of the sensor user interface
@@ -124,12 +147,13 @@ A ros2 `SetMode` service should be called to implement these mode changes. There
 For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMRR-11 sensor to `AEB (2)` mode would require the following call:
 `ros2 service call /smart_radar/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
 
-Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are two inputs for sending a command:
+Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are three inputs for sending a command:
 - `command`: name of the command (specific to the sensor interface)
+- `value`: the value of the command  
 - `sensor_id`: the id of the sensor to which the service call should be sent.
 
 The call for such a service would be as follows:
-`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", sensor_id: 100}"`
+`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", value: 2, sensor_id: 100}"`
 
 ## Configuration of the sensors
 In order to use multiple sensors (maximum of up to eight sensors) with the node the sensors should be configured separately.
@@ -148,8 +172,22 @@ value in decimal `3232238400` should be used.
 The call for such a service would be as follows:
 `ros2 service call /smart_radar/set_ip_address umrr_ros2_msgs/srv/SetIp "{value_ip: 3232238400, sensor_id: 100}"`
 
-Note: For successfull execution of this call it is important that the sensor is restarted, the ip address in the
+Note: For successful execution of this call it is important that the sensor is restarted, the ip address in the
 [`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
+
+## Firmware download
+All the smartmicro radar sensors have independent firmware which are updated every now and than. To keep the sensor updated a firmware download
+needs to be performed.
+
+A ros2 `FirmwareDownload` service should be called to implement these mode changes. There are two inputs to a ros2 service call:
+- `file_path`: the path where the firmware is located
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+
+The call for such a service would be as follows:
+`ros2 service call /smart_radar/firmware_download umrr_ros2_msgs/srv/FirmwareDownload "{sensor_id: 100, file_path: '/path/to/firmware/file'}"`
+
+Note: The download could be performed only for one sensor at a time!
+Important: The download requires that the transfer length of the interface is set to minimum 4k!
 
 ## Sensor Service Responses
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
@@ -162,6 +200,13 @@ The sensor services respond with certain value codes. The following is a lookup 
 6   |    Invalid protection
 7   |    Value out of minimal bounds
 8   |    Value out of maximal bounds
+
+## Recorder plugin and custom CAN sender
+A custom plugin for rviz to log the target list has been provided. A config file is available which adds this plugin to the rviz. WIth the plugin
+it is now possible to view the target list data for the desired sensor. Along with logging the data the plugin also gives the possibility to record
+the target list data, convert it into a csv format and save it.
+
+Separately, a python GUI is also provided with which it is possible to send custom CAN messages. 
 
 ## Development
 The dockerfile can be used to build and test the ros driver.

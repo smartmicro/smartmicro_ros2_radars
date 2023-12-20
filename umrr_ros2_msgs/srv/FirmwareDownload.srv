@@ -1,5 +1,4 @@
-string command
-float32 value
 uint32 sensor_id
+string file_path
 ---
 string res
