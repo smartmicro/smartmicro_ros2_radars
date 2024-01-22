@@ -53,6 +53,7 @@ sure the version used to publish the data is compatible with this version:
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.5.0`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.3`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.2.2`
+- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.5.0`
 - User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.0.1`
 - User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.3.0`
 

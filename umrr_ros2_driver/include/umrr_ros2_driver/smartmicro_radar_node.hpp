@@ -400,7 +400,7 @@ private:
 
   ///
   /// @brief      A callback that is called when a new CAN target list for
-  /// umrr9d_v1_2_2 arrives.
+  /// umrr9d_v1_5_0 arrives.
   ///
   /// @param[in]  sensor_idx   The sensor id for respective published topic.
   /// @param[in]  target_list_port  The target list port

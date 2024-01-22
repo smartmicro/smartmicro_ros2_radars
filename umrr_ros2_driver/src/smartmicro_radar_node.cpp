@@ -37,6 +37,8 @@
 #include <umrr9f_t169_automotive_v2_1_1/comtargetlist/Target.h>
 #include <umrr9f_t169_automotive_v2_2_1/comtargetlist/PortHeader.h>
 #include <umrr9f_t169_automotive_v2_2_1/comtargetlist/Target.h>
+#include <umrr9f_t169_automotive_v2_5_0/comtargetlist/PortHeader.h>
+#include <umrr9f_t169_automotive_v2_5_0/comtargetlist/Target.h>
 #include <umrra4_automotive_v1_0_1/comtargetlist/PortHeader.h>
 #include <umrra4_automotive_v1_0_1/comtargetlist/Target.h>
 #include <umrra4_automotive_v1_3_0/comtargetlist/PortHeader.h>
