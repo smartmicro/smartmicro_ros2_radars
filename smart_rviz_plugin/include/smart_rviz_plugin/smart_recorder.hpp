@@ -12,6 +12,7 @@
 #include <QTextStream>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <vector>
 #include <rclcpp/rclcpp.hpp>
 #include <rviz_common/panel.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
@@ -20,6 +21,22 @@
 
 namespace smart_rviz_plugin
 {
+
+struct RecordedData {
+  float range;
+  float power;
+  float azimuth_deg;
+  float elevation_deg;
+  float rcs;
+  float noise;
+  float snr;
+  float radial_speed;
+  float azimuth_angle;
+  float elevation_angle;
+  uint32_t timestamp_sec;
+  uint32_t timestamp_nanosec;
+};
+
 class SmartRadarRecorder : public rviz_common::Panel
 {
   Q_OBJECT
@@ -37,6 +54,10 @@ private slots:
 private:
   void initializeRecorder();
   void callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg, const std::string topic_name);
+  void updateRecordedData(
+    float range, float power, float azimuth_deg, float elevation_deg, float rcs,
+    float noise, float snr, float radial_speed, float azimuth_angle,
+    float elevation_angle, uint32_t timestamp_sec, uint32_t timestamp_nanosec);
 
 private:
   QTableWidget * table_data_;
@@ -52,7 +73,7 @@ private:
   rclcpp::Node::SharedPtr node_;
   std::unordered_map<std::string, rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr>
     subscribers_{};
-  QVector<QVector<QString>> recorded_data;
+  std::vector<RecordedData> recorded_data;
   std::string selected_topic_;
   bool recording_active_{false};
 };
