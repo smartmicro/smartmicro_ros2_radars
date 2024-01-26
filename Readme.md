@@ -42,16 +42,18 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVE
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `December 20, 2023`
-- Smart Access Automotive version: `v3.5.0`
+- Date of release: `January 26, 2023`
+- Smart Access Automotive version: `v3.7.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.2`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.2`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.0.0`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.1.1`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.2.1`
+- User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.5.0`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.3`
 - User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.2.2`
+- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.5.0`
 - User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.0.1`
 - User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.3.0`
 
@@ -61,11 +63,14 @@ This ROS2 driver release is compatible with the following sensor firmwares:
 - UMRR96 Type 153: V5.2.4
 - UMRR9D Type 152: V2.1.0
 - UMRR9D Type 152: V2.5.0
+- UMRR9D Type 152: V2.7.0
 - UMRR9F Type 169: V1.3.0
 - UMRR9F Type 169: V2.0.2
 - UMRR9F Type 169: V2.2.0
+- UMRR9F Type 169: V2.4.0
 - UMRRA4 Type 171: V1.0.0
 - UMRRA4 Type 171: V1.2.1
+- UMRRA4 Type 171: V1.3.0
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a

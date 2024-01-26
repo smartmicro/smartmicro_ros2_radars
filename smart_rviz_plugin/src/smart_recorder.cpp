@@ -1,5 +1,6 @@
 #include "smart_rviz_plugin/smart_recorder.hpp"
 
+#include <cmath>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
 namespace smart_rviz_plugin
@@ -35,12 +36,11 @@ void SmartRadarRecorder::initializeRecorder()
   connect(topic_dropdown_, SIGNAL(currentIndexChanged(int)), this, SLOT(updateTable()));
 
   table_data_ = new QTableWidget();
-  table_data_->setColumnCount(8);
+  table_data_->setColumnCount(10);
   table_data_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   table_data_->setHorizontalHeaderLabels(
-    {"RadialSpeed [m/s]", "Power [dB]", "RCS [dB]", "Noise [dB]", "SNR", "AzimuthAngle [rad]",
-     "ElevationAngle [rad]", "Range [m]"});
-
+    {"Range [m]", "Power [dB]", "AzimuthAngle [Deg]", "ElevationAngle [Deg]", "RCS [dB]",
+     "Noise [dB]", "SNR [dB]", "RadialSpeed [m/s]", "AzimuthAngle [rad]", "ElevationAngle [rad]"});
   table_timestamps_ = new QTableWidget();
   table_timestamps_->setColumnCount(2);
   table_timestamps_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -77,6 +77,28 @@ void SmartRadarRecorder::initializeRecorder()
   setLayout(gui_layout_);
 }
 
+void SmartRadarRecorder::updateRecordedData(
+  float range, float power, float azimuth_deg, float elevation_deg, float rcs, float noise,
+  float snr, float radial_speed, float azimuth_angle, float elevation_angle,
+  uint32_t timestamp_sec, uint32_t timestamp_nanosec)
+{
+  RecordedData data;
+  data.range = range;
+  data.power = power;
+  data.azimuth_deg = azimuth_deg;
+  data.elevation_deg = elevation_deg;
+  data.rcs = rcs;
+  data.noise = noise;
+  data.snr = snr;
+  data.radial_speed = radial_speed;
+  data.azimuth_angle = azimuth_angle;
+  data.elevation_angle = elevation_angle;
+  data.timestamp_sec = timestamp_sec;
+  data.timestamp_nanosec = timestamp_nanosec;
+
+  recorded_data.push_back(data);
+}
+
 void SmartRadarRecorder::callback(
   const sensor_msgs::msg::PointCloud2::SharedPtr msg, const std::string topic_name)
 {
@@ -85,60 +107,48 @@ void SmartRadarRecorder::callback(
     auto timestamp_nanosec = msg->header.stamp.nanosec;
 
     // Create iterators for the pc2 fields
-    sensor_msgs::PointCloud2ConstIterator<float> iter_radial_speed(*msg, "radial_speed");
+    sensor_msgs::PointCloud2ConstIterator<float> iter_range(*msg, "range");
     sensor_msgs::PointCloud2ConstIterator<float> iter_power(*msg, "power");
+    sensor_msgs::PointCloud2ConstIterator<float> iter_azimuth_angle(*msg, "azimuth_angle");
+    sensor_msgs::PointCloud2ConstIterator<float> iter_elevation_angle(*msg, "elevation_angle");
     sensor_msgs::PointCloud2ConstIterator<float> iter_rcs(*msg, "rcs");
     sensor_msgs::PointCloud2ConstIterator<float> iter_noise(*msg, "noise");
     sensor_msgs::PointCloud2ConstIterator<float> iter_snr(*msg, "snr");
-    sensor_msgs::PointCloud2ConstIterator<float> iter_azimuth_angle(*msg, "azimuth_angle");
-    sensor_msgs::PointCloud2ConstIterator<float> iter_elevation_angle(*msg, "elevation_angle");
-    sensor_msgs::PointCloud2ConstIterator<float> iter_range(*msg, "range");
-
-    // Initialize variables for recorded_data
-    QString radial_speed_value_str;
-    QString power_value_str;
-    QString rcs_value_str;
-    QString noise_value_str;
-    QString snr_value_str;
-    QString azimuth_value_str;
-    QString elevation_value_str;
-    QString range_value_str;
+    sensor_msgs::PointCloud2ConstIterator<float> iter_radial_speed(*msg, "radial_speed");
 
     table_data_->setRowCount(0);
 
-    for (size_t i = 0; i < msg->height * msg->width; ++i, ++iter_radial_speed, ++iter_power,
-                ++iter_rcs, ++iter_noise, ++iter_snr, ++iter_azimuth_angle, ++iter_elevation_angle,
-                ++iter_range) {
+    // Conversion from radians to degrees
+    const double radToDeg = 180.0 / M_PI;
+    double azimuth_deg, elevation_deg;
+
+    for (size_t i = 0; i < msg->height * msg->width; ++i, ++iter_range, ++iter_power,
+                ++iter_azimuth_angle, ++iter_elevation_angle, ++iter_rcs, ++iter_noise,
+                ++iter_snr) {
+      azimuth_deg = *iter_azimuth_angle * radToDeg;
+      elevation_deg = *iter_elevation_angle * radToDeg;
+
+      // Update the recorded data
+      if (recording_active_) {
+        updateRecordedData(
+          *iter_range, *iter_power, azimuth_deg, elevation_deg, *iter_rcs, *iter_noise, *iter_snr,
+          *iter_radial_speed, *iter_azimuth_angle, *iter_elevation_angle, timestamp_sec,
+          timestamp_nanosec);
+      }
       // Add items to the table
       table_data_->insertRow(0);
-      table_data_->setItem(0, 0, new QTableWidgetItem(QString::number(*iter_radial_speed, 'f', 2)));
+      table_data_->setItem(0, 0, new QTableWidgetItem(QString::number(*iter_range, 'f', 2)));
       table_data_->setItem(0, 1, new QTableWidgetItem(QString::number(*iter_power, 'f', 2)));
-      table_data_->setItem(0, 2, new QTableWidgetItem(QString::number(*iter_rcs, 'f', 2)));
-      table_data_->setItem(0, 3, new QTableWidgetItem(QString::number(*iter_noise, 'f', 2)));
-      table_data_->setItem(0, 4, new QTableWidgetItem(QString::number(*iter_snr, 'f', 2)));
+      table_data_->setItem(0, 2, new QTableWidgetItem(QString::number(azimuth_deg, 'f', 2)));
+      table_data_->setItem(0, 3, new QTableWidgetItem(QString::number(elevation_deg, 'f', 2)));
+      table_data_->setItem(0, 4, new QTableWidgetItem(QString::number(*iter_rcs, 'f', 2)));
+      table_data_->setItem(0, 5, new QTableWidgetItem(QString::number(*iter_noise, 'f', 2)));
+      table_data_->setItem(0, 6, new QTableWidgetItem(QString::number(*iter_snr, 'f', 2)));
+      table_data_->setItem(0, 7, new QTableWidgetItem(QString::number(*iter_radial_speed, 'f', 2)));
       table_data_->setItem(
-        0, 5, new QTableWidgetItem(QString::number(*iter_azimuth_angle, 'f', 2)));
+        0, 8, new QTableWidgetItem(QString::number(*iter_azimuth_angle, 'f', 2)));
       table_data_->setItem(
-        0, 6, new QTableWidgetItem(QString::number(*iter_elevation_angle, 'f', 2)));
-      table_data_->setItem(0, 7, new QTableWidgetItem(QString::number(*iter_range, 'f', 2)));
-      // Update variables for recorded_data
-      radial_speed_value_str = QString::number(*iter_radial_speed, 'f', 2);
-      power_value_str = QString::number(*iter_power, 'f', 2);
-      rcs_value_str = QString::number(*iter_rcs, 'f', 2);
-      noise_value_str = QString::number(*iter_noise, 'f', 2);
-      snr_value_str = QString::number(*iter_snr, 'f', 2);
-      azimuth_value_str = QString::number(*iter_azimuth_angle, 'f', 2);
-      elevation_value_str = QString::number(*iter_elevation_angle, 'f', 2);
-      range_value_str = QString::number(*iter_range, 'f', 2);
-    }
-
-    // Append data to recorded_data
-    if (recording_active_) {
-      recorded_data.append(
-        {radial_speed_value_str, power_value_str, rcs_value_str, noise_value_str, snr_value_str,
-         azimuth_value_str, elevation_value_str, range_value_str});
-      recorded_data.back().append(QString::number(timestamp_sec));
-      recorded_data.back().append(QString::number(timestamp_nanosec));
+        0, 9, new QTableWidgetItem(QString::number(*iter_elevation_angle, 'f', 2)));
     }
 
     // Update the timestamp table
@@ -173,7 +183,7 @@ void SmartRadarRecorder::stopRecording()
 void SmartRadarRecorder::saveDataToCSV()
 {
   qDebug() << "Saving data to CSV!";
-  if (!recorded_data.isEmpty()) {
+  if (!recorded_data.empty()) {
     QFileDialog file_dialog;
     QString file_path =
       file_dialog.getSaveFileName(this, "Save Data", "", "CSV Files (*.csv);;All Files (*)");
@@ -182,11 +192,26 @@ void SmartRadarRecorder::saveDataToCSV()
       QFile csvfile(file_path);
       if (csvfile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream csv_writer(&csvfile);
-        csv_writer << "RadialSpeed [m/s], Power [dB], RCS [dB], Noise [dB], SNR, AzimuthAngle "
-                      "[rad], ElevationAngle [rad], Range [m], TimestampSec, TimestampNanoSec \n";
+        csv_writer << "Range [m], Power [dB], AzimuthAngle [Deg], ElevationAngle [Deg], RCS [dB], "
+                      "Noise [dB], SNR [dB],  "
+                      "RadialSpeed [m/s], ElevationAngle [rad], AzimuthAngle [rad], "
+                      "TimestampSec, TimestampNanoSec\n";
 
         for (const auto & data_row : recorded_data) {
-          QStringList data_str_list = QStringList::fromVector(data_row);
+          QStringList data_str_list;
+          data_str_list << QString::number(data_row.range, 'f', 2);
+          data_str_list << QString::number(data_row.power, 'f', 2);
+          data_str_list << QString::number(data_row.azimuth_angle * 180.0 / M_PI, 'f', 2);
+          data_str_list << QString::number(data_row.elevation_angle * 180.0 / M_PI, 'f', 2);
+          data_str_list << QString::number(data_row.rcs, 'f', 2);
+          data_str_list << QString::number(data_row.noise, 'f', 2);
+          data_str_list << QString::number(data_row.snr, 'f', 2);
+          data_str_list << QString::number(data_row.radial_speed, 'f', 2);
+          data_str_list << QString::number(data_row.azimuth_angle, 'f', 2);
+          data_str_list << QString::number(data_row.elevation_angle, 'f', 2);
+          data_str_list << QString::number(data_row.timestamp_sec);
+          data_str_list << QString::number(data_row.timestamp_nanosec);
+
           csv_writer << data_str_list.join(", ") << "\n";
         }
 
