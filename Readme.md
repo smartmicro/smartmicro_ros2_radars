@@ -42,8 +42,8 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVE
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `December 20, 2023`
-- Smart Access Automotive version: `v3.5.0`
+- Date of release: `January 26, 2023`
+- Smart Access Automotive version: `v3.7.0`
 - User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.2`
 - User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.2`
 - User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
