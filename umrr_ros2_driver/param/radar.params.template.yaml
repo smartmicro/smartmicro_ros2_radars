@@ -11,13 +11,17 @@
     sensors:
       # As many as 10 sensors all named as "sensor_<number>" in increasing order of numbers,
       # e.g., sensor_0, sensor_1, etc. The list must start with sensor_0.
-      # For sensor `model`if using :
-      # can: 'umrra4_can_v1_0_1', 'umrr96_can', 'umrr11_can', 'umrr9d_can_v1_0_3', 'umrr9d_can_v1_2_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
-      # port: 'umrra4_v1_0_1', 'umrr96', 'umrr11', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1'
+      # 
+      # Sensor `model` names if using link type:
+      # can: 'umrr9f_can_mse_v1_0_0', 'umrra4_can_v1_0_1', 'umrr96_can_v1_2_2', 'umrr11_can_v1_1_2', 'umrr9d_can_v1_0_3', 'umrr9d_can_v1_2_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
+      # port: 'umrr9f_mse_v1_0_0', 'umrra4_v1_0_1', 'umrr96_v1_2_2', 'umrr11_v1_1_2', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1'
       sensor_0:
+        # The link of the sensor either 'can' or 'eth'
         link_type: "eth"
+        # The publisher type of the sensor
+        pub_type: "target"
         # The model of the connected sensor.
-        model: "umrr11"
+        model: "umrr11_v1_1_2"
         # Adapter id to which sensor is connected
         dev_id: 3
         # The client_id of the sensor/source, must be a unique integer.
@@ -41,9 +45,12 @@
         # The pathc version of the interface
         uifpatchv: 2
       sensor_1:
+        # The link of the sensor either 'can' or 'eth'
         link_type: "eth"
+        # The publisher type of the sensor
+        pub_type: "target"
         # The model of the connected sensor.
-        model: "umrr96"
+        model: "umrr96_v1_2_2"
         # Adapter id to which sensor is connected
         dev_id: 3
         # The client_id of the sensor/source, must be a unique integer.
@@ -67,7 +74,10 @@
         # The pathc version of the interface
         uifpatchv: 2
       sensor_2:
+        # The link of the sensor either 'can' or 'eth'
         link_type: "eth"
+        # The publisher type of the sensor
+        pub_type: "target"
         # The model of the connected sensor.
         model: "umrr9f_v2_1_1"
         # Adapter id to which sensor is connected
@@ -93,7 +103,10 @@
         # The pathc version of the interface
         uifpatchv: 1
       sensor_3:
+        # The link of the sensor either 'can' or 'eth'
         link_type: "eth"
+        # The publisher type of the sensor
+        pub_type: "target"
         # The model of the connected sensor.
         model: "umrr9d_v1_0_3"
         # Adapter id to which sensor is connected

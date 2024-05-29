@@ -1,0 +1,9 @@
+string frame_id
+float32 cycle_time
+uint16 number_of_objects
+float32 ego_speed
+float32 ego_speed_quality
+float32 ego_yaw_rate
+float32 ego_yaw_rate_quality
+uint32 cycle_count
+uint8 dyn_source

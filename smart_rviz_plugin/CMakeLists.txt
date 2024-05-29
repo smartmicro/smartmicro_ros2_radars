@@ -23,7 +23,8 @@ find_package(rviz_rendering REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Widgets Test)
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
-
+find_package(OpenCV REQUIRED)
+find_package(cv_bridge REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 
@@ -31,12 +32,14 @@ set(smart_rviz_plugin_SRCS
   src/smart_recorder.cpp
   src/smart_services.cpp
   src/smart_download.cpp
+  src/smart_status.cpp
 )
 
 set(smart_rviz_plugin_HDRS
   include/smart_rviz_plugin/smart_recorder.hpp
   include/smart_rviz_plugin/smart_services.hpp
   include/smart_rviz_plugin/smart_download.hpp
+  include/smart_rviz_plugin/smart_status.hpp
 )
 
 add_library(smart_rviz_plugin SHARED
@@ -54,6 +57,8 @@ set(dependencies
   rviz_ogre_vendor
   rviz_rendering
   std_msgs
+  OpenCV
+  cv_bridge
 )
 
 ament_target_dependencies(smart_rviz_plugin
@@ -64,6 +69,7 @@ target_include_directories(smart_rviz_plugin PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/smart_rviz_plugin>
   ${Qt5Widgets_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 

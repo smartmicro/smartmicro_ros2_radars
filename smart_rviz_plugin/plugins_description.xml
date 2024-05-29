@@ -1,6 +1,6 @@
 <library path="smart_rviz_plugin">
   <class
-      name="smart_rviz_plugin/TargetList Recorder"
+      name="smart_rviz_plugin/Smart Recorder"
       type="smart_rviz_plugin::SmartRadarRecorder"
       base_class_type="rviz_common::Panel">
     <description>The Smart TargetList Recorder.</description>
@@ -16,5 +16,11 @@
       type="smart_rviz_plugin::SmartDownloadService"
       base_class_type="rviz_common::Panel">
     <description>The Smart Download.</description>
+  </class>
+  <class
+      name="smart_rviz_plugin/Smart Status"
+      type="smart_rviz_plugin::SmartRadarStatus"
+      base_class_type="rviz_common::Panel">
+    <description>The Smart Status.</description>
   </class>
 </library>

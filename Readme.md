@@ -38,39 +38,36 @@ python custom_can_sender.py
 - ROS2 foxy
 
 ### UMRR radars and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152 or DRVEGRD 169 radar are 
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152, DRVEGRD 169 or DRVEGRD 169 MSE radar are 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `January 26, 2023`
-- Smart Access Automotive version: `v3.7.0`
-- User interface version: `UMRR96 Type 153 AUTOMOTIVE v1.2.2`
-- User interface version: `UMRR11 Type 132 AUTOMOTIVE v1.1.2`
-- User interface version: `UMRR9F Type 169 AUTOMOTIVE v1.1.1`
-- User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.0.0`
-- User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.1.1`
-- User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.2.1`
-- User interface version: `UMRR9F Type 169 AUTOMOTIVE v2.5.0`
-- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.0.3`
-- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.2.2`
-- User interface version: `UMRR9D Type 152 AUTOMOTIVE v1.5.0`
-- User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.0.1`
-- User interface version: `UMRRA4 Type 171 AUTOMOTIVE v1.3.0`
+- Date of release: `June 03, 2024`
+- Smart Access Automotive version: `v3.8.0`
 
-### Sensor Firmwares
-This ROS2 driver release is compatible with the following sensor firmwares:
-- UMRR11 Type 132: V5.1.4
-- UMRR96 Type 153: V5.2.4
-- UMRR9D Type 152: V2.1.0
-- UMRR9D Type 152: V2.5.0
-- UMRR9D Type 152: V2.7.0
-- UMRR9F Type 169: V1.3.0
-- UMRR9F Type 169: V2.0.2
-- UMRR9F Type 169: V2.2.0
-- UMRR9F Type 169: V2.4.0
-- UMRRA4 Type 171: V1.0.0
-- UMRRA4 Type 171: V1.2.1
-- UMRRA4 Type 171: V1.3.0
+For each sensor user interface there is a corressponding sensor firmware. The following list all the possible combinations. 
+
+| **User Interface Version**                       | **Sensor Firmware Version**         |
+|--------------------------------------------------|-------------------------------------|
+| UMRR96 Type 153 AUTOMOTIVE v1.2.1                | UMRR96 Type 153: V5.2.4             |
+| UMRR96 Type 153 AUTOMOTIVE v1.2.2                | UMRR96 Type 153: V5.2.4             |
+| UMRR11 Type 132 AUTOMOTIVE v1.1.1                | UMRR11 Type 132: V5.1.4             |
+| UMRR11 Type 132 AUTOMOTIVE v1.1.2                | UMRR11 Type 132: V5.1.4             |
+| UMRR9F Type 169 AUTOMOTIVE v1.1.1                | UMRR9F Type 169: V1.3.0             |
+| UMRR9F Type 169 AUTOMOTIVE v2.0.0                | UMRR9F Type 169: V2.0.1             |
+| UMRR9F Type 169 AUTOMOTIVE v2.1.1                | UMRR9F Type 169: V2.0.1             |
+| UMRR9F Type 169 AUTOMOTIVE v2.2.0                | UMRR9F Type 169: V2.2.0             |
+| UMRR9F Type 169 AUTOMOTIVE v2.2.1                | UMRR9F Type 169: V2.2.0             |
+| UMRR9F Type 169 AUTOMOTIVE v2.4.1                | UMRR9F Type 169: V2.4.0             |
+| UMRR9D Type 152 AUTOMOTIVE v1.0.2                | UMRR9D Type 152: V2.1.0             |
+| UMRR9D Type 152 AUTOMOTIVE v1.0.3                | UMRR9D Type 152: V2.5.0             |
+| UMRR9D Type 152 AUTOMOTIVE v1.2.2                | UMRR9D Type 152: V2.5.0             |
+| UMRR9D Type 152 AUTOMOTIVE v1.4.1                | UMRR9D Type 152: V2.7.0             |
+| UMRRA4 Type 171 AUTOMOTIVE v1.0.0                | UMRRA4 Type 171: V1.0.0             |
+| UMRRA4 Type 171 AUTOMOTIVE v1.0.1                | UMRRA4 Type 171: V1.0.0             |
+| UMRRA4 Type 171 AUTOMOTIVE v1.2.1                | UMRRA4 Type 171: V1.2.1             |
+| UMRR11 Type 132 MSE v1.1.1                       | UMRR11 Type 132-MSE: V6.1.2         |
+| UMRR9F Type 169 MSE v1.0.0                       | UMRR9F Type 169-MSE: V1.1.0         |
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -116,8 +113,8 @@ For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/r
 For the setting up the ***sensors***:
 - `link_type`: the type of hardware connection
 - `model`: the model of the sensor being used
-  - can: 'umrra4_can_v1_0_1', 'umrr96_can', 'umrr11_can', 'umrr9d_can_v1_0_3', 'umrr9d_can_v1_2_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
-  - port: 'umrra4_v1_0_1', 'umrr96', 'umrr11', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1',
+  - can: 'umrr9f_can_mse_v1_0_0', 'umrra4_can_v1_0_1', 'umrr96_can_v1_2_2', 'umrr11_can_v1_1_2', 'umrr9d_can_v1_0_3', 'umrr9d_can_v1_2_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
+  - port: 'umrr9f_mse_v1_0_0', 'umrra4_v1_0_1', 'umrr96_v1_2_2', 'umrr11_v1_1_2', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1'
 - `dev_id`: adapter id to which sensor is connected. ***The adapter and sensor should have the same dev_id***
 - `id`: the client_id of the sensor/source, ***must be a _unique_ integer and non-zero***.
 - `ip`: the ***_unique_*** ip address of the sensor or of the source acting as a sensor, required only for sensors using _ethernet_.
@@ -234,7 +231,7 @@ docker build . -t umrr-ros:latest
 
 Building the driver with the docker container
 ```bash
-docker run --rm -v`pwd`:/code umrr-ros colcon build
+docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-skip smart_rviz_plugin
 ```
 
 Running the unit and integration tests via the docker compose

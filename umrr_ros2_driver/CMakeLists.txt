@@ -26,11 +26,12 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter -g)
+    add_compile_options(-Wall -Wextra -Wnarrowing -Wpedantic -Wno-unused-parameter -g)
 endif()
 
 find_package(ament_cmake_auto REQUIRED)
 find_package(Threads REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 fetchcontent_declare(json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -61,12 +62,13 @@ install(FILES
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.1.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.2.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.5.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.4.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.0.3_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.2.2_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.5.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.4.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.0.1_user_interface.so"
-    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.3.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.2.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_msev1.0.0_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -93,12 +95,13 @@ smartmicro/include/umrr9f_t169_automotive_v1_1_1
 smartmicro/include/umrr9f_t169_automotive_v2_0_0
 smartmicro/include/umrr9f_t169_automotive_v2_1_1
 smartmicro/include/umrr9f_t169_automotive_v2_2_1
-smartmicro/include/umrr9f_t169_automotive_v2_5_0
+smartmicro/include/umrr9f_t169_automotive_v2_4_1
 smartmicro/include/umrr9d_t152_automotive_v1_0_3
 smartmicro/include/umrr9d_t152_automotive_v1_2_2
-smartmicro/include/umrr9d_t152_automotive_v1_5_0
+smartmicro/include/umrr9d_t152_automotive_v1_4_1
 smartmicro/include/umrra4_automotive_v1_0_1
-smartmicro/include/umrra4_automotive_v1_3_0)
+smartmicro/include/umrra4_automotive_v1_2_1
+smartmicro/include/umrr9f_t169_mse_v1_0_0)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node
@@ -112,12 +115,13 @@ target_link_libraries(smartmicro_radar_node
     umrr9f_t169_automotivev2.0.0_user_interface
     umrr9f_t169_automotivev2.1.1_user_interface
     umrr9f_t169_automotivev2.2.1_user_interface
-    umrr9f_t169_automotivev2.5.0_user_interface
+    umrr9f_t169_automotivev2.4.1_user_interface
     umrr9d_t152_automotivev1.0.3_user_interface
     umrr9d_t152_automotivev1.2.2_user_interface
-    umrr9d_t152_automotivev1.5.0_user_interface
+    umrr9d_t152_automotivev1.4.1_user_interface
     umrra4_automotivev1.0.1_user_interface
-    umrra4_automotivev1.3.0_user_interface)
+    umrra4_automotivev1.2.1_user_interface
+    umrr9f_t169_msev1.0.0_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"
