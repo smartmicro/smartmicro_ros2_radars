@@ -105,6 +105,6 @@ All notable changes to this project will be documented in this file. This projec
 - **New ROS 2 Parameter - `pub_type`**: Added the `pub_type` parameter to manage the desired publication type.
 - **New message definitions**:
   - CanObjectHeader.msg includes object status for sensors connected over CAN.
-  - CanTargetHeader.msg includes target status for sensors connected over ethernet.
+  - CanTargetHeader.msg includes target status for sensors connected over CAN.
   - PortObjectHeader.msg includes object status for sensors connected over ethernet.
   - PortTargetHeader.msg includes target status for sensors connected over ethernet.
