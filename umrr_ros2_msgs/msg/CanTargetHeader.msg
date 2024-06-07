@@ -1,0 +1,7 @@
+string frame_id
+float32 cycle_time
+uint8 number_of_targets
+uint32 cycle_count
+uint8 acquisition_setup
+uint32 time_stamp
+float32 acq_ts_fraction

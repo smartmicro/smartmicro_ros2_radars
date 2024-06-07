@@ -121,7 +121,7 @@ class TestSmartNode(unittest.TestCase):
         self.test_node.destroy_node()
 
     def test_smart_node_publishes(self):
-        # Expect the smartnode to publish strings on '/smart_radar/targets_'
+        # Expect the smartnode to publish strings on 'smart_radar/port_targets_'
         data_rx_s1 = []
         data_rx_s2 = []
         data_rx_s3 = []
@@ -137,19 +137,19 @@ class TestSmartNode(unittest.TestCase):
 
         sub_s1 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
-            '/smart_radar/targets_0',
+            'smart_radar/port_targets_0',
             data_rx_s1_callback,
             10
         )
         sub_s2 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
-            '/smart_radar/targets_1',
+            'smart_radar/port_targets_1',
             data_rx_s2_callback,
             10
         )
         sub_s3 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
-            '/smart_radar/targets_2',
+            'smart_radar/port_targets_2',
             data_rx_s3_callback,
             10
         )

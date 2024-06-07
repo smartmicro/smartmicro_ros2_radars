@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>umrr_ros2_driver</name>
-  <version>6.1.0</version>
+  <version>7.0.0</version>
   <description>A node to publish data from a smartmicro radar.</description>
   <maintainer email="opensource@smartmicro.de">s.m.s, smart microwave sensors GmbH.</maintainer>
   <license>Apache 2.0 License</license>
@@ -14,6 +14,7 @@
   <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
   <depend>point_cloud_msg_wrapper</depend>
+  <depend>visualization_msgs</depend>
   <depend>umrr_ros2_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
