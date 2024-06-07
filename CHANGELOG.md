@@ -96,11 +96,15 @@ All notable changes to this project will be documented in this file. This projec
   - Fixed issues with the smart record plugin.
   - Added azimuth and elevation angles in degrees.
 
-## v7.0.0 - 2024-06-03
+## v7.0.0 - 2024-06-07
 
 ### New Features
 - **User Interface for DRVEGRD 169**: Introduced a new UI with integrated object tracking capabilities.
 - **RViz Plugins**: Added plugins to RViz for decoding targets, objects, and header information.
 - **Enhanced Command Configurator**: Improved the command configurator for better usability and functionality.
 - **New ROS 2 Parameter - `pub_type`**: Added the `pub_type` parameter to manage the desired publication type.
-- **New message definitons**: Created new custom message definitons to output radar header information.
+- **New message definitions**:
+  - CanObjectHeader.msg includes object status for sensors connected over CAN.
+  - CanTargetHeader.msg includes target status for sensors connected over ethernet.
+  - PortObjectHeader.msg includes object status for sensors connected over ethernet.
+  - PortTargetHeader.msg includes target status for sensors connected over ethernet.

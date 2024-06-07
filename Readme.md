@@ -42,7 +42,7 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVE
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `June 03, 2024`
+- Date of release: `June 07, 2024`
 - Smart Access Automotive version: `v3.8.0`
 
 For each sensor user interface there is a corressponding sensor firmware. The following list all the possible combinations. 
