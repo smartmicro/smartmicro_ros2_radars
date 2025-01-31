@@ -19,7 +19,7 @@ target_include_directories(simulator PUBLIC
                            umrr_ros2_driver/smartmicro/include/umrr11_t132_automotive_v1_1_2
                            umrr_ros2_driver/smartmicro/include/umrr96_t153_automotive_v1_2_2
                            umrr_ros2_driver/smartmicro/include/umrr9f_t169_automotive_v2_1_1
-                           umrr_ros2_driver/smartmicro/include/umrr9d_t152_automotive_v1_0_3)
+                           umrr_ros2_driver/smartmicro/include/umrr9d_t152_automotive_v1_5_0)
 
 target_link_libraries(simulator
                       com_lib
@@ -27,7 +27,7 @@ target_link_libraries(simulator
                       umrr11_t132_automotivev1.1.2_user_interface
                       umrr96_t153_automotivev1.2.2_user_interface
                       umrr9f_t169_automotivev2.1.1_user_interface
-                      umrr9d_t152_automotivev1.0.3_user_interface
+                      umrr9d_t152_automotivev1.5.0_user_interface
                       dl)
 
 install(TARGETS simulator DESTINATION bin)

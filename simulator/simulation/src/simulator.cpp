@@ -152,6 +152,9 @@ int main(int argc, char * argv[])
     } else if (port == "C") {
       std::string portFile = "/code/simulator/targetlist_port_v4_0_0.bin";
       stream_port(portFile);
+    } else if (port == "D") {
+      std::string portFile = "/code/simulator/targetlist_port_v4_1_0.bin";
+      stream_port(portFile);
     } else {
       std::cout << "Invalid input!" << std::endl;
     }

@@ -100,6 +100,7 @@ void SmartRadarService::populate_file_menu()
   file_selector_combo_box->addItem("UMRR9F");
   file_selector_combo_box->addItem("UMRR9D");
   file_selector_combo_box->addItem("UMRRA4");
+  file_selector_combo_box->addItem("UMRRA4 MSE");
 }
 
 void SmartRadarService::on_file_selected(int index)
@@ -154,6 +155,15 @@ void SmartRadarService::on_file_selected(int index)
       current_directory +
       "/src/smartmicro_ros2_radars/umrr_ros2_driver/smartmicro/user_interfaces/"
       "UserInterfaceUmrra4_automotiveV1.2.1/instructions/command/auto_interface.command";
+  } else if (index == 5) {
+    param_json_file_path =
+      current_directory +
+      "/src/smartmicro_ros2_radars/umrr_ros2_driver/smartmicro/user_interfaces/"
+      "UserInterfaceUmrra4_mseV1.0.0/instructions/params/auto_interface_0dim.param";
+    command_json_file_path =
+      current_directory +
+      "/src/smartmicro_ros2_radars/umrr_ros2_driver/smartmicro/user_interfaces/"
+      "UserInterfaceUmrra4_mseV1.0.0/instructions/command/auto_interface.command";
   }
 
   // Update tables with data from selected files

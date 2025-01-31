@@ -38,12 +38,12 @@ python custom_can_sender.py
 - ROS2 foxy
 
 ### UMRR radars and Smart Access API version
-A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152, DRVEGRD 169 or DRVEGRD 169 MSE radar are 
+A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152, DRVEGRD 169, DRVEGRD 169 MSE or DRVEGRD 171 MSE radar is 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `June 07, 2024`
-- Smart Access Automotive version: `v3.8.0`
+- Date of release: `February 03, 2025`
+- Smart Access Automotive version: `v3.9.0`
 
 For each sensor user interface there is a corressponding sensor firmware. The following list all the possible combinations. 
 
@@ -63,11 +63,15 @@ For each sensor user interface there is a corressponding sensor firmware. The fo
 | UMRR9D Type 152 AUTOMOTIVE v1.0.3                | UMRR9D Type 152: V2.5.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.2.2                | UMRR9D Type 152: V2.5.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.4.1                | UMRR9D Type 152: V2.7.0             |
+| UMRR9D Type 152 AUTOMOTIVE v1.5.0                | UMRR9D Type 152: V3.3.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.0.0                | UMRRA4 Type 171: V1.0.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.0.1                | UMRRA4 Type 171: V1.0.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.2.1                | UMRRA4 Type 171: V1.2.1             |
+| UMRRA4 Type 171 AUTOMOTIVE v1.4.0                | UMRRA4 Type 171: V2.0.0             |
 | UMRR11 Type 132 MSE v1.1.1                       | UMRR11 Type 132-MSE: V6.1.2         |
 | UMRR9F Type 169 MSE v1.0.0                       | UMRR9F Type 169-MSE: V1.1.0         |
+| UMRR9F Type 169 MSE v1.1.0                       | UMRR9F Type 169-MSE: V1.3.0         |
+| UMRRA4 Type 171 MSE v1.0.0                       | UMRR9F Type 171-MSE: V1.0.0         |
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -110,32 +114,67 @@ The node is configured through the parameters. Here is a short recap of the most
 For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/radar.sensor.example.yaml) and 
 [`radar.adapter.example.yaml`](umrr_ros2_driver/param/radar.adapter.example.yaml) files.
 
-For the setting up the ***sensors***:
-- `link_type`: the type of hardware connection
-- `model`: the model of the sensor being used
-  - can: 'umrr9f_can_mse_v1_0_0', 'umrra4_can_v1_0_1', 'umrr96_can_v1_2_2', 'umrr11_can_v1_1_2', 'umrr9d_can_v1_0_3', 'umrr9d_can_v1_2_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1'
-  - port: 'umrr9f_mse_v1_0_0', 'umrra4_v1_0_1', 'umrr96_v1_2_2', 'umrr11_v1_1_2', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9f_v1_1_1', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1'
-- `dev_id`: adapter id to which sensor is connected. ***The adapter and sensor should have the same dev_id***
-- `id`: the client_id of the sensor/source, ***must be a _unique_ integer and non-zero***.
-- `ip`: the ***_unique_*** ip address of the sensor or of the source acting as a sensor, required only for sensors using _ethernet_.
-- `port`: port to be used to receive the packets, default is _55555_
-- `frame_id`: name of the frame in which the messages will be published
-- `history_size`: size of history for the message publisher
-- `inst_type`: the type of instruction serialization type, relevant to sensors using ethernet and should be 'port_based'
-- `data_type`: the type of data serialization type, relevant to sensors using ethernet and should be 'port_based'
-- `uifname`: the user interface name of the sensor (refer to the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/))
-- `uifmajorv`: the major version of the sensor user interface
-- `uifminorv`: the minor version of the sensor user interface
-- `uifpatchv`: the patch version of the sensor user interface
+To set up the ***sensors***, configure the following parameters:
 
-For setting up the ***adapters***:
-- `master_inst_serial_type`: the instruction serilization type of the master. When using a hybrid of 'can' and 'port' use 'can_based'
-- `master_data_serial_type`: the data serilization type of the master. When using a hybrid of 'can' and 'port' use 'can_based'
-- `hw_type`: the type of the hardware connection
-- `hw_dev_id`: adapter id of the hardware, ***the sensor and adapter should use the same id***
-- `hw_iface_name`: name of the used network interface
-- `baudrate`: the baudrate of the sensor connected with can, default is _500000_
-- `port`: port to be used to receive the packets, default is _55555_
+- **`link_type`**: Specifies the type of hardware connection.
+
+- **`model`**: Defines the model of the sensor being used.  
+  - **CAN Models**:  
+    `umrra4_can_mse_v1_0_0`, `umrr9f_can_mse_v1_1_0`, `umrr9f_can_mse_v1_0_0`, `umrr96_can_v1_2_2`, `umrr11_can_v1_1_2`, `umrr9f_can_v2_1_1`, `umrr9f_can_v2_2_1`,
+    `umrr9f_can_v2_4_1`, `umrr9d_can_v1_0_3`, `umrr9d_can_v1_2_2`, `umrr9d_can_v1_4_1`, `umrr9d_can_v1_5_0`, `umrra4_can_v1_0_1`, `umrra4_can_v1_2_1`,`umrra4_can_v1_4_0`
+  - **Port Models**:  
+    `umrra4_mse_v1_0_0`, `umrr9f_mse_v1_1_0`, `umrr9f_mse_v1_0_0`, `umrr96_v1_2_2`, `umrr11_v1_1_2`, `umrr9f_v2_1_1`, `umrr9f_v2_2_1`,
+    `umrr9f_v2_4_1`, `umrr9d_v1_0_3`, `umrr9d_v1_2_2`, `umrr9d_v1_4_1`, `umrr9d_v1_5_0`, `umrra4_v1_0_1`, `umrra4_v1_2_1`,`umrra4_v1_4_0`
+
+- **`dev_id`**: Adapter ID to which the sensor is connected.  
+  ***Note:*** The adapter and sensor must have the same `dev_id`.
+
+- **`id`**: The client ID of the sensor/source.  
+  ***Must be a unique, non-zero integer.***
+
+- **`ip`**: The ***unique*** IP address of the sensor or source acting as a sensor.  
+  ***Required only for sensors using Ethernet.***
+
+- **`port`**: Port used to receive packets.  
+  ***Required only for sensors using Ethernet and default is:*** `55555`.
+
+- **`frame_id`**: Name of the frame in which messages will be published.
+
+- **`history_size`**: Size of the history buffer for the message publisher.
+
+- **`inst_type`**: Instruction serialization type.  
+  ***Relevant for Ethernet sensors.***. 
+  ***Should be set to:*** `port_based`.
+
+- **`data_type`**: Data serialization type.  
+  ***Relevant for Ethernet sensors.***. 
+  ***Should be set to:*** `port_based`.
+
+- **`uifname`**: User interface name of the sensor (refer to the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/)).
+  - **`uifmajorv`**: Major version of the sensor user interface.
+  - **`uifminorv`**: Minor version of the sensor user interface.
+  - **`uifpatchv`**: Patch version of the sensor user interface.
+
+To set up the ***adapters***, configure the following parameters:
+
+- **`master_inst_serial_type`**: Instruction serilization type of the master.
+  ***Note:*** When using a hybrid of `can` and `port` use `can_based`.
+
+- **`master_data_serial_type`**: Data serilization type of the master.
+  ***Note:*** When using a hybrid of `can` and `port` use `can_based`.
+
+- **`hw_type`**: Specifies the type of the hardware connection.
+
+- **`hw_dev_id`**: Adapter id of the hardware.
+  ***Note:*** The adapter and sensor must have the same `dev_id`.
+
+- **`hw_iface_name`**: Name of the used network interface.
+
+- **`baudrate`**: Baudrate of the sensor connected with CAN.
+  ***Required only for sensors using CAN and default is:*** _500000_.
+
+- **`port`**: Port used to receive packets.  
+  ***Required only for sensors using Ethernet and default is:*** _55555_.
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one

@@ -20,9 +20,9 @@ cmake_minimum_required(VERSION 3.11)
 project(umrr_ros2_driver)
 include(FetchContent)
 
-# Default to C++14
+# Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -66,9 +66,13 @@ install(FILES
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.0.3_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.2.2_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.4.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.5.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.0.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.2.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.4.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_msev1.0.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_msev1.1.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_msev1.0.0_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -99,9 +103,13 @@ smartmicro/include/umrr9f_t169_automotive_v2_4_1
 smartmicro/include/umrr9d_t152_automotive_v1_0_3
 smartmicro/include/umrr9d_t152_automotive_v1_2_2
 smartmicro/include/umrr9d_t152_automotive_v1_4_1
+smartmicro/include/umrr9d_t152_automotive_v1_5_0
 smartmicro/include/umrra4_automotive_v1_0_1
 smartmicro/include/umrra4_automotive_v1_2_1
-smartmicro/include/umrr9f_t169_mse_v1_0_0)
+smartmicro/include/umrra4_automotive_v1_4_0
+smartmicro/include/umrr9f_t169_mse_v1_0_0
+smartmicro/include/umrr9f_t169_mse_v1_1_0
+smartmicro/include/umrra4_mse_v1_0_0)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node
@@ -119,9 +127,13 @@ target_link_libraries(smartmicro_radar_node
     umrr9d_t152_automotivev1.0.3_user_interface
     umrr9d_t152_automotivev1.2.2_user_interface
     umrr9d_t152_automotivev1.4.1_user_interface
+    umrr9d_t152_automotivev1.5.0_user_interface
     umrra4_automotivev1.0.1_user_interface
     umrra4_automotivev1.2.1_user_interface
-    umrr9f_t169_msev1.0.0_user_interface)
+    umrra4_automotivev1.4.0_user_interface
+    umrr9f_t169_msev1.0.0_user_interface
+    umrr9f_t169_msev1.1.0_user_interface
+    umrra4_msev1.0.0_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"

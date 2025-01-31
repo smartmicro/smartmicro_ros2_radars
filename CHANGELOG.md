@@ -108,3 +108,13 @@ All notable changes to this project will be documented in this file. This projec
   - CanTargetHeader.msg includes target status for sensors connected over CAN.
   - PortObjectHeader.msg includes object status for sensors connected over ethernet.
   - PortTargetHeader.msg includes target status for sensors connected over ethernet.
+
+## v7.1.0 - 2025-02-03
+
+### New Features
+- **User Interface for DRVEGRD 169 MSE v1.1.0**: Introduced a new UI with integrated object tracking capabilities.
+- **User Interface for DRVEGRD 171 MSE v1.0.0**: Introduced a new UI with integrated object tracking capabilities.
+- **New User Interfaces**: Added user interfaces for DRVEGRD 152 v1.5.0 and DRVEGRD 171 v1.4.0.
+- **RViz Plugins**: Extended service configurator with DRVEGRD 171 MSE instruction set.
+- **Adopted Testing**: Includes check for new DRVEGRD 171 v1.5.0.
+- **Updated External libraries**: Updated external libraries compatible with the new smart access release. 

@@ -90,7 +90,11 @@ typedef uint8_t CanNetId;
 typedef uint16_t CanId;
 typedef uint16_t UdtId;
 typedef uint8_t PhyDeviceId;
-
+struct TimeOutDeatils {
+  uint16_t timeOutCount;
+  uint64_t latestOffsetValue;
+};
+typedef std::map<uint8_t, TimeOutDeatils> TimeOutMap;
 const PortId INSTRUCTION_PORT_ID = 46;
 
 class SharedLibDescriptor {
@@ -447,7 +451,6 @@ class ComLibConfig {
   bool IsTimeSyncSupported() const;
   bool IsAliveSupported() const;
   TimeSyncRole GetTimeSyncRole() const;
-  uint8_t GetTimeSyncNumOfIter() const;
   uint16_t GetMajorVersion() const;
   uint16_t GetMinorVersion() const;
   uint16_t GetPatchVersion() const;
@@ -464,7 +467,6 @@ class ComLibConfig {
   void SetTimeSyncHwDeviceId(IN uint8_t deviceId);
   void SetTimeSyncSupport(IN bool isSupported);
   void SetTimeSyncRole(IN TimeSyncRole role);
-  void SetTimeSyncNumOfIter(IN uint8_t numOfIter);
   void SetAliveSupport(IN bool support);
   void SetUserInterfaceMajorVersion(uint16_t majorVer);
   void SetUserInterfaceMinorVersion(uint16_t minorVer);
@@ -489,7 +491,6 @@ class ComLibConfig {
   uint8_t _timeSyncHwDevId;
   bool _isTimeSyncSupported;
   TimeSyncRole _timeSyncRole;
-  uint8_t _numOfIter;
   bool _isAliveSupported;
   uint16_t _userIfMajorVer;
   uint16_t _userIfMinorVer;

@@ -82,8 +82,8 @@ class Instruction {
         _id(id),
         _dataType(0),
         _dimCount(0),
-        _value(0),
-        _signature(0) {}
+        _signature(0),
+        _value(0) {}
 
   ~Instruction() {}
 
