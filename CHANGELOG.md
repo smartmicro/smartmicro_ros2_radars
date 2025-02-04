@@ -109,7 +109,7 @@ All notable changes to this project will be documented in this file. This projec
   - PortObjectHeader.msg includes object status for sensors connected over ethernet.
   - PortTargetHeader.msg includes target status for sensors connected over ethernet.
 
-## v7.1.0 - 2025-02-03
+## v7.1.0 - 2025-02-05
 
 ### New Features
 - **User Interface for DRVEGRD 169 MSE v1.1.0**: Introduced a new UI with integrated object tracking capabilities.
