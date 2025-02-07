@@ -55,6 +55,7 @@ void StartSoftwareUpdate(ClientId client_id, std::string update_image) {
                                        MyUpdateServiceInfoHandler) !=
       ERROR_CODE_OK) {
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Start of SW-Download failed");
+    return;
   }
 
   if (UpdateInfoStatic.GetCurrentDownloadedBytes() == size) {
