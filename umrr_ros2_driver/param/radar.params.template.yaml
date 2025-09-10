@@ -34,7 +34,7 @@
         # The port to be used.
         port: 55555
         # The frame_id to be set to the published messages.
-        frame_id: "umrr"
+        frame_id: "radar"
         # Specify the history size.
         history_size: 10
         inst_type: "port_based"
@@ -42,11 +42,11 @@
         # The interface name of the sensor
         uifname: "umrr96_t153_automotive"
         # The major version of the interface
-        uifmajorv: 5
+        uifmajorv: 1
         # The minor version of the interface
         uifminorv: 2
         # The pathc version of the interface
-        uifpatchv: 4
+        uifpatchv: 2
       # sensor_1:
       #   # The link of the sensor either 'can' or 'eth'
       #   link_type: "eth"
