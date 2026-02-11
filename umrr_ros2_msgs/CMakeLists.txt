@@ -23,6 +23,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
     "srv/SetIp.srv"
     "srv/SendCommand.srv"
     "srv/FirmwareDownload.srv"
+    "srv/GetStatus.srv"
+    "srv/GetMode.srv"
     "msg/CanTargetHeader.msg"
     "msg/PortTargetHeader.msg"
     "msg/PortObjectHeader.msg"

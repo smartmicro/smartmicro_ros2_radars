@@ -1,33 +1,27 @@
-name: Build and test
-
-on:
-  pull_request:
-  push:
-    branches:
-      - master
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ros_distro: [foxy, humble, jazzy]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Get the Smart Access binaries
+        run: echo "yes" | ./smart_extract.sh
 
-    - name: Get the Smart Access binaries
-      run:  echo "yes" | ./smart_extract.sh
+      - name: Build docker container
+        run: docker build --build-arg ROS_DISTRO=${{ matrix.ros_distro }} -t umrr-ros:${{ matrix.ros_distro }} .
 
-    - name: Build the docker container
-      run:  docker build . -t umrr-ros:latest
+      - name: Build the driver
+        run: docker run --rm -v`pwd`:/code umrr-ros:${{ matrix.ros_distro }} colcon build --packages-skip smart_rviz_plugin
 
-    - name: Building the driver with the docker container
-      run:  docker run --rm -v`pwd`:/code umrr-ros colcon build --packages-skip smart_rviz_plugin
+      - name: Run tests
+        run: ROS_DISTRO=${{ matrix.ros_distro }} docker compose up
 
-    - name: Running the unit/integration tests via the docker container and exit
-      run:  docker compose up
+      - name: Collect test results
+        run: docker run --rm -v`pwd`:/code umrr-ros:${{ matrix.ros_distro }} colcon test-result --all --verbose
 
-    - name: Getting the test coverage
-      run:  docker run --rm -v`pwd`:/code umrr-ros colcon test-result --all --verbose
-
-    - name: Shut down docker containers and networks
-      run:  docker compose down
+      - name: Shut down containers
+        run: docker compose down

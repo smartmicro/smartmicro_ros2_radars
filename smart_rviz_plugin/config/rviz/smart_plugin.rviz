@@ -1,16 +1,11 @@
 Panels:
   - Class: rviz_common/Displays
-    Help Height: 81
+    Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Global Options1
-        - /Status1
-        - /PointCloud21
-        - /PointCloud22
-        - /PointCloud23
+      Expanded: ~
       Splitter Ratio: 0.5
-    Tree Height: 1140
+    Tree Height: 295
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -30,12 +25,10 @@ Panels:
     Name: Smart Status
   - Class: smart_rviz_plugin/Smart Command Configurator
     Name: Smart Command Configurator
-  - Class: smart_rviz_plugin/Smart Firmware Download
-    Name: Smart Firmware Download
   - Class: smart_rviz_plugin/Smart Status
     Name: Smart Status
-  - Class: smart_rviz_plugin/Smart Recorder
-    Name: Smart Recorder
+  - Class: smart_rviz_plugin/Smart Firmware Download
+    Name: Smart Firmware Download
 Visualization Manager:
   Class: ""
   Displays:
@@ -57,6 +50,46 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
+    - Class: rviz_default_plugins/Axes
+      Enabled: true
+      Length: 1
+      Name: Axes
+      Radius: 0.10000000149011612
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: power
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 88.64950561523438
+      Min Color: 0; 0; 0
+      Min Intensity: 56.63246154785156
+      Name: Port_Tgts_S0
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 10
+      Size (m): 0.009999999776482582
+      Style: Points
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /smart_radar/port_targets_0
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -66,7 +99,7 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz_default_plugins/PointCloud2
-      Color: 204; 0; 0
+      Color: 138; 226; 52
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
@@ -75,10 +108,10 @@ Visualization Manager:
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: PointCloud2
+      Name: Can_Tgts_S1
       Position Transformer: XYZ
       Selectable: true
-      Size (Pixels): 15
+      Size (Pixels): 10
       Size (m): 0.009999999776482582
       Style: Points
       Topic:
@@ -87,72 +120,6 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /smart_radar/can_targets_1
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: true
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: heading
-      Class: rviz_default_plugins/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: Intensity
-      Decay Time: 0
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: -999999
-      Min Color: 0; 0; 0
-      Min Intensity: 999999
-      Name: PointCloud2
-      Position Transformer: XYZ
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 1
-      Style: Boxes
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /smart_radar/port_objects_0
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: true
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz_default_plugins/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: Intensity
-      Decay Time: 0
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: PointCloud2
-      Position Transformer: XYZ
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 1
-      Style: Tiles
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /smart_radar/port_targets_0
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
@@ -199,33 +166,33 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 197.11245727539062
+      Distance: 38.8543701171875
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 33.84825134277344
-        Y: -4.720839023590088
-        Z: 7.3445963859558105
+        X: 10.84825325012207
+        Y: 0.366975337266922
+        Z: 0.01084582507610321
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5047965049743652
+      Pitch: 1.5697963237762451
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.1354000568389893
+      Yaw: 3.1353957653045654
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 2090
+  Height: 1757
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000006ba00000562fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006a00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c00610079007300000002fe0000050b000000e800fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c0053006d0061007200740020005200650063006f007200640065007201000002a7000001c90000010e00fffffffb000000340053006d00610072007400200043006f006d006d0061006e006400200043006f006e0066006900670075007200610074006f00720100000477000003920000022d00ffffff00000001000004c400000562fc0200000004fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000002e0053006d0061007200740020004600690072006d007700610072006500200044006f0077006e006c006f0061006401000002a70000019d0000015b00fffffffb0000000a00560069006500770073010000044b000003be000000be00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000f000000025bfc0100000004fb0000001c0053006d0061007200740020005200650063006f0072006400650072010000000000000c3d0000017700fffffffb000000180053006d00610072007400200053007400610074007500730100000c44000001620000015300fffffffb000000180053006d00610072007400200053007400610074007500730100000dad000001530000015300fffffffb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004420000003efc0100000002fb0000000800540069006d00650100000000000004420000000000000000fb0000000800540069006d00650100000000000004500000000000000000000003740000056200000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000007ce00000677fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006a00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c00610079007300000000450000016d000000e800fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c0053006d0061007200740020005200650063006f007200640065007201000000450000025e0000010e00fffffffb000000340053006d00610072007400200043006f006d006d0061006e006400200043006f006e0066006900670075007200610074006f007201000002aa000004120000026000ffffff000000010000015300000677fc0200000006fb000000180053006d00610072007400200053007400610074007500730100000045000004c40000009f00fffffffb0000002e0053006d0061007200740020004600690072006d007700610072006500200044006f0077006e006c006f006100640100000510000001ac0000014b00fffffffb000000180053006d006100720074002000530074006100740075007300000000450000053c0000009f00fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000004500000320000000be00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004420000003efc0100000002fb0000000800540069006d00650100000000000004420000000000000000fb0000000800540069006d00650100000000000004500000000000000000000003200000067700000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Smart Command Configurator:
@@ -240,6 +207,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 3840
-  X: 0
-  Y: 33
+  Width: 3151
+  X: 374
+  Y: 214

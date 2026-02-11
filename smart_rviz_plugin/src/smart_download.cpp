@@ -1,101 +1,141 @@
 #include "smart_rviz_plugin/smart_download.hpp"
+#include <pluginlib/class_list_macros.hpp>
 
 namespace smart_rviz_plugin
 {
-SmartDownloadService::SmartDownloadService(QWidget * parent) : rviz_common::Panel(parent)
+
+SmartDownloadService::SmartDownloadService(QWidget * parent)
+: rviz_common::Panel(parent)
 {
-  initialize();
+  initialize_ros();
+  setup_ui();
 }
 
-void SmartDownloadService::initialize()
+SmartDownloadService::~SmartDownloadService()
 {
-  // Initialize ROS 2
+  if (executor_) {
+    executor_->cancel();
+  }
+  if (ros_thread_.joinable()) {
+    ros_thread_.join();
+  }
+  rclcpp::shutdown();
+}
+
+void SmartDownloadService::initialize_ros()
+{
   if (!rclcpp::ok()) {
     rclcpp::init(0, nullptr);
   }
 
-  // Declare node and client
-  download_node = rclcpp::Node::make_shared("smart_download_gui");
-  download_client = download_node->create_client<umrr_ros2_msgs::srv::FirmwareDownload>(
+  download_node_ = rclcpp::Node::make_shared("smart_download_gui");
+  download_client_ = download_node_->create_client<umrr_ros2_msgs::srv::FirmwareDownload>(
     "smart_radar/firmware_download");
 
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Download node created!");
+  executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+  executor_->add_node(download_node_);
 
-  // GUI setup
-  file_path_input = new QLineEdit(this);
-  sensor_id_input = new QLineEdit(this);
-  start_download_button = new QPushButton("Start Download", this);
-  browse_button = new QPushButton("Browse", this);
+  ros_thread_ = std::thread([this]() { executor_->spin(); });
 
-  response_text_edit = new QTextEdit(this);
-  response_text_edit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  response_text_edit->setFixedSize(1200, 100);
+  RCLCPP_INFO(download_node_->get_logger(), "SmartDownloadService node initialized.");
+}
 
-  QVBoxLayout * layout = new QVBoxLayout(this);
-  layout->addWidget(new QLabel("File Path:"));
-  layout->addWidget(file_path_input);
-  layout->addWidget(browse_button);
+void SmartDownloadService::setup_ui()
+{
+  file_path_input_ = new QLineEdit(this);
+  sensor_id_input_ = new QLineEdit(this);
+  start_download_button_ = new QPushButton("Start Download", this);
+  browse_button_ = new QPushButton("Browse", this);
+  response_text_edit_ = new QTextEdit(this);
+  response_text_edit_->setReadOnly(true);
+  response_text_edit_->setFixedHeight(120);
+
+  // Compact file path layout
+  auto * file_layout = new QHBoxLayout;
+  file_layout->addWidget(file_path_input_);
+  file_layout->addWidget(browse_button_);
+
+  // Main layout
+  auto * layout = new QVBoxLayout(this);
+  layout->addWidget(new QLabel("Firmware File Path:"));
+  layout->addLayout(file_layout);
   layout->addWidget(new QLabel("Sensor ID:"));
-  layout->addWidget(sensor_id_input);
-  layout->addWidget(start_download_button);
-  layout->addWidget(response_text_edit);
+  layout->addWidget(sensor_id_input_);
+  layout->addWidget(start_download_button_);
+  layout->addWidget(response_text_edit_);
+  setLayout(layout);
 
   // Connect signals and slots
-  connect(start_download_button, SIGNAL(clicked()), this, SLOT(download_firmware()));
-  connect(browse_button, SIGNAL(clicked()), this, SLOT(browse_file()));
+  connect(start_download_button_, &QPushButton::clicked, this, &SmartDownloadService::download_firmware);
+  connect(browse_button_, &QPushButton::clicked, this, &SmartDownloadService::browse_file);
 }
 
 void SmartDownloadService::download_firmware()
 {
-  if (!download_client) {
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to create download_client");
+  if (!download_client_) {
+    RCLCPP_ERROR(download_node_->get_logger(), "Download client not created.");
     return;
   }
 
-  // Get file path and sensor ID
-  QString filePath = file_path_input->text();
-  int sensorId = sensor_id_input->text().toInt();
+  QString file_path = file_path_input_->text().trimmed();
+  QString sensor_id_str = sensor_id_input_->text().trimmed();
 
-  if (filePath.isEmpty()) {
-    QMessageBox::warning(this, "Warning", "Please select a file to download.", QMessageBox::Ok);
+  if (file_path.isEmpty()) {
+    QMessageBox::warning(this, "Warning", "Please select a firmware file.", QMessageBox::Ok);
+    return;
+  }
+  if (sensor_id_str.isEmpty() || !sensor_id_str.toInt()) {
+    QMessageBox::warning(this, "Warning", "Please enter a valid numeric sensor ID.", QMessageBox::Ok);
     return;
   }
 
-  start_download_button->setText("Downloading...");
+  int sensor_id = sensor_id_str.toInt();
+  start_download_button_->setEnabled(false);
+  start_download_button_->setText("Downloading...");
 
-  // Set up the request
   auto request = std::make_shared<umrr_ros2_msgs::srv::FirmwareDownload::Request>();
-  request->file_path = filePath.toStdString();
-  request->sensor_id = sensorId;
+  request->file_path = file_path.toStdString();
+  request->sensor_id = sensor_id;
 
-  auto result = download_client->async_send_request(request);
-
-  // Wait for the result.
-  if (
-    rclcpp::spin_until_future_complete(download_node, result) ==
-    rclcpp::FutureReturnCode::SUCCESS) {
-    QString response_msg = QString::fromStdString(result.get()->res);
-    response_text_edit->append("Download request sent.\n Response from sensor: " + response_msg);
-    RCLCPP_INFO(
-      rclcpp::get_logger("rclcpp"), "Request successful\n. Response: %s ",
-      result.get()->res.c_str());
-    start_download_button->setText("Start Download");
-  } else {
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to download sensor firmware");
-    response_text_edit->append("<font color=\"red\">Failed to downlaod sensor firmware!</font>");
-    start_download_button->setText("Start Download");
+  if (!download_client_->wait_for_service(std::chrono::seconds(2))) {
+    QMessageBox::critical(this, "Error", "Firmware download service not available.");
+    start_download_button_->setEnabled(true);
+    start_download_button_->setText("Start Download");
+    return;
   }
+
+  auto future = download_client_->async_send_request(request);
+
+  // Async callback, do non block rviz
+  std::thread([this, future]() mutable {
+    try {
+      auto result = future.get();
+      QString response_msg = QString::fromStdString(result->res);
+      QMetaObject::invokeMethod(this, [this, response_msg]() {
+        response_text_edit_->append("Response: " + response_msg);
+        start_download_button_->setEnabled(true);
+        start_download_button_->setText("Start Download");
+      });
+      RCLCPP_INFO(download_node_->get_logger(), "Firmware download succeeded: %s", result->res.c_str());
+    } catch (const std::exception & e) {
+      QMetaObject::invokeMethod(this, [this, e]() {
+        response_text_edit_->append(QString("<font color='red'>Error: %1</font>").arg(e.what()));
+        start_download_button_->setEnabled(true);
+        start_download_button_->setText("Start Download");
+      });
+      RCLCPP_ERROR(download_node_->get_logger(), "Firmware download failed: %s", e.what());
+    }
+  }).detach();
 }
 
 void SmartDownloadService::browse_file()
 {
-  QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("All Files (*)"));
-  if (!filePath.isEmpty()) {
-    file_path_input->setText(filePath);
+  QString file_path = QFileDialog::getOpenFileName(this, tr("Select Firmware File"), "", tr("All Files (*)"));
+  if (!file_path.isEmpty()) {
+    file_path_input_->setText(file_path);
   }
 }
 
 }  // namespace smart_rviz_plugin
 
-#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(smart_rviz_plugin::SmartDownloadService, rviz_common::Panel)

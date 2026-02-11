@@ -10,6 +10,9 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QHBoxLayout>
+#include <QThread>
+
 #include <rclcpp/rclcpp.hpp>
 #include <rviz_common/panel.hpp>
 
@@ -30,12 +33,8 @@ class SmartDownloadService : public rviz_common::Panel
   Q_OBJECT
 
 public:
-  ///
-  /// @brief      Constructor for the SmartDownloadService class.
-  ///
-  /// @param      parent  The parent widget. Defaults to nullptr.
-  ///
-  SmartDownloadService(QWidget * parent = nullptr);
+  explicit SmartDownloadService(QWidget * parent = nullptr);
+  ~SmartDownloadService() override;
 
 private slots:
   ///
@@ -46,7 +45,7 @@ private slots:
   /// and sensor ID.
   ///
   void download_firmware();
-
+  
   ///
   /// @brief      Slot function to handle file browsing action.
   ///
@@ -58,22 +57,31 @@ private slots:
 
 private:
   ///
-  /// @brief      Initializes the panel's components and ROS2 client.
+  /// @brief      Initializes the ROS2 clients.
   ///
-  /// This function sets up the GUI elements, initializes the ROS2 node and
-  /// client for the firmware download service, and connects the signals and
+  /// This function initializes the ROS2 node and
+  /// client for the firmware download service
+  ///
+  void initialize_ros();
+
+  ///
+  /// @brief      Initializes the panel's components.
+  ///
+  /// This function sets up the GUI elements and connects the signals and
   /// slots.
   ///
-  void initialize();
+  void setup_ui();
 
-  rclcpp::Node::SharedPtr download_node;
-  rclcpp::Client<umrr_ros2_msgs::srv::FirmwareDownload>::SharedPtr download_client;
+  rclcpp::Node::SharedPtr download_node_;
+  rclcpp::Client<umrr_ros2_msgs::srv::FirmwareDownload>::SharedPtr download_client_;
+  std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> executor_;
+  std::thread ros_thread_;
 
-  QLineEdit * file_path_input;
-  QLineEdit * sensor_id_input;
-  QPushButton * start_download_button;
-  QPushButton * browse_button;
-  QTextEdit * response_text_edit;
+  QLineEdit * file_path_input_;
+  QLineEdit * sensor_id_input_;
+  QPushButton * start_download_button_;
+  QPushButton * browse_button_;
+  QTextEdit * response_text_edit_;
 };
 
 }  // namespace smart_rviz_plugin

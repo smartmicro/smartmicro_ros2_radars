@@ -1,5 +1,7 @@
-string param
-float32 value 
-uint32 sensor_id
+string section_name     # name of the interface section
+uint32 sensor_id        # id of the sensor to send request
+string[] params         # list of params or param to send
+string[] values         # list of values or value to send
+uint8[] value_types     # 0: float32, 1: uint32, 2: uint16, 3: uint8
 ---
-string res
+string res              # response from the sensor

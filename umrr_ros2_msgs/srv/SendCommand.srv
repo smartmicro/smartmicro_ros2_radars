@@ -1,5 +1,6 @@
-string command
-float32 value
-uint32 sensor_id
+string section_name     # name of the interface section
+string command          # name of command to send
+float32 value           # value to send
+uint32 sensor_id        # id of the sensor to send request
 ---
 string res

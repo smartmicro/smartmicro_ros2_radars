@@ -42,57 +42,54 @@ def generate_test_description():
         parameters=[radar__params]
     )
 
-    frequency_sweep_service = ExecuteProcess(
-        cmd = [[
-            'ros2 service call ',
-            '/smart_radar/set_radar_mode ',
-            'umrr_ros2_msgs/srv/SetMode ', 
-            '"{param: "frequency_sweep_idx", value: 1, sensor_id: 200}"'
-        ]],
+    set_frequency_sweep_service = ExecuteProcess(
+        cmd = [
+            'ros2', 'service', 'call',
+            '/smart_radar/set_radar_mode',
+            'umrr_ros2_msgs/srv/SetMode', 
+            '{sensor_id: 200, params: ["frequency_sweep_idx"], values: ["1"], value_types: [3]}'
+        ],
         output='screen',
-        shell = True
     )
 
-    angular_separation_service = ExecuteProcess(
-        cmd = [[
-            'ros2 service call ',
-            '/smart_radar/set_radar_mode ',
-            'umrr_ros2_msgs/srv/SetMode ', 
-            '"{param: "angular_separation", value: 1, sensor_id: 100}"'
-        ]],
-        output='screen',
-        shell = True
+    set_angular_separation_service = ExecuteProcess(
+    cmd=[
+        'ros2', 'service', 'call',
+        '/smart_radar/set_radar_mode',
+        'umrr_ros2_msgs/srv/SetMode',
+        '{sensor_id: 100, params: ["angular_separation"], values: ["1"], value_types: [3]}'
+    ],
+        output='screen'
     )
 
-    range_toggle_mode_service = ExecuteProcess(
-        cmd = [[
-            'ros2 service call ',
-            '/smart_radar/set_radar_mode ',
-            'umrr_ros2_msgs/srv/SetMode ', 
-            '"{param: "range_toggle_mode", value: 4, sensor_id: 300}"'
-        ]],
+    
+    get_range_toggle_mode_service = ExecuteProcess(
+        cmd = [
+            'ros2', 'service', 'call',
+            '/smart_radar/get_radar_mode',
+            'umrr_ros2_msgs/srv/GetMode', 
+            '{sensor_id: 300, params: ["range_toggle_mode"], param_types: [3]}'
+        ],
         output='screen',
-        shell = True
     )
 
-    center_frequency_idx_service = ExecuteProcess(
-        cmd = [[
-            'ros2 service call ',
-            '/smart_radar/set_radar_mode ',
-            'umrr_ros2_msgs/srv/SetMode ', 
-            '"{param: "center_frequency_idx", value: 1, sensor_id: 400}"'
-        ]],
+    get_software_version_service = ExecuteProcess(
+        cmd = [
+            'ros2', 'service', 'call',
+            '/smart_radar/get_radar_status',
+            'umrr_ros2_msgs/srv/GetStatus', 
+            '{sensor_id: 400, statuses: ["sw_version_major", "sw_version_minor"], status_types: [1, 1]}'
+        ],
         output='screen',
-        shell = True
     )
 
     return (
         launch.LaunchDescription([
             radar_node,
-            frequency_sweep_service,
-            angular_separation_service,
-            range_toggle_mode_service,
-            center_frequency_idx_service,
+            set_frequency_sweep_service,
+            set_angular_separation_service,
+            get_range_toggle_mode_service,
+            get_software_version_service,
             launch_testing.actions.ReadyToTest(),
         ]),
         {

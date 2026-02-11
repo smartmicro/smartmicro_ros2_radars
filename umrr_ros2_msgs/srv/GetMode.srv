@@ -1,0 +1,6 @@
+string section_name     # name of the interface section
+uint32 sensor_id        # id of the sensor to send request
+string[] params         # list of parameters or parameter to read
+uint8[] param_types     # 0: float32, 1: uint32, 2: uint16, 3: uint8
+---
+string res              # response from the sensor

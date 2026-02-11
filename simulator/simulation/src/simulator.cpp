@@ -55,40 +55,23 @@ void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer)
   auto instructions = receive->GetInstructions();
 
   for (auto instruction : instructions) {
-    if (instruction->GetSectionId() == 3042 && instruction->GetId() == 20) {
-      std::cout << "Base user interface major version set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-      instruction->SetValue(1);
-    } else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 21) {
-      std::cout << "Base user interface minor version set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-      instruction->SetValue(0);
-    } else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 22) {
-      std::cout << "User interface identifier set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-      instruction->SetValue(identifier);
-    } else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 23) {
-      std::cout << "User interface major version set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-      instruction->SetValue(majorVersion);
-    } else if (instruction->GetSectionId() == 3042 && instruction->GetId() == 24) {
-      std::cout << "User interface minor version set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-      instruction->SetValue(minorVersion);
-    } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 2) {
-      std::cout << "UMRR96 mode frequency_sweep set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-    } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 4) {
-      std::cout << "UMRR11 mode angular_separation set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
+    if (instruction->GetSectionId() == 2010 && instruction->GetId() == 2) {
+        std::cout << "UMRR96 mode frequency_sweep set!" << std::endl;
+        instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 5) {
-      std::cout << "UMRR9F mode range_toggle_mode set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
-    } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 1) {
-      std::cout << "UMRR9D mode center_frequency_idx set!" << std::endl;
-      instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
+        std::cout << "UMRR9F mode range_toggle_mode get!" << std::endl;
+        instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
+    } else if (instruction->GetSectionId() == 2010 && instruction->GetId() == 4) {
+        std::cout << "UMRR11 mode angular_separation set!" << std::endl;
+        instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
+    } else if (instruction->GetSectionId() == 2012 && instruction->GetId() == 3) {
+        std::cout << "Software major version read!" << std::endl;
+        instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
+    } else if (instruction->GetSectionId() == 2012 && instruction->GetId() == 4) {
+        std::cout << "Software minorr version read!" << std::endl;
+        instruction->SetResponse(COM_INSTR_PORT_SUCCESS);
     } else {
-      std::cout << "Unknown instruction received from ROS driver!" << std::endl;
+        std::cout << "Unknown instruction received from ROS driver!" << std::endl;
     }
   }
 

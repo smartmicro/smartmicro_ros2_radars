@@ -19,10 +19,10 @@ ros2 launch umrr_ros2_driver radar.launch.py
 ## How to launch the rviz with recorder plugin
 From a separate terminal and after sourcing workspace
 ```
-rviz2 -d [`recorder.rviz`](smart_rviz_plugin/config/rviz/recorder.rviz)
+rviz2 -d smartmicro_ros2_radars/umrr_ros2_driver/config/rviz/smart_plugin.rviz
 ```
 
-![Recorder](smart_rviz_plugin/config/images/recorder_rviz.png "Rviz Outlook")
+![Recorder](smart_rviz_plugin/config/images/smart_rviz_plugin.png "Rviz Outlook")
 
 ## How to start the custom can message sender
 From smart_rviz_plugin folder
@@ -43,7 +43,7 @@ required to run this node. This code is bundled with a version of Smart Access A
 sure the version used to publish the data is compatible with this version:
 
 - Date of release: `February 12, 2025`
-- Smart Access Automotive version: `v3.9.0`
+- Smart Access Automotive version: `v3.11.0`
 
 For each sensor user interface there is a corressponding sensor firmware. The following list all the possible combinations. 
 
@@ -64,14 +64,20 @@ For each sensor user interface there is a corressponding sensor firmware. The fo
 | UMRR9D Type 152 AUTOMOTIVE v1.2.2                | UMRR9D Type 152: V2.5.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.4.1                | UMRR9D Type 152: V2.7.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.5.0                | UMRR9D Type 152: V3.3.0             |
+| UMRR9D Type 152 AUTOMOTIVE v1.5.0                | UMRR9D Type 152: V3.6.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.0.0                | UMRRA4 Type 171: V1.0.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.0.1                | UMRRA4 Type 171: V1.0.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.2.1                | UMRRA4 Type 171: V1.2.1             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.4.0                | UMRRA4 Type 171: V2.0.0             |
+| UMRRA4 Type 171 AUTOMOTIVE v1.4.0                | UMRRA4 Type 171: V2.3.0             |
 | UMRR11 Type 132 MSE v1.1.1                       | UMRR11 Type 132-MSE: V6.1.2         |
 | UMRR9F Type 169 MSE v1.0.0                       | UMRR9F Type 169-MSE: V1.1.0         |
 | UMRR9F Type 169 MSE v1.1.0                       | UMRR9F Type 169-MSE: V1.3.0         |
+| UMRR9F Type 169 MSE v1.3.0                       | UMRR9F Type 169-MSE: V1.5.0         |
 | UMRRA4 Type 171 MSE v1.0.0                       | UMRR9F Type 171-MSE: V1.0.0         |
+| UMRRA4 Type 171 MSE v1.3.0                       | UMRR9F Type 171-MSE: V2.1.0         |
+| UMRRA1 Type 166 AUTOMOTIVE v1.0.0                | UMRRA1 Type 166: V1.0.0             |
+| UMRRA1 Type 166 AUTOMOTIVE v2.0.0                | UMRRA1 Type 166: V1.0.0             |
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -120,11 +126,13 @@ To set up the ***sensors***, configure the following parameters:
 
 - **`model`**: Defines the model of the sensor being used.  
   - **CAN Models**:  
-    `umrra4_can_mse_v1_0_0`, `umrr9f_can_mse_v1_1_0`, `umrr9f_can_mse_v1_0_0`, `umrr96_can_v1_2_2`, `umrr11_can_v1_1_2`, `umrr9f_can_v2_1_1`, `umrr9f_can_v2_2_1`,
-    `umrr9f_can_v2_4_1`, `umrr9d_can_v1_0_3`, `umrr9d_can_v1_2_2`, `umrr9d_can_v1_4_1`, `umrr9d_can_v1_5_0`, `umrra4_can_v1_0_1`, `umrra4_can_v1_2_1`,`umrra4_can_v1_4_0`
+    'umrra4_can_mse_v1_0_0', 'umrra4_can_mse_v2_1_0', 'umrr9f_can_mse_v1_1_0', 'umrr9f_can_mse_v1_0_0', 'umrr96_can_v1_2_2',
+    'umrr11_can_v1_1_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1', 'umrr9f_can_v2_4_1', 'umrr9f_can_v3_0_0', 'umrr9d_can_v1_0_3',
+    'umrr9d_can_v1_2_2', 'umrr9d_can_v1_4_1', 'umrr9d_can_v1_5_0', 'umrra4_can_v1_0_1', 'umrra4_can_v1_2_1', 'umrra4_can_v1_4_0'
   - **Port Models**:  
-    `umrra4_mse_v1_0_0`, `umrr9f_mse_v1_1_0`, `umrr9f_mse_v1_0_0`, `umrr96_v1_2_2`, `umrr11_v1_1_2`, `umrr9f_v2_1_1`, `umrr9f_v2_2_1`,
-    `umrr9f_v2_4_1`, `umrr9d_v1_0_3`, `umrr9d_v1_2_2`, `umrr9d_v1_4_1`, `umrr9d_v1_5_0`, `umrra4_v1_0_1`, `umrra4_v1_2_1`,`umrra4_v1_4_0`
+    'umrra1_v2_0_0', 'umrra1_v1_0_0', 'umrra4_mse_v1_0_0', 'umrra4_mse_v2_1_0', 'umrr9f_mse_v1_3_0', 'umrr9f_mse_v1_1_0',
+    'umrr9f_mse_v1_0_0', 'umrr96_v1_2_2', 'umrr11_v1_1_2', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1', 'umrr9f_v2_4_1','umrr9f_v3_0_0',
+    'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9d_v1_4_1', 'umrr9d_v1_5_0', 'umrra4_v1_0_1', 'umrra4_v1_2_1', 'umrra4_v1_4_0'
 
 - **`dev_id`**: Adapter ID to which the sensor is connected.  
   ***Note:*** The adapter and sensor must have the same `dev_id`.
@@ -180,21 +188,42 @@ To set up the ***adapters***, configure the following parameters:
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
 may access these modes and send commands to the sensor. A list of available sensor operations is given in the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/).
 
-A ros2 `SetMode` service should be called to implement these mode changes. There are three inputs to a ros2 service call:
-- `param`: name of the mode instruction (specific to the sensor)
-- `value`: the mode of operation (specific to sensor where the modes are same) 
+A ros2 `SetMode` service should be called to implement these mode changes. These are the inputs to a ros2 `SetMode` service call:
+- `params`: name/names of the mode instructions (specific to the sensor).
+- `values`: the mode of operation (specific to sensor where the modes are same).
 - `sensor_id`: the id of the sensor to which the service call should be sent.
+- `value_types`: the data types for the params `0: float32, 1: uint32, 2: uint16, 3: uint8`.
+- `section_name`: the name of the section in the instruction file.
 
-For instance, changing the `Index of Transmit Antenna (tx_antenna_idx)` of a UMRR-11 sensor to `AEB (2)` mode would require the following call:
-`ros2 service call /smart_radar/set_radar_mode umrr_ros2_msgs/srv/SetMode "{param: "tx_antenna_idx", value: 2, sensor_id: 100}"`
+For instance, changing the `Index of center frequency (center_frequency_idx)` of a UMRR-A4 sensor to `(1)` mode would require the following call:
+`ros2 service call /smart_radar/set_radar_mode umrr_ros2_msgs/srv/SetMode "{section_name: auto_interface_0dim, sensor_id: 100, params: ['center_frequency_idx'], values: ['1'], value_types: [3]}"`
+
+A ros2 'GetMode' service can be called to get the actual sensor modes. The inputs for this call are:
+- `params`: name/names of the mode instructions (specific to the sensor).
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+- `param_types`: the data types for the params `0: float32, 1: uint32, 2: uint16, 3: uint8`.
+- `section_name`: the name of the section in the instruction file.
+
+For instance, getting the `Index of center frequency (center_frequency_idx)` of a UMRR-A4 sensor to `(1)` mode would require the following call:
+`ros2 service call /smart_radar/get_radar_mode umrr_ros2_msgs/srv/GetMode "{section_name: auto_interface_0dim, sensor_id: 100, params: ['center_frequency_idx'], param_types: [3]}"`
 
 Similarly, a ros2 `SendCommand` service could be used to send commands to the sensors. There are three inputs for sending a command:
 - `command`: name of the command (specific to the sensor interface)
 - `value`: the value of the command  
 - `sensor_id`: the id of the sensor to which the service call should be sent.
+- `section_name`: the name of the section in the instruction file.
 
 The call for such a service would be as follows:
-`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{command: "comp_eeprom_ctrl_default_param_sec", value: 2, sensor_id: 100}"`
+`ros2 service call /smart_radar/send_command umrr_ros2_msgs/srv/SendCommand "{section_name: auto_interface_command, command: "comp_eeprom_ctrl_default_param_sec", value: 2, sensor_id: 100}"`
+
+Apart from commands and modes we can also access the status of the sensor using a ros2 `GetStatus` service. It has three inputs:
+- `statuses`: name/names of the status (specific to the sensor).
+- `sensor_id`: the id of the sensor to which the service call should be sent.
+- `status_types`: the data types for the status `0: uint32, 1: uint16`.
+- `section_name`: the name of the section in the instruction file.
+
+The call would be like follows:
+`ros2 service call /smart_radar/get_radar_status umrr_ros2_msgs/srv/GetStatus "{section_name: auto_interface, sensor_id: 100, statuses: ["sw_version_major", "sw_version_minor"], status_types: [1, 1]}"`
 
 ## Configuration of the sensors
 In order to use multiple sensors (maximum of up to eight sensors) with the node the sensors should be configured separately.
@@ -242,10 +271,11 @@ The sensor services respond with certain value codes. The following is a lookup 
 7   |    Value out of minimal bounds
 8   |    Value out of maximal bounds
 
-## Recorder plugin and custom CAN sender
-A custom plugin for rviz to log the target list has been provided. A config file is available which adds this plugin to the rviz. WIth the plugin
-it is now possible to view the target list data for the desired sensor. Along with logging the data the plugin also gives the possibility to record
-the target list data, convert it into a csv format and save it.
+## RVIZ plugins and custom CAN sender
+Custom plugins for rviz has been provided. This plugin provides logging of the target list, object list and their respective headers.
+It provides a command configurator plugin through which commands, status and mode reqeust could be send. It also provides a plugin for initiating a firmware download.
+A config file is available which adds this plugin to the rviz. Along with logging the data the plugin also gives the possibility to record
+the target/object list data, convert it into a csv format and save it.
 
 Separately, a python GUI is also provided with which it is possible to send custom CAN messages. 
 

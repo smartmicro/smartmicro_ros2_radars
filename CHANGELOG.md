@@ -117,4 +117,19 @@ All notable changes to this project will be documented in this file. This projec
 - **New User Interfaces**: Added user interfaces for DRVEGRD 152 v1.5.0 and DRVEGRD 171 v1.4.0.
 - **RViz Plugins**: Extended service configurator with DRVEGRD 171 MSE instruction set.
 - **Adopted Testing**: Includes check for new DRVEGRD 171 v1.5.0.
-- **Updated External libraries**: Updated external libraries compatible with the new smart access release. 
+- **Updated External libraries**: Updated external libraries compatible with the new smart access release.
+
+## v8.0.0 - 2026-02-11
+
+### New Features
+- **User Interface for DRVEGRD 166 v1.0.0**: Introduced a new UI.
+- **User Interface for DRVEGRD 166 v2.0.0**: Introduced a new UI.
+- **New User Interfaces**: Added user interfaces for DRVEGRD 169 v3.0.0, DRVEGRD 169 MSE v1.3.0 and DRVEGRD 171 MSE v2.1.0.
+- **Multi-Distro Support**: Added full compatibility for ROS 2 Foxy, Humble, and Jazzy via updated Docker configurations and CI/CD pipelines.
+- **Batch Instruction Interface**: Introduced a new extensible service structure allowing multiple parameters of varying types (float, uint8/16/32) to be sent in a single request.
+- **Asynchronous Firmware Updates**: Refactored the download protocol to use a thread-safe, non-blocking architecture, preventing RViz UI freezes during sensor updates.
+- **Expanded Service Set**: Integrated new GetMode and GetStatus services into the smartmicro node logic.
+- **Enhanced RViz Plugins**: Updated the Service Configurator and Download plugins with improved layouts, section-based parameters, and read/write capabilities.
+
+### Breaking Changes
+- **Message Structure Refactor**: Replaced single-field param and value fields with array-based params, values, and value_types to support batch processing. Existing integrations must be updated to the new array format.
