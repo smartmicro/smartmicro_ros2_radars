@@ -18,7 +18,11 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     python3 \
     python3-pip \
-    wget
+    wget \
+    git \
+    ca-certificates \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # ROS-specific dependencies
 RUN apt-get update && apt-get install -y \

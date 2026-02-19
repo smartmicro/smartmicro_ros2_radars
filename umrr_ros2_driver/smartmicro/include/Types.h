@@ -17,7 +17,9 @@
 #include <stdlib.h>
 
 #include <map>
-#include <set>
+#include <mutex>
+#include <string>
+#include <utility>
 
 namespace com {
 
@@ -34,28 +36,29 @@ const uint8_t MAX_NUM_OF_INST = 255;
 #endif
 #define CAN_MAX_DATA_BYTES 8
 
-enum SerializationType {
+enum SerializationType {  // NOLINT(*enum-size)
   SERIALIZATION_TYPE_CAN_SPEC = 0,
   SERIALIZATION_TYPE_PORT_BASED,
   SERIALIZATION_TYPE_UNKNOWN
 };
 
-typedef struct {
+struct CanFormat {
   uint16_t u16_identifier;
   uint8_t u8_dlc;
-  uint8_t au8_data[CAN_MAX_DATA_BYTES];
-} CanFormat;
+  uint8_t au8_data[CAN_MAX_DATA_BYTES];  // NOLINT(*arrays)
+};
 
-enum LinkType {
+enum LinkType {  // NOLINT(*enum-size)
   LINK_TYPE_UDP = 0,
   LINK_TYPE_UDP_DISCOVERY,
   LINK_TYPE_CAN,
   LINK_TYPE_CAN_DISCOVERY,
   LINK_TYPE_RS485,
-  LIMK_TYPE_UNKNOWN
+  LIMK_TYPE_UNKNOWN,
+  LINK_TYPE_UNKNOWN = LIMK_TYPE_UNKNOWN
 };
 
-enum ProtocolType {
+enum ProtocolType {  // NOLINT(*enum-size)
   PROTOCOL_TYPE_UNKNOWN = 0,
   PROTOCOL_TYPE_SMS_CAN_BASE_DATA_V1,
   PROTOCOL_TYPE_ATXMEGA_SDLC,
@@ -72,50 +75,66 @@ enum ProtocolType {
   PROTOCOL_TYPE_INSTRUCTION
 };
 
-enum LibraryRole {
+enum LibraryRole {  // NOLINT(*enum-size)
   LIBRARY_ROLE_MASTER,
   LIBRARY_ROLE_SLAVE,
   LIBRARY_ROLE_UNKNOWN
 };
 
-enum TimeSyncRole {
+enum TimeSyncRole {  // NOLINT(*enum-size)
   TIME_SYNC_ROLE_MASTER,
   TIME_SYNC_ROLE_SLAVE,
   TIME_SYNC_ROLE_UNKNOWN
 };
 
-typedef uint16_t LinkId;
-typedef uint32_t SequenceNumber;
-typedef uint8_t CanNetId;
-typedef uint16_t CanId;
-typedef uint16_t UdtId;
-typedef uint8_t PhyDeviceId;
-struct TimeOutDeatils {
+using LinkId = uint16_t;
+using SequenceNumber = uint32_t;
+using CanNetId = uint8_t;
+using CanId = uint16_t;
+using UdtId = uint16_t;
+using PhyDeviceId = uint8_t;
+
+struct TimeOutDetails {
   uint16_t timeOutCount;
   uint64_t latestOffsetValue;
 };
-typedef std::map<uint8_t, TimeOutDeatils> TimeOutMap;
+using TimeOutDeatils = TimeOutDetails;  // TODO(RKO): Remove in next release
+using TimeOutMap = std::map<uint8_t, TimeOutDetails>;
 const PortId INSTRUCTION_PORT_ID = 46;
 
 class SharedLibDescriptor {
  public:
+  // NOLINTNEXTLINE(*explicit*)
   SharedLibDescriptor(const std::string& libName);
+  SharedLibDescriptor(const SharedLibDescriptor&) = delete;
+  SharedLibDescriptor(SharedLibDescriptor&&) = default;
+  SharedLibDescriptor& operator=(const SharedLibDescriptor&) = delete;
+  SharedLibDescriptor& operator=(SharedLibDescriptor&&) = default;
   virtual ~SharedLibDescriptor();
 
   bool Link();
 
-  inline void* GetHandle() { return _handle; }
+  void* GetHandle() { return _handle; }
 
  protected:
+  // NOLINTBEGIN(*non-private-member-variables-in-classes)
   std::string _libName;
-  void* _handle;
+  void* _handle{nullptr};
+  // NOLINTEND(*non-private-member-variables-in-classes)
+
+ private:
+  static std::mutex mutex_;
 };
 
 class ReceiverKey {
  public:
   ReceiverKey(ClientId clientId, PortId portId);
-  ReceiverKey();
-  ~ReceiverKey();
+  ReceiverKey() = default;
+  ReceiverKey(const ReceiverKey&) = default;
+  ReceiverKey(ReceiverKey&&) = delete;
+  ReceiverKey& operator=(const ReceiverKey&) = default;
+  ReceiverKey& operator=(ReceiverKey&&) = delete;
+  ~ReceiverKey() = default;
 
   ClientId GetClientId() const;
   void SetClientId(const ClientId& clientId);
@@ -124,24 +143,25 @@ class ReceiverKey {
   void SetPortId(const PortId& portId);
 
  private:
-  ClientId _clientId;
-  PortId _portId;
+  ClientId _clientId{0};
+  PortId _portId{0};
 };
 
 inline bool operator<(const ReceiverKey& lhs, const ReceiverKey& rhs) {
-  if ((lhs.GetClientId() < rhs.GetClientId()) ||
-      ((lhs.GetClientId() == rhs.GetClientId()) &&
-       (lhs.GetPortId() < rhs.GetPortId()))) {
-    return true;
-  }
-  return false;
+  return (lhs.GetClientId() < rhs.GetClientId()) ||
+         ((lhs.GetClientId() == rhs.GetClientId()) &&
+          (lhs.GetPortId() < rhs.GetPortId()));
 }
 
 class ResponseKey {
  public:
   ResponseKey(ClientId clientId, SequenceNumber seqNum);
-  ResponseKey();
-  ~ResponseKey();
+  ResponseKey() = default;
+  ResponseKey(const ResponseKey&) = default;
+  ResponseKey(ResponseKey&&) = delete;
+  ResponseKey& operator=(const ResponseKey&) = default;
+  ResponseKey& operator=(ResponseKey&&) = delete;
+  ~ResponseKey() = default;
 
   ClientId GetClientId() const;
   void SetClientId(IN const ClientId& clientId);
@@ -150,26 +170,26 @@ class ResponseKey {
   void SetSequenceNumber(IN const SequenceNumber& seqNum);
 
  private:
-  ClientId _clientId;
-  SequenceNumber _seqNum;
+  ClientId _clientId{0};
+  SequenceNumber _seqNum{0};
 };
 
 inline bool operator<(IN const ResponseKey& lhs, IN const ResponseKey& rhs) {
-  if ((lhs.GetClientId() < rhs.GetClientId()) ||
-      ((lhs.GetClientId() == rhs.GetClientId()) &&
-       (lhs.GetSequenceNumber() < rhs.GetSequenceNumber()))) {
-    return true;
-  }
-  return false;
+  return (lhs.GetClientId() < rhs.GetClientId()) ||
+         ((lhs.GetClientId() == rhs.GetClientId()) &&
+          (lhs.GetSequenceNumber() < rhs.GetSequenceNumber()));
 }
 
 class EthNetDescriptor {
  public:
   EthNetDescriptor(const std::string& ip, uint32_t port, EthTransportType type);
+  EthNetDescriptor() = default;
+  EthNetDescriptor(const EthNetDescriptor&) = default;
+  EthNetDescriptor(EthNetDescriptor&&) = delete;
+  EthNetDescriptor& operator=(const EthNetDescriptor&) = default;
+  EthNetDescriptor& operator=(EthNetDescriptor&&) = delete;
+  ~EthNetDescriptor() = default;
 
-  EthNetDescriptor() {}
-  ~EthNetDescriptor() {}
-  // ACCESS
   void GetIp(OUT std::string& ip) const;
   void SetIp(IN const std::string& ip);
 
@@ -181,11 +201,11 @@ class EthNetDescriptor {
 
  private:
   std::string _ip;
-  uint32_t _port;
-  EthTransportType _type;
+  uint32_t _port{0};
+  EthTransportType _type{ETH_TRANSPORT_TYPE_TCP};
 };
 
-enum ClientPhyType {
+enum ClientPhyType {  // NOLINT(*enum-size)
   CLIENT_PHY_CAN = 0,
   CLIENT_PHY_ETH,
   CLIENT_PHY_RS485,
@@ -197,243 +217,249 @@ class ClientDescriptor {
   ClientDescriptor(ClientId clientId, ClientPhyType phyType,
                    SerializationType instSerialType,
                    SerializationType dataSerialType, uint8_t phyDevId);
+  ClientDescriptor(const ClientDescriptor&) = default;
+  ClientDescriptor(ClientDescriptor&&) = delete;
+  ClientDescriptor& operator=(const ClientDescriptor&) = default;
+  ClientDescriptor& operator=(ClientDescriptor&&) = delete;
+  virtual ~ClientDescriptor() = default;
 
-  virtual ~ClientDescriptor() {}
+  ClientPhyType GetPhyType() const;
+  void SetPhyType(IN ClientPhyType phyType);
 
-  inline ClientPhyType GetPhyType() const { return _phyType; }
-  inline void SetPhyType(IN ClientPhyType phyType) { _phyType = phyType; }
+  ClientId GetId() const;
+  void SetId(IN ClientId clientId);
 
-  inline ClientId GetId() const { return _clientId; }
+  PhyDeviceId GetPhyDevId() const;
+  void SetPhyDevId(IN PhyDeviceId phyDevId);
 
-  inline void SetId(IN ClientId clientId) { _clientId = clientId; }
+  SerializationType GetInstSerialType() const;
+  void SetInstSerialType(IN SerializationType type);
 
-  inline void SetPhyDevId(IN PhyDeviceId phyDevId) { _phyDevId = phyDevId; }
+  SerializationType GetDataSerialType() const;
+  void SetDataSerialType(IN SerializationType type);
 
-  inline SerializationType GetInstSerialType() const { return _instSerialType; }
+  std::string GetUserIfName() const;
+  void SetUserIfName(IN const std::string& userIfName);
 
-  inline void SetInstSerialType(IN SerializationType type) {
-    _instSerialType = type;
-  }
+  uint32_t GetUserIfMajorVer() const;
+  void SetUserIfMajorVer(IN uint32_t majorVer);
 
-  inline SerializationType GetDataSerialType() const { return _dataSerialType; }
+  uint32_t GetUserIfMinorVer() const;
+  void SetUserIfMinorVer(IN uint32_t minorVer);
 
-  inline void SetDataSerialType(IN SerializationType type) {
-    _dataSerialType = type;
-  }
-
-  inline PhyDeviceId GetPhyDevId() const { return _phyDevId; }
-
-  inline void SetUserIfName(IN const std::string userIfName) {
-    _userIfName = userIfName;
-  }
-
-  inline std::string GetUserIfName() const { return _userIfName; }
-
-  inline void SetUserIfMajorVer(IN uint32_t majorVer) {
-    _userIfMajorVer = majorVer;
-  }
-
-  inline uint32_t GetUserIfMajorVer() const { return _userIfMajorVer; }
-
-  inline void SetUserIfMinorVer(IN uint32_t minorVer) {
-    _userIfMinorVer = minorVer;
-  }
-
-  inline uint32_t GetUserIfMinorVer() const { return _userIfMinorVer; }
-
-  inline void SetUserIfPatchVer(IN uint32_t patchVer) {
-    _userIfPatchVer = patchVer;
-  }
-
-  inline uint32_t GetUserIfPatchVer() const { return _userIfPatchVer; }
+  uint32_t GetUserIfPatchVer() const;
+  void SetUserIfPatchVer(IN uint32_t patchVer);
 
  private:
-  ClientId _clientId;
-  ClientPhyType _phyType;
-  SerializationType _instSerialType;
-  SerializationType _dataSerialType;
-  PhyDeviceId _phyDevId;
+  ClientId _clientId{0};
+  ClientPhyType _phyType{CLIENT_PHY_UNKNOWN};
+  SerializationType _instSerialType{SERIALIZATION_TYPE_UNKNOWN};
+  SerializationType _dataSerialType{SERIALIZATION_TYPE_UNKNOWN};
+  PhyDeviceId _phyDevId{0};
   std::string _userIfName;
-  uint32_t _userIfMajorVer;
-  uint32_t _userIfMinorVer;
-  uint32_t _userIfPatchVer;
+  uint32_t _userIfMajorVer{0};
+  uint32_t _userIfMinorVer{0};
+  uint32_t _userIfPatchVer{0};
 };
 
 class CanClientDescriptor : public ClientDescriptor {
  public:
   CanClientDescriptor(ClientId clientId, CanNetId canNetId,
                       PhyDeviceId phyDevId);
-  virtual ~CanClientDescriptor() {}
+  CanClientDescriptor(const CanClientDescriptor&) = default;
+  CanClientDescriptor(CanClientDescriptor&&) = delete;
+  CanClientDescriptor& operator=(const CanClientDescriptor&) = default;
+  CanClientDescriptor& operator=(CanClientDescriptor&&) = delete;
+  ~CanClientDescriptor() override = default;
 
-  inline CanNetId GetCanNetId() const { return _canNetId; }
-
-  inline void SetCanNetId(IN CanNetId canNetId) { _canNetId = canNetId; }
+  CanNetId GetCanNetId() const;
+  void SetCanNetId(IN CanNetId canNetId);
 
  private:
-  CanNetId _canNetId;
+  CanNetId _canNetId{0};
 };
 
 class Rs485ClientDescriptor : public ClientDescriptor {
  public:
   Rs485ClientDescriptor(ClientId clientId, SerializationType instSerialType,
                         SerializationType dataSerialType, PhyDeviceId phyDevId);
-  virtual ~Rs485ClientDescriptor() {}
+  Rs485ClientDescriptor(const Rs485ClientDescriptor&) = default;
+  Rs485ClientDescriptor(Rs485ClientDescriptor&&) = delete;
+  Rs485ClientDescriptor& operator=(const Rs485ClientDescriptor&) = default;
+  Rs485ClientDescriptor& operator=(Rs485ClientDescriptor&&) = delete;
+  ~Rs485ClientDescriptor() override = default;
 };
 
 class EthClientDescriptor : public ClientDescriptor {
  public:
   EthClientDescriptor(ClientId clientId, SerializationType instSerialType,
                       SerializationType dataSerialType);
-  virtual ~EthClientDescriptor() {}
+  EthClientDescriptor(const EthClientDescriptor&) = default;
+  EthClientDescriptor(EthClientDescriptor&&) = delete;
+  EthClientDescriptor& operator=(const EthClientDescriptor&) = default;
+  EthClientDescriptor& operator=(EthClientDescriptor&&) = delete;
+  ~EthClientDescriptor() override = default;
 };
 
 class SerializerConfig {
  public:
-  SerializerConfig(ClientId clientId, SerializationType serialType)
-      : _clientId(clientId), _serialType(serialType) {}
+  SerializerConfig(ClientId clientId, SerializationType serialType);
+  SerializerConfig(const SerializerConfig&) = default;
+  SerializerConfig(SerializerConfig&&) = delete;
+  SerializerConfig& operator=(const SerializerConfig&) = default;
+  SerializerConfig& operator=(SerializerConfig&&) = delete;
+  virtual ~SerializerConfig() = default;
 
-  virtual ~SerializerConfig() {}
-
-  inline ClientId GetClientId() const { return _clientId; }
-
-  inline SerializationType GetType() const { return _serialType; }
+  ClientId GetClientId() const;
+  SerializationType GetType() const;
 
  private:
-  ClientId _clientId;
-  SerializationType _serialType;
+  ClientId _clientId{0};
+  SerializationType _serialType{SERIALIZATION_TYPE_UNKNOWN};
 };
 
 class CanSerializerConfig : public SerializerConfig {
  public:
-  CanSerializerConfig(ClientId clientId, LibraryRole role, CanNetId canNetId)
-      : SerializerConfig(clientId, SERIALIZATION_TYPE_CAN_SPEC),
-        _canNetId(canNetId),
-        _role(role) {}
+  CanSerializerConfig(ClientId clientId, LibraryRole role, CanNetId canNetId);
+  CanSerializerConfig(const CanSerializerConfig&) = default;
+  CanSerializerConfig(CanSerializerConfig&&) = delete;
+  CanSerializerConfig& operator=(const CanSerializerConfig&) = default;
+  CanSerializerConfig& operator=(CanSerializerConfig&&) = delete;
+  ~CanSerializerConfig() override = default;
 
-  virtual ~CanSerializerConfig() {}
-
-  inline CanNetId GetCanNetId() const { return _canNetId; }
-
-  inline LibraryRole GetLibraryRole() const { return _role; }
+  CanNetId GetCanNetId() const;
+  LibraryRole GetLibraryRole() const;
 
  private:
-  CanNetId _canNetId;
-  LibraryRole _role;
+  CanNetId _canNetId{0};
+  LibraryRole _role{LIBRARY_ROLE_UNKNOWN};
 };
 
 class PortBasedSerializerConfig : public SerializerConfig {
  public:
-  PortBasedSerializerConfig(ClientId clientId, LibraryRole role)
-      : SerializerConfig(clientId, SERIALIZATION_TYPE_PORT_BASED),
-        _role(role) {}
-  virtual ~PortBasedSerializerConfig() {}
+  PortBasedSerializerConfig(ClientId clientId, LibraryRole role);
+  PortBasedSerializerConfig(const PortBasedSerializerConfig&) = default;
+  PortBasedSerializerConfig(PortBasedSerializerConfig&&) = delete;
+  PortBasedSerializerConfig& operator=(const PortBasedSerializerConfig&) =
+      default;
+  PortBasedSerializerConfig& operator=(PortBasedSerializerConfig&&) = delete;
+  ~PortBasedSerializerConfig() override = default;
 
-  inline LibraryRole GetLibraryRole() const { return _role; }
+  LibraryRole GetLibraryRole() const;
 
  private:
-  LibraryRole _role;
+  LibraryRole _role{LIBRARY_ROLE_UNKNOWN};
 };
 
 class InterfaceConfig {
  public:
-  InterfaceConfig(LinkType linkType);
-  virtual ~InterfaceConfig() {}
+  InterfaceConfig(LinkType linkType);  // NOLINT(*explicit*)
+  InterfaceConfig(const InterfaceConfig&) = default;
+  InterfaceConfig(InterfaceConfig&&) = delete;
+  InterfaceConfig& operator=(const InterfaceConfig&) = default;
+  InterfaceConfig& operator=(InterfaceConfig&&) = delete;
+  virtual ~InterfaceConfig() = default;
 
   LinkType GetLinkType() const;
 
  private:
-  LinkType _linkType;
+  LinkType _linkType{LINK_TYPE_UNKNOWN};
 };
 
 class CanInterfaceConfig : public InterfaceConfig {
  public:
   CanInterfaceConfig(CanNetId canNetId, CanDevId canDevId);
-  virtual ~CanInterfaceConfig() {}
+  CanInterfaceConfig(const CanInterfaceConfig&) = default;
+  CanInterfaceConfig(CanInterfaceConfig&&) = delete;
+  CanInterfaceConfig& operator=(const CanInterfaceConfig&) = default;
+  CanInterfaceConfig& operator=(CanInterfaceConfig&&) = delete;
+  ~CanInterfaceConfig() override = default;
 
   CanNetId GetNetId() const;
   CanDevId GetDevId() const;
 
-  inline void SetUserIfName(IN const std::string& userIfName) {
-    _userIfName = userIfName;
-  }
+  std::string GetUserIfName() const;
+  void SetUserIfName(IN const std::string& userIfName);
 
-  inline std::string GetUserIfName() const { return _userIfName; }
+  uint32_t GetUserIfMajorVer() const;
+  void SetUserIfMajorVer(IN uint32_t majorVer);
 
-  inline void SetUserIfMajorVer(IN uint32_t majorVer) {
-    _userIfMajorVer = majorVer;
-  }
+  uint32_t GetUserIfMinorVer() const;
+  void SetUserIfMinorVer(IN uint32_t minorVer);
 
-  inline uint32_t GetUserIfMajorVer() const { return _userIfMajorVer; }
-
-  inline void SetUserIfMinorVer(IN uint32_t minorVer) {
-    _userIfMinorVer = minorVer;
-  }
-
-  inline uint32_t GetUserIfMinorVer() const { return _userIfMinorVer; }
-
-  inline void SetUserIfPatchVer(IN uint32_t patchVer) {
-    _userIfPatchVer = patchVer;
-  }
-
-  inline uint32_t GetUserIfPatchVer() const { return _userIfPatchVer; }
+  uint32_t GetUserIfPatchVer() const;
+  void SetUserIfPatchVer(IN uint32_t patchVer);
 
  private:
-  CanNetId _canNetId;
-  CanDevId _canDevId;
+  CanNetId _canNetId{0};
+  CanDevId _canDevId{0};
   std::string _userIfName;
-  uint32_t _userIfMajorVer;
-  uint32_t _userIfMinorVer;
-  uint32_t _userIfPatchVer;
+  uint32_t _userIfMajorVer{0};
+  uint32_t _userIfMinorVer{0};
+  uint32_t _userIfPatchVer{0};
 };
 
 class Rs485InterfaceConfig : public InterfaceConfig {
  public:
-  Rs485InterfaceConfig(SerialDevId devId);
-  virtual ~Rs485InterfaceConfig() {}
+  Rs485InterfaceConfig(SerialDevId devId);  // NOLINT(*explicit*)
+  Rs485InterfaceConfig(const Rs485InterfaceConfig&) = default;
+  Rs485InterfaceConfig(Rs485InterfaceConfig&&) = delete;
+  Rs485InterfaceConfig& operator=(const Rs485InterfaceConfig&) = default;
+  Rs485InterfaceConfig& operator=(Rs485InterfaceConfig&&) = delete;
+  ~Rs485InterfaceConfig() override = default;
 
   SerialDevId GetDevId() const;
 
  private:
-  SerialDevId _devId;
+  SerialDevId _devId{0};
 };
 
 class IpConfig : public InterfaceConfig {
  public:
-  IpConfig(const std::string& ip, uint16_t port, LinkType type)
-      : InterfaceConfig(type), _ip(ip), _port(port) {}
-  virtual ~IpConfig() {}
+  IpConfig(const std::string& ip, uint16_t port, LinkType type);
+  IpConfig(const IpConfig&) = default;
+  IpConfig(IpConfig&&) = delete;
+  IpConfig& operator=(const IpConfig&) = default;
+  IpConfig& operator=(IpConfig&&) = delete;
+  ~IpConfig() override = default;
 
-  inline std::string GetIp() const { return _ip; }
-
-  inline uint16_t GetPort() const { return _port; }
+  std::string GetIp() const;
+  uint16_t GetPort() const;
 
  private:
   std::string _ip;
-  uint16_t _port;
+  uint16_t _port{0};
 };
 
 class UdpConfig : public IpConfig {
  public:
-  UdpConfig(const std::string& ip, uint16_t port)
-      : IpConfig(ip, port, LINK_TYPE_UDP) {}
-  virtual ~UdpConfig() {}
+  UdpConfig(const std::string& ip, uint16_t port);
+  UdpConfig(const UdpConfig&) = default;
+  UdpConfig(UdpConfig&&) = delete;
+  UdpConfig& operator=(const UdpConfig&) = default;
+  UdpConfig& operator=(UdpConfig&&) = delete;
+  ~UdpConfig() override = default;
 };
 
 class MulticastConfig : public IpConfig {
  public:
-  MulticastConfig(const std::string& ip, uint16_t port)
-      : IpConfig(ip, port, LINK_TYPE_UDP_DISCOVERY) {}
-  virtual ~MulticastConfig() {}
+  MulticastConfig(const std::string& ip, uint16_t port);
+  MulticastConfig(const MulticastConfig&) = default;
+  MulticastConfig(MulticastConfig&&) = delete;
+  MulticastConfig& operator=(const MulticastConfig&) = default;
+  MulticastConfig& operator=(MulticastConfig&&) = delete;
+  ~MulticastConfig() override = default;
 };
 
 class ComLibConfig {
  public:
-  ComLibConfig();
-
+  ComLibConfig() = default;
   ComLibConfig(uint16_t majorVer, uint16_t minorVer, uint16_t patchVer);
-
-  ~ComLibConfig();
-  // ACCESS
+  ComLibConfig(const ComLibConfig&) = default;
+  ComLibConfig(ComLibConfig&&) = delete;
+  ComLibConfig& operator=(const ComLibConfig&) = default;
+  ComLibConfig& operator=(ComLibConfig&&) = delete;
+  ~ComLibConfig() = default;
 
   LibraryRole GetRole() const;
   ClientId GetClientId() const;
@@ -476,75 +502,53 @@ class ComLibConfig {
   void SetComLibConfigPatchVersion(uint16_t patchVer);
 
  private:
-  uint16_t _majorVer;
-  uint16_t _minorVer;
-  uint16_t _patchVer;
+  uint16_t _majorVer{0};
+  uint16_t _minorVer{0};
+  uint16_t _patchVer{0};
   std::string _serialLibPath;
   std::string _configFilesPath;
-  ClientId _clientId;
-  LibraryRole _role;
+  ClientId _clientId{0};
+  LibraryRole _role{LIBRARY_ROLE_UNKNOWN};
   std::string _userIfName;
   std::string _downloadPath;
-  SerializationType _instSerialization;
-  SerializationType _dataSerialization;
-  ClientPhyType _timeSyncHwIfaceType;
-  uint8_t _timeSyncHwDevId;
-  bool _isTimeSyncSupported;
-  TimeSyncRole _timeSyncRole;
-  bool _isAliveSupported;
-  uint16_t _userIfMajorVer;
-  uint16_t _userIfMinorVer;
-  uint16_t _userIfPatchVer;
+  SerializationType _instSerialization{SERIALIZATION_TYPE_UNKNOWN};
+  SerializationType _dataSerialization{SERIALIZATION_TYPE_UNKNOWN};
+  ClientPhyType _timeSyncHwIfaceType{CLIENT_PHY_UNKNOWN};
+  uint8_t _timeSyncHwDevId{};
+  bool _isTimeSyncSupported{false};
+  TimeSyncRole _timeSyncRole{TIME_SYNC_ROLE_UNKNOWN};
+  bool _isAliveSupported{false};
+  uint16_t _userIfMajorVer{0};
+  uint16_t _userIfMinorVer{0};
+  uint16_t _userIfPatchVer{0};
 };
 
 class SWUpdateConfigData {
  public:
-  SWUpdateConfigData()
-      : _pathAvailableFlag(false),
-        _dataPtrValidFlag(false),
-        _segmentBufferSize(0),
-        _segmentDataPtr((uint8_t*)0) {}
-  virtual ~SWUpdateConfigData() {}
-
-  inline void SetData(IN bool pathFlag, IN std::string pathStr,
-                      IN bool dataFlag, IN int32_t dataSize,
-                      IN uint8_t dataEncrypt, IN uint8_t* dataPtr) {
-    _pathAvailableFlag = pathFlag;
-    _segmentPath = pathStr;
-    _dataPtrValidFlag = dataFlag;
-    _segmentBufferSize = dataSize;
-    _segmentEncryption = dataEncrypt;
-    _segmentDataPtr = dataPtr;
-  }
+  void SetData(IN bool pathFlag, IN std::string pathStr, IN bool dataFlag,
+               IN int32_t dataSize, IN uint8_t dataEncrypt,
+               IN uint8_t* dataPtr);
 
   void cleanData();
 
-  inline bool GetPathAvailableFlag() const { return _pathAvailableFlag; }
-
-  inline std::string GetSegmentFilePath() const { return _segmentPath; }
-
-  inline bool GetDataPtrValidFlag() const { return _dataPtrValidFlag; }
-
-  inline uint8_t GetSegmentEncryption() const { return _segmentEncryption; }
-
-  inline int32_t GetSegmentBufferSize() const { return _segmentBufferSize; }
-
-  inline uint8_t* GetSegmentDataPtr() { return _segmentDataPtr; }
+  bool GetPathAvailableFlag() const;
+  std::string GetSegmentFilePath() const;
+  bool GetDataPtrValidFlag() const;
+  uint8_t GetSegmentEncryption() const;
+  int32_t GetSegmentBufferSize() const;
+  uint8_t* GetSegmentDataPtr();
 
  private:
-  bool _pathAvailableFlag;
+  bool _pathAvailableFlag{false};
   std::string _segmentPath;
-  bool _dataPtrValidFlag;
-  int32_t _segmentBufferSize;
-  uint8_t _segmentEncryption;
-  uint8_t* _segmentDataPtr;
+  bool _dataPtrValidFlag{false};
+  int32_t _segmentBufferSize{0};
+  uint8_t _segmentEncryption{0};
+  uint8_t* _segmentDataPtr{nullptr};
 };
 
 class InternalTransportHeader {
  public:
-  InternalTransportHeader();
-  ~InternalTransportHeader();
-
   com::types::ProtocolType GetProtocolType() const;
   void SetProtocolType(IN com::types::ProtocolType protoType);
 
@@ -557,11 +561,11 @@ class InternalTransportHeader {
   void SetDstClientId(IN ClientId clientId);
 
  private:
-  com::types::ProtocolType _protoType;
-  ClientId _srcClientId;
-  bool _srcClientIdValid;
-  ClientId _dstClientId;
-  bool _dstClientIdValid;
+  com::types::ProtocolType _protoType{PROTOCOL_TYPE_UNKNOWN};
+  ClientId _srcClientId{0};
+  bool _srcClientIdValid{false};
+  ClientId _dstClientId{0};
+  bool _dstClientIdValid{false};
 };
 
 }  // namespace types

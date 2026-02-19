@@ -218,7 +218,6 @@ void SmartRadarService::on_param_selection()
   QList<QTableWidgetItem*> selected = param_table_widget->selectedItems();
   if (!selected.isEmpty()) {
     int row = selected[0]->row();
-    //param_name_line_edit->setText(selected[0]->text());
     param_name_line_edit->setText(param_table_widget->item(row, 1)->text());
     param_section_name->setText(param_table_widget->item(row, 0)->text());
   }
@@ -229,7 +228,6 @@ void SmartRadarService::on_command_selection()
   QList<QTableWidgetItem*> selected = command_table_widget->selectedItems();
   if (!selected.isEmpty()) {
     int row = selected[0]->row();
-    //command_name_line_edit->setText(selected[0]->text());
     command_name_line_edit->setText(command_table_widget->item(row, 1)->text());
     command_section_name->setText(command_table_widget->item(row, 0)->text());
   }
@@ -240,7 +238,6 @@ void SmartRadarService::on_status_selection()
   QList<QTableWidgetItem*> selected = status_table_widget->selectedItems();
   if (!selected.isEmpty()) {
     int row = selected[0]->row();
-    //status_name_line_edit->setText(selected[0]->text());
     status_name_line_edit->setText(status_table_widget->item(row, 1)->text());
     status_section_name->setText(status_table_widget->item(row, 0)->text());
   }
@@ -319,11 +316,11 @@ void SmartRadarService::on_file_selected(int index)
       break;
     case 6:
       param_json_file_path = base_path +
-        "UserInterfaceUmrra1_t166_b_automotiveV2.0.0/instructions/params/auto_interface_rrm.param";
+        "user_interface_umrra1_t166_b_automotive_v2_0_0/instructions/params/auto_interface_rrm.param";
       command_json_file_path = base_path +
-        "UserInterfaceUmrra1_t166_b_automotiveV2.0.0/instructions/command/auto_interface_rrm.command";
+        "user_interface_umrra1_t166_b_automotive_v2_0_0/instructions/command/auto_interface_rrm.command";
       status_json_file_path = base_path +
-        "UserInterfaceUmrra1_t166_b_automotiveV2.0.0/instructions/status/auto_interface_rrm.status";
+        "user_interface_umrra1_t166_b_automotive_v2_0_0/instructions/status/auto_interface_rrm.status";
       break;
   }
 
@@ -481,7 +478,6 @@ void SmartRadarService::on_send_param()
     }
     auto request = std::make_shared<umrr_ros2_msgs::srv::SetMode::Request>();
     request->section_name = param_section_name->text().toStdString();
-    //request->section_name.push_back(param_section_name->text().toStdString()); 
     request->params.push_back(param_name_line_edit->text().toStdString());
     request->sensor_id = std::stoi(param_sensor_id->text().toStdString());
     request->value_types.push_back(param_value_type->currentIndex());
@@ -521,7 +517,6 @@ void SmartRadarService::on_send_param()
     }
     auto request = std::make_shared<umrr_ros2_msgs::srv::GetMode::Request>();
     request->section_name = param_section_name->text().toStdString();
-    //request->section_name.push_back(param_section_name->text().toStdString());
     request->params.push_back(param_name_line_edit->text().toStdString());
     request->sensor_id = std::stoi(param_sensor_id->text().toStdString());
     request->param_types.push_back(param_value_type->currentIndex());
@@ -630,7 +625,6 @@ void SmartRadarService::on_get_status()
   auto request = std::make_shared<umrr_ros2_msgs::srv::GetStatus::Request>();
 
   request->section_name = status_section_name->text().toStdString();
-  //request->section_name.push_back(status_section_name->text().toStdString());
   request->statuses.push_back(status_name_line_edit->text().toStdString());
   request->sensor_id = std::stoi(status_sensor_id->text().toUtf8().constData());
   request->status_types.push_back(status_value_type->currentIndex());

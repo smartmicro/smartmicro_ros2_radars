@@ -1,3 +1,11 @@
+name: Build and test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -15,7 +23,7 @@ jobs:
         run: docker build --build-arg ROS_DISTRO=${{ matrix.ros_distro }} -t umrr-ros:${{ matrix.ros_distro }} .
 
       - name: Build the driver
-        run: docker run --rm -v`pwd`:/code umrr-ros:${{ matrix.ros_distro }} colcon build --packages-skip smart_rviz_plugin
+        run: docker run --rm -v $(pwd):/code umrr-ros:${{ matrix.ros_distro }} colcon build --packages-skip smart_rviz_plugin
 
       - name: Run tests
         run: ROS_DISTRO=${{ matrix.ros_distro }} docker compose up

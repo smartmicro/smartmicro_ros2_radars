@@ -47,7 +47,7 @@ def generate_test_description():
             'ros2', 'service', 'call',
             '/smart_radar/set_radar_mode',
             'umrr_ros2_msgs/srv/SetMode', 
-            '{sensor_id: 200, params: ["frequency_sweep_idx"], values: ["1"], value_types: [3]}'
+            '{section_name: auto_interface_0dim, sensor_id: 200, params: ["frequency_sweep_idx"], values: ["1"], value_types: [3]}'
         ],
         output='screen',
     )
@@ -57,7 +57,7 @@ def generate_test_description():
         'ros2', 'service', 'call',
         '/smart_radar/set_radar_mode',
         'umrr_ros2_msgs/srv/SetMode',
-        '{sensor_id: 100, params: ["angular_separation"], values: ["1"], value_types: [3]}'
+        '{section_name: auto_interface_0dim, sensor_id: 100, params: ["angular_separation"], values: ["1"], value_types: [3]}'
     ],
         output='screen'
     )
@@ -68,7 +68,7 @@ def generate_test_description():
             'ros2', 'service', 'call',
             '/smart_radar/get_radar_mode',
             'umrr_ros2_msgs/srv/GetMode', 
-            '{sensor_id: 300, params: ["range_toggle_mode"], param_types: [3]}'
+            '{section_name: auto_interface_0dim, sensor_id: 300, params: ["range_toggle_mode"], param_types: [3]}'
         ],
         output='screen',
     )
@@ -78,7 +78,7 @@ def generate_test_description():
             'ros2', 'service', 'call',
             '/smart_radar/get_radar_status',
             'umrr_ros2_msgs/srv/GetStatus', 
-            '{sensor_id: 400, statuses: ["sw_version_major", "sw_version_minor"], status_types: [1, 1]}'
+            '{section_name: auto_interface, sensor_id: 400, statuses: ["sw_version_major", "sw_version_minor"], status_types: [1, 1]}'
         ],
         output='screen',
     )
@@ -134,7 +134,7 @@ class TestSmartNode(unittest.TestCase):
 
         sub_s1 = self.test_node.create_subscription(
             sensor_msgs.PointCloud2,
-            'smart_radar/port_targets_0',
+            'smart_radar/port_targets_3',
             data_rx_s1_callback,
             10
         )

@@ -1,15 +1,10 @@
 /smart_radar:
   ros__parameters:
     adapters:
-      #adapter_0:
-      #  hw_type: "can"
-      #  hw_dev_id: 3
-      #  hw_iface_name: "can0"
-      #  baudrate: 500000
       adapter_0:
         hw_type: "eth"
         hw_dev_id: 4
-        hw_iface_name: "enx002432163c8d"
+        hw_iface_name: "eth0"
         port: 55555
     master_data_serial_type: port_based
     master_inst_serial_type: port_based
@@ -23,42 +18,17 @@
       #
       # port: 'umrra1_v2_0_0', 'umrra1_v1_0_0', 'umrra4_mse_v1_0_0', 'umrra4_mse_v2_1_0', 'umrr9f_mse_v1_3_0', 'umrr9f_mse_v1_1_0', 'umrr9f_mse_v1_0_0', 'umrr96_v1_2_2', 'umrr11_v1_1_2', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1', 'umrr9f_v2_4_1', 
       #       'umrr9f_v3_0_0', 'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9d_v1_4_1', 'umrr9d_v1_5_0', 'umrra4_v1_0_1', 'umrra4_v1_2_1', 'umrra4_v1_4_0'
-      #sensor_0:
-      #  # The link of the sensor either 'can' or 'eth'
-      #  link_type: "can"
-      #  # The publisher type of the sensor
-      #  pub_type: "target"
-      #  # The model of the connected sensor.
-      #  model: "umrr96_can_v1_2_2"
-      #  # Adapter id to which sensor is connected
-      #  dev_id: 3
-      #  # The client_id of the sensor/source, must be a unique integer.
-      #  id: 100
-      #  # The frame_id to be set to the published messages.
-      #  frame_id: "umrr"
-      #  # Specify the history size.
-      #  history_size: 10
-      #  inst_type: "can_based"
-      #  data_type: "can_based"
-      #  # The interface name of the sensor
-      #  uifname: "umrr96_t153_automotive"
-      #  # The major version of the interface
-      #  uifmajorv: 1
-      #  # The minor version of the interface
-      #  uifminorv: 2
-      #  # The pathc version of the interface
-      #  uifpatchv: 2
       sensor_0:
          # The link of the sensor either 'can' or 'eth'
         link_type: "eth"
         # The publisher type of the sensor
         pub_type: "target"
         # The model of the connected sensor.
-        model: "umrra1_v2_0_0"
+        model: "umrr11_v1_1_2"
         # Adapter id to which sensor is connected
         dev_id: 4
         # The client_id of the sensor/source, must be a unique integer.
-        id: 200
+        id: 100
         # The frame_id to be set to the published messages.
         frame_id: "umrr"
         # Specify the history size.
@@ -70,12 +40,97 @@
         # The port to be used.
         port: 55555
         # The interface name of the sensor
-        uifname: "umrra1_t166_b_automotive"
+        uifname: "umrr11_t132_automotive"
+        # The major version of the interface
+        uifmajorv: 1
+        # The minor version of the interface
+        uifminorv: 1
+        # The pathc version of the interface
+        uifpatchv: 2
+      sensor_1:
+        # The link of the sensor either 'can' or 'eth'
+        link_type: "eth"
+        # The publisher type of the sensor
+        pub_type: "target"
+        # The model of the connected sensor.
+        model: "umrr96_v1_2_2"
+        # Adapter id to which sensor is connected
+        dev_id: 4
+        # The client_id of the sensor/source, must be a unique integer.
+        id: 200
+        # The ip address of the sensor or of the source acting as a sensor.
+        ip: "172.22.10.102"
+        # The port to be used.
+        port: 55555
+        # The frame_id to be set to the published messages.
+        frame_id: "umrr"
+        # Specify the history size.
+        history_size: 10
+        inst_type: "port_based"
+        data_type: "port_based"
+        # The interface name of the sensor
+        uifname: "umrr96_t153_automotive"
+        # The major version of the interface
+        uifmajorv: 1
+        # The minor version of the interface
+        uifminorv: 2
+        # The pathc version of the interface
+        uifpatchv: 2
+      sensor_2:
+        # The link of the sensor either 'can' or 'eth'
+        link_type: "eth"
+        # The publisher type of the sensor
+        pub_type: "target"
+        # The model of the connected sensor.
+        model: "umrr9f_v2_1_1"
+        # Adapter id to which sensor is connected
+        dev_id: 4
+        # The client_id of the sensor/source, must be a unique integer.
+        id: 300
+        # The ip address of the sensor or of the source acting as a sensor.
+        ip: "172.22.10.103"
+        # The port to be used.
+        port: 55555
+        # The frame_id to be set to the published messages.
+        frame_id: "umrr"
+        # Specify the history size.
+        history_size: 10
+        inst_type: "port_based"
+        data_type: "port_based"
+        # The interface name of the sensor
+        uifname: "umrr9f_t169_automotive"
         # The major version of the interface
         uifmajorv: 2
         # The minor version of the interface
-        uifminorv: 0
+        uifminorv: 1
+        # The pathc version of the interface
+        uifpatchv: 1
+      sensor_3:
+        # The link of the sensor either 'can' or 'eth'
+        link_type: "eth"
+        # The publisher type of the sensor
+        pub_type: "target"
+        # The model of the connected sensor.
+        model: "umrr9d_v1_5_0"
+        # Adapter id to which sensor is connected
+        dev_id: 4
+        # The client_id of the sensor/source, must be a unique integer.
+        id: 400
+        # The ip address of the sensor or of the source acting as a sensor.
+        ip: "172.22.10.104"
+        # The port to be used.
+        port: 55555
+        # The frame_id to be set to the published messages.
+        frame_id: "umrr"
+        # Specify the history size.
+        history_size: 10
+        inst_type: "port_based"
+        data_type: "port_based"
+        # The interface name of the sensor
+        uifname: "umrr9d_t152_automotive"
+        # The major version of the interface
+        uifmajorv: 1
+        # The minor version of the interface
+        uifminorv: 5
         # The pathc version of the interface
         uifpatchv: 0
-      
-      

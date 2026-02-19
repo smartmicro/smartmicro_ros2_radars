@@ -31,6 +31,9 @@ typedef std::function<void(ClientId clientId, PortId, BufferDescriptor)>
     DataReceiverCallback;
 typedef std::function<void(ClientId clientId, InstructionBuffer &)>
     ResponseCallback;
+typedef std::function<void(ClientId clientId, std::string log_message)>
+    LogReceiverCallback;
+
 typedef std::function<void(const std::string &)> UpdateCallback;
 typedef std::function<bool(uint64_t &)> GetLocalTimeCallback;
 typedef std::function<bool(int64_t)> SetTimeOffsetCallback;
@@ -93,6 +96,19 @@ public:
   virtual ErrorCode
   RegisterDataRecvCallback(IN ClientId clientId, IN PortId portId,
                            IN DataReceiverCallback callback) = 0;
+
+  /*
+   * Function: RegisterComHubDataRecvCallback
+   * this function will pass all data ports from comhub device to registered
+   * callback function
+   * Arguments: IN DataReceiverCallback callback - callback function which
+   * should be called upon a reception. Return: ErrorCode Description: Registers
+   * a receiver callback function , which should be called , when a new buffer
+   * arrives.
+   */
+  virtual ErrorCode
+  RegisterComHubDataRecvCallback(IN DataReceiverCallback callback) = 0;
+
   /*
    * Function: RegisterInstRecvCallback
    * Arguments: IN DataReceiverCallback callback - callback function will be
@@ -175,6 +191,16 @@ public:
    */
   virtual ErrorCode
   RegisterSetTimeOffsetCallback(IN SetTimeOffsetCallback callback) = 0;
+
+  /*
+   * Function: RegisterLogMessageCallBack
+   * Arguments: LogReceiverCallback
+   * Return: ErrorCode
+   * Description: Register a callback to receive log messages from
+   * BareMetal sensor.
+   */
+  virtual ErrorCode
+  RegisterLogMessageCallBack(IN LogReceiverCallback callback) = 0;
 
   /*
    * Function: AddTimeSyncSlave
@@ -262,6 +288,18 @@ public:
    */
   virtual bool GetConnectedClients(
       OUT std::map<ClientId, std::shared_ptr<ClientDescriptor>> &clients) = 0;
+
+  /*
+   * Function: GetConnectedClients
+   * Arguments: OUT std::map<ClientId,std::shared_ptr<ClientDescriptor>>&
+   *            OUT std::map<ClientId, std::string>&
+   * clients Return: bool Description: Returns a map of connected client
+   * descriptions.
+   */
+  virtual bool GetConnectedClients(
+      OUT std::map<ClientId, std::shared_ptr<ClientDescriptor>> &clients,
+      OUT std::map<ClientId, std::string> &client_ips) = 0;
+
   /*
    * Function: SetClientUserInterfaceInfo
    * Arguments: IN ClientId clientId client id

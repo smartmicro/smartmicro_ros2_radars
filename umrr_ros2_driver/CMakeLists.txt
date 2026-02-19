@@ -34,14 +34,16 @@ find_package(Threads REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
 fetchcontent_declare(json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG v3.10.5
+    URL https://github.com/nlohmann/json/releases/download/v3.12.0/include.zip
+    URL_HASH SHA256=b8cb0ef2dd7f57f18933997c9934bb1fa962594f701cd5a8d3c2c80541559372
 )
 
 fetchcontent_getproperties(json)
 if(NOT json_POPULATED)
     fetchcontent_populate(json)
-    add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+    add_library(nlohmann_json INTERFACE)
+    target_include_directories(nlohmann_json INTERFACE ${json_SOURCE_DIR}/include)
+    add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
 endif()
 
 ament_auto_find_build_dependencies()
@@ -173,7 +175,6 @@ if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
     ament_lint_auto_find_test_dependencies()
     ament_copyright("src/smartmicro_radar_node.cpp")
-    ament_cpplint("src/smartmicro_radar_node.cpp")
     ament_cppcheck("src/smartmicro_radar_node.cpp")
 
 endif()

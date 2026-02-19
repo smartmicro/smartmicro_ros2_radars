@@ -16,9 +16,22 @@
 
 #include "umrr_ros2_driver/smartmicro_radar_node.hpp"
 
+#include <signal.h>
+
+#include <algorithm>
+#include <cstdlib>
+#include <fstream>
+#include <limits>
+#include <memory>
+#include <set>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <vector>
+
+#include <nlohmann/json.hpp>
 #include <point_cloud_msg_wrapper/point_cloud_msg_wrapper.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
-
 #include <umrr11_t132_automotive_v1_1_2/comtargetlist/PortHeader.h>
 #include <umrr11_t132_automotive_v1_1_2/comtargetlist/Target.h>
 #include <umrr96_t153_automotive_v1_2_2/comtargetlist/PortHeader.h>
@@ -49,6 +62,10 @@
 #include <umrr9f_t169_mse_v1_1_0/comobjectlist/Object.h>
 #include <umrr9f_t169_mse_v1_3_0/comobjectlist/ComObjectList.h>
 #include <umrr9f_t169_mse_v1_3_0/comobjectlist/Object.h>
+#include <umrra1_t166_b_automotive_v1_0_0/comtargetlist/PortHeader.h>
+#include <umrra1_t166_b_automotive_v1_0_0/comtargetlist/Target.h>
+#include <umrra1_t166_b_automotive_v2_0_0/comtargetlist/PortHeader.h>
+#include <umrra1_t166_b_automotive_v2_0_0/comtargetlist/Target.h>
 #include <umrra4_automotive_v1_0_1/comtargetlist/PortHeader.h>
 #include <umrra4_automotive_v1_0_1/comtargetlist/Target.h>
 #include <umrra4_automotive_v1_2_1/comtargetlist/PortHeader.h>
@@ -59,25 +76,6 @@
 #include <umrra4_mse_v1_0_0/comobjectlist/Object.h>
 #include <umrra4_mse_v2_1_0/comobjectlist/ComObjectList.h>
 #include <umrra4_mse_v2_1_0/comobjectlist/Object.h>
-#include <umrra1_t166_b_automotive_v1_0_0/comtargetlist/PortHeader.h>
-#include <umrra1_t166_b_automotive_v1_0_0/comtargetlist/Target.h>
-#include <umrra1_t166_b_automotive_v2_0_0/comtargetlist/PortHeader.h>
-#include <umrra1_t166_b_automotive_v2_0_0/comtargetlist/Target.h>
-
-#include <signal.h>
-
-#include <nlohmann/json.hpp>
-
-#include <algorithm>
-#include <cstdlib>
-#include <fstream>
-#include <limits>
-#include <memory>
-#include <set>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <vector>
 
 #include "umrr_ros2_driver/config_path.hpp"
 
@@ -992,12 +990,13 @@ void SmartmicroRadarNode::set_radar_mode(
   }
 
   auto section_name = request->section_name;
-  if (section_name != "auto_interface_0dim" && 
-      section_name != "auto_interface_rrm" && 
-      section_name != "Parameter") {
-    
-      result->res = "Error: Invalid section name specified! Must be 'auto_interface_0dim', 'auto_interface_rrm', or 'Parameter'.";
-      return;
+  if (
+    section_name != "auto_interface_0dim" && section_name != "auto_interface_rrm" &&
+    section_name != "Parameter") {
+    result->res =
+      "Error: Invalid section name specified! Must be 'auto_interface_0dim', "
+      "'auto_interface_rrm', or 'Parameter'.";
+    return;
   }
 
   // Check arrays have same length
@@ -1053,7 +1052,7 @@ void SmartmicroRadarNode::set_radar_mode(
             result->res = "Error: uint16 value cannot contain decimal points";
             return;
           }
-          unsigned long temp = std::stoul(value);
+          uint64_t temp = std::stoul(value);
           if (temp > 65535) {
             result->res = "Error: uint16 value must be between 0 and 65535";
             return;
@@ -1069,7 +1068,7 @@ void SmartmicroRadarNode::set_radar_mode(
             result->res = "Error: uint8 value cannot contain decimal points";
             return;
           }
-          unsigned long temp = std::stoul(value);
+          uint64_t temp = std::stoul(value);
           if (temp > 255) {
             result->res = "Error: uint8 value must be between 0 and 255";
             return;
@@ -1100,10 +1099,11 @@ void SmartmicroRadarNode::set_radar_mode(
   }
 
   if (
-    com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
-                                   batch, std::bind(
-                                            &SmartmicroRadarNode::mode_response, this, client_id,
-                                            std::placeholders::_2, request->params, section_name))) {
+    com::types::ERROR_CODE_OK !=
+    inst->SendInstructionBatch(
+      batch, std::bind(
+               &SmartmicroRadarNode::mode_response, this, client_id, std::placeholders::_2,
+               request->params, section_name))) {
     result->res = "Error: Check params are valid for this sensor and values within range!";
     return;
   }
@@ -1193,12 +1193,13 @@ void SmartmicroRadarNode::radar_command(
   }
 
   auto section_name = request->section_name;
-  if (section_name != "auto_interface_command" && 
-      section_name != "auto_interface_rrm_command" && 
-      section_name != "Command") {
-    
-      result->res = "Error: Invalid section name specified! Must be 'auto_interface_command', 'auto_interface_rrm_command', or 'Command'.";
-      return;
+  if (
+    section_name != "auto_interface_command" && section_name != "auto_interface_rrm_command" &&
+    section_name != "Command") {
+    result->res =
+      "Error: Invalid section name specified! Must be 'auto_interface_command', "
+      "'auto_interface_rrm_command', or 'Command'.";
+    return;
   }
 
   std::shared_ptr<InstructionServiceIface> inst{m_services->GetInstructionService()};
@@ -1250,12 +1251,13 @@ void SmartmicroRadarNode::get_radar_status(
   }
 
   auto section_name = request->section_name;
-  if (section_name != "auto_interface" && 
-      section_name != "auto_interface_rrm" && 
-      section_name != "Status") {
-    
-      result->res = "Error: Invalid section name specified! Must be 'auto_interface', 'auto_interface_rrm', or 'Status'.";
-      return;
+  if (
+    section_name != "auto_interface" && section_name != "auto_interface_rrm" &&
+    section_name != "Status") {
+    result->res =
+      "Error: Invalid section name specified! Must be 'auto_interface', 'auto_interface_rrm', or "
+      "'Status'.";
+    return;
   }
 
   // Check arrays have same length
@@ -1286,14 +1288,12 @@ void SmartmicroRadarNode::get_radar_status(
 
     switch (status_type) {
       case 0: {
-        auto radar_status_u32 =
-          std::make_shared<GetStatusRequest<uint32_t>>(section_name, status);
+        auto radar_status_u32 = std::make_shared<GetStatusRequest<uint32_t>>(section_name, status);
         request_added = batch->AddRequest(radar_status_u32);
         break;
       }
       case 1: {
-        auto radar_status_u16 =
-          std::make_shared<GetStatusRequest<uint16_t>>(section_name, status);
+        auto radar_status_u16 = std::make_shared<GetStatusRequest<uint16_t>>(section_name, status);
         request_added = batch->AddRequest(radar_status_u16);
         break;
       }
@@ -1309,10 +1309,11 @@ void SmartmicroRadarNode::get_radar_status(
   }
 
   if (
-    com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
-                                   batch, std::bind(
-                                            &SmartmicroRadarNode::status_response, this, client_id,
-                                            std::placeholders::_2, request->statuses, section_name))) {
+    com::types::ERROR_CODE_OK !=
+    inst->SendInstructionBatch(
+      batch, std::bind(
+               &SmartmicroRadarNode::status_response, this, client_id, std::placeholders::_2,
+               request->statuses, section_name))) {
     result->res = "Error: Check status are valid for this sensor!";
     return;
   }
@@ -1338,12 +1339,13 @@ void SmartmicroRadarNode::get_radar_mode(
   }
 
   auto section_name = request->section_name;
-  if (section_name != "auto_interface_0dim" && 
-      section_name != "auto_interface_rrm" && 
-      section_name != "Parameter") {
-    
-      result->res = "Error: Invalid section name specified! Must be 'auto_interface_0dim', 'auto_interface_rrm', or 'Parameter'.";
-      return;
+  if (
+    section_name != "auto_interface_0dim" && section_name != "auto_interface_rrm" &&
+    section_name != "Parameter") {
+    result->res =
+      "Error: Invalid section name specified! Must be 'auto_interface_0dim', 'auto_interface_rrm', "
+      "or 'Parameter'.";
+    return;
   }
 
   // Check arrays have same length
@@ -1374,26 +1376,22 @@ void SmartmicroRadarNode::get_radar_mode(
 
     switch (param_type) {
       case 0: {
-        auto radar_param_float =
-          std::make_shared<GetParamRequest<float>>(section_name, param);
+        auto radar_param_float = std::make_shared<GetParamRequest<float>>(section_name, param);
         request_added = batch->AddRequest(radar_param_float);
         break;
       }
       case 1: {
-        auto radar_param_u32 =
-          std::make_shared<GetParamRequest<uint32_t>>(section_name, param);
+        auto radar_param_u32 = std::make_shared<GetParamRequest<uint32_t>>(section_name, param);
         request_added = batch->AddRequest(radar_param_u32);
         break;
       }
       case 2: {
-        auto radar_param_u16 =
-          std::make_shared<GetParamRequest<uint16_t>>(section_name, param);
+        auto radar_param_u16 = std::make_shared<GetParamRequest<uint16_t>>(section_name, param);
         request_added = batch->AddRequest(radar_param_u16);
         break;
       }
       case 3: {
-        auto radar_param_u8 =
-          std::make_shared<GetParamRequest<uint8_t>>(section_name, param);
+        auto radar_param_u8 = std::make_shared<GetParamRequest<uint8_t>>(section_name, param);
         request_added = batch->AddRequest(radar_param_u8);
         break;
       }
@@ -1410,10 +1408,11 @@ void SmartmicroRadarNode::get_radar_mode(
   }
 
   if (
-    com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
-                                   batch, std::bind(
-                                            &SmartmicroRadarNode::param_response, this, client_id,
-                                            std::placeholders::_2, request->params, section_name))) {
+    com::types::ERROR_CODE_OK !=
+    inst->SendInstructionBatch(
+      batch, std::bind(
+               &SmartmicroRadarNode::param_response, this, client_id, std::placeholders::_2,
+               request->params, section_name))) {
     result->res = "Error: Check params are valid for this sensor!";
     return;
   }
@@ -1423,8 +1422,7 @@ void SmartmicroRadarNode::get_radar_mode(
 void SmartmicroRadarNode::mode_response(
   const com::types::ClientId client_id,
   const std::shared_ptr<com::master::ResponseBatch> & response,
-  const std::vector<std::string> & instruction_names,
-  const std::string & section_name)
+  const std::vector<std::string> & instruction_names, const std::string & section_name)
 {
   for (const auto & instruction_name : instruction_names) {
     std::vector<std::shared_ptr<Response<uint8_t>>> resp_u8;
@@ -1445,8 +1443,7 @@ void SmartmicroRadarNode::mode_response(
       }
     }
 
-    if (response->GetResponse<uint32_t>(
-          section_name, instruction_name.c_str(), resp_u32)) {
+    if (response->GetResponse<uint32_t>(section_name, instruction_name.c_str(), resp_u32)) {
       response_found = true;
       for (auto & resp : resp_u32) {
         RCLCPP_INFO(
@@ -1502,8 +1499,7 @@ void SmartmicroRadarNode::command_response(
   const std::string & section_name)
 {
   std::vector<std::shared_ptr<Response<uint32_t>>> command_resp;
-  if (response->GetResponse<uint32_t>(
-        section_name, command_name.c_str(), command_resp)) {
+  if (response->GetResponse<uint32_t>(section_name, command_name.c_str(), command_resp)) {
     for (auto & resp : command_resp) {
       RCLCPP_INFO(
         this->get_logger(),
@@ -1519,8 +1515,7 @@ void SmartmicroRadarNode::command_response(
 void SmartmicroRadarNode::status_response(
   const com::types::ClientId client_id,
   const std::shared_ptr<com::master::ResponseBatch> & response,
-  const std::vector<std::string> & statuses,
-  const std::string & section_name)
+  const std::vector<std::string> & statuses, const std::string & section_name)
 {
   for (const auto & instruction_name : statuses) {
     std::vector<std::shared_ptr<Response<uint16_t>>> resp_u16;
@@ -1562,8 +1557,7 @@ void SmartmicroRadarNode::status_response(
 void SmartmicroRadarNode::param_response(
   const com::types::ClientId client_id,
   const std::shared_ptr<com::master::ResponseBatch> & response,
-  const std::vector<std::string> & statuses,
-  const std::string & section_name)
+  const std::vector<std::string> & statuses, const std::string & section_name)
 {
   for (const auto & instruction_name : statuses) {
     std::vector<std::shared_ptr<Response<uint16_t>>> resp_u16;
@@ -1572,8 +1566,7 @@ void SmartmicroRadarNode::param_response(
     std::vector<std::shared_ptr<Response<float>>> resp_f;
     bool response_found = false;
 
-    if (response->GetResponse<uint16_t>(
-          section_name, instruction_name.c_str(), resp_u16)) {
+    if (response->GetResponse<uint16_t>(section_name, instruction_name.c_str(), resp_u16)) {
       response_found = true;
       for (auto & resp : resp_u16) {
         RCLCPP_INFO(
@@ -1586,8 +1579,7 @@ void SmartmicroRadarNode::param_response(
       }
     }
 
-    if (response->GetResponse<uint32_t>(
-          section_name, instruction_name.c_str(), resp_u32)) {
+    if (response->GetResponse<uint32_t>(section_name, instruction_name.c_str(), resp_u32)) {
       response_found = true;
       for (auto & resp : resp_u32) {
         RCLCPP_INFO(
@@ -1819,7 +1811,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0(
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
     header.port_size = port_header->GetPortSize();
-    header.body_endianness = port_header->GetBodyEndianness(); 
+    header.body_endianness = port_header->GetBodyEndianness();
     header.port_index = port_header->GetPortIndex();
     header.header_ver_major = port_header->GetHeaderVersionMajor();
     header.header_ver_minor = port_header->GetHeaderVersionMinor();
@@ -3010,13 +3002,15 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
 
 void SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0(
   const std::uint32_t sensor_idx,
-  const std::shared_ptr<com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::ComTargetList> &
+  const std::shared_ptr<
+    com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::ComTargetList> &
     targetlist_port_umrra1_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra1_v1_0_0" << std::endl;
   if (!check_signal) {
-    std::shared_ptr<com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::PortHeader> port_header;
+    std::shared_ptr<com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::PortHeader>
+      port_header;
     port_header = targetlist_port_umrra1_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::TargetListHeader>
       target_header;
@@ -3065,13 +3059,15 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0(
 
 void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0(
   const std::uint32_t sensor_idx,
-  const std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::ComTargetList> &
+  const std::shared_ptr<
+    com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::ComTargetList> &
     targetlist_port_umrra1_v2_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra1_v2_0_0" << std::endl;
   if (!check_signal) {
-    std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::PortHeader> port_header;
+    std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::PortHeader>
+      port_header;
     port_header = targetlist_port_umrra1_v2_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::TargetListHeader>
       target_header;
@@ -3117,7 +3113,6 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0(
     m_publishers_port_target_header[sensor_idx]->publish(header);
   }
 }
-
 
 void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0(
   const std::uint32_t sensor_idx,
