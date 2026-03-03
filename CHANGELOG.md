@@ -119,7 +119,7 @@ All notable changes to this project will be documented in this file. This projec
 - **Adopted Testing**: Includes check for new DRVEGRD 171 v1.5.0.
 - **Updated External libraries**: Updated external libraries compatible with the new smart access release.
 
-## v8.0.0 - 2026-02-11
+## v8.0.0 - 2026-03-03
 
 ### New Features
 - **User Interface for DRVEGRD 166 v1.0.0**: Introduced a new UI.
