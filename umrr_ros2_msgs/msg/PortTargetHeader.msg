@@ -1,4 +1,5 @@
-string frame_id
+std_msgs/Header header
+
 uint32 port_identifier
 int16 port_ver_major
 int16 port_ver_minor

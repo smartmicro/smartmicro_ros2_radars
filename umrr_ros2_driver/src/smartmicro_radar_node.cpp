@@ -1641,9 +1641,12 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v2_1_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -1696,9 +1699,12 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v2_1_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -1749,9 +1755,12 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v1_0_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -1804,9 +1813,12 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -1858,9 +1870,12 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -1914,9 +1929,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_3_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -1968,9 +1986,12 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2024,9 +2045,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2078,9 +2102,12 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2134,9 +2161,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2189,10 +2219,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
-
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2201,7 +2233,6 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
     header.port_index = port_header->GetPortIndex();
     header.header_ver_major = port_header->GetHeaderVersionMajor();
     header.header_ver_minor = port_header->GetHeaderVersionMinor();
-
     header.cycle_time = target_header->GetCycleTime();
     header.number_of_targets = target_header->GetNumberOfTargets();
     for (const auto & target : targetlist_port_umrr96->GetTargetList()) {
@@ -2240,9 +2271,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2293,9 +2327,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortId();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2346,9 +2383,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortId();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2401,9 +2441,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_1_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2456,9 +2499,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2513,9 +2559,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_4_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2570,9 +2619,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v3_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2627,9 +2679,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_3(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2682,9 +2737,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_2(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2739,9 +2797,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_4_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2796,9 +2857,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_5_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2852,9 +2916,12 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
 
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -2908,8 +2975,12 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2919,7 +2990,6 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1(
     header.header_ver_major = port_header->GetHeaderVersionMajor();
     header.header_ver_minor = port_header->GetHeaderVersionMinor();
 
-    header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleTime();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_tx_ant_idx = target_header->GetAcquisitionTxAntIdx();
@@ -2963,8 +3033,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2974,7 +3047,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
     header.header_ver_major = port_header->GetHeaderVersionMajor();
     header.header_ver_minor = port_header->GetHeaderVersionMinor();
 
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleTime();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_tx_ant_idx = target_header->GetAcquisitionTxAntIdx();
@@ -3020,8 +3093,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -3031,7 +3107,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0(
     header.header_ver_major = port_header->GetHeaderVersionMajor();
     header.header_ver_minor = port_header->GetHeaderVersionMinor();
 
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleTime();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_tx_ant_idx = target_header->GetAcquisitionTxAntIdx();
@@ -3077,8 +3153,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -3088,7 +3167,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0(
     header.header_ver_major = port_header->GetHeaderVersionMajor();
     header.header_ver_minor = port_header->GetHeaderVersionMinor();
 
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleTime();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_tx_ant_idx = target_header->GetAcquisitionTxAntIdx();
@@ -3132,9 +3211,12 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -3180,9 +3262,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -3224,9 +3309,12 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -3272,9 +3360,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -3316,9 +3407,12 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -3364,9 +3458,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -3408,9 +3505,12 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -3456,9 +3556,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -3500,9 +3603,12 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0(
     ObjectPointCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -3548,9 +3654,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_3_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -3594,9 +3703,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr96(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3640,9 +3752,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr11(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3686,9 +3801,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3732,9 +3850,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3778,9 +3899,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_4_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3824,9 +3948,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_5_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3870,9 +3997,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_1_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3916,9 +4046,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_2_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -3962,9 +4095,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_4_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -4008,9 +4144,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_0_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -4054,9 +4193,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_0_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -4100,9 +4242,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_2_1(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -4146,9 +4291,12 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_4_0(
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
     const auto [sec, nanosec] =
       convert_timestamp(std::chrono::microseconds{port_header->GetTimestamp()});
-    msg.header.stamp.sec = sec;
-    msg.header.stamp.nanosec = nanosec;
-    header.frame_id = m_sensors[sensor_idx].frame_id;
+    builtin_interfaces::msg::Time stamp;
+    stamp.sec = sec;
+    stamp.nanosec = nanosec;  
+    msg.header.stamp = stamp;
+    header.header.stamp = stamp;
+    header.header.frame_id = m_sensors[sensor_idx].frame_id;
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();

@@ -1,4 +1,5 @@
-string frame_id
+std_msgs/Header header
+
 float32 cycle_time
 uint8 number_of_targets
 uint32 cycle_count
