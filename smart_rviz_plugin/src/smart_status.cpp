@@ -11,7 +11,7 @@ SmartRadarStatus::SmartRadarStatus(QWidget * parent) : rviz_common::Panel(parent
 
 void SmartRadarStatus::initialize()
 {
-  node_ = rclcpp::Node::make_shared("smart_radar_gui_node");
+  node_ = rclcpp::Node::make_shared("smart_radar_status_gui_node");
 
   // Status setup
   gui_layout_ = new QVBoxLayout();
@@ -63,7 +63,7 @@ void SmartRadarStatus::initialize()
   connect(topic_dropdown_, SIGNAL(currentIndexChanged(int)), this, SLOT(update_table()));
 
   table_data_ = new QTableWidget();
-  table_data_->setRowCount(16);
+  table_data_->setRowCount(17);
   table_data_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   table_data_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -73,9 +73,9 @@ void SmartRadarStatus::initialize()
 
   gui_layout_->addWidget(splitter_);
 
-  timer_ = new QTimer();
+  timer_ = new QTimer(this);
   connect(timer_, SIGNAL(timeout()), this, SLOT(check_data()));
-  timer_->start(20);
+  timer_->start(50);
 
   setLayout(gui_layout_);
 

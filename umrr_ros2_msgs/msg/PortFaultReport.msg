@@ -1,0 +1,9 @@
+uint32 module_id
+uint32 fault_group
+uint32 fault_code
+uint32 fault_errno
+uint64 fault_time_stamp
+uint32 cycle_count
+uint8 instance_id
+uint8 criticality
+uint16 occurence_count

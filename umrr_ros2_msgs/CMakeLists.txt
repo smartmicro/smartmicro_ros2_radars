@@ -29,6 +29,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
     "msg/PortTargetHeader.msg"
     "msg/PortObjectHeader.msg"
     "msg/CanObjectHeader.msg"
+    "msg/PortFaultReportHeader.msg"
+    "msg/PortFaultReport.msg"
+    "msg/PortFaultReportsMsg.msg"
     DEPENDENCIES
       "geometry_msgs"
       "sensor_msgs"

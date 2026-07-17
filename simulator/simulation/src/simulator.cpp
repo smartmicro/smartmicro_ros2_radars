@@ -30,6 +30,7 @@
 #include <memory>
 #include <string>
 #include <thread>
+#include <vector>
 
 using namespace com::common;
 using namespace com::master;
@@ -49,8 +50,12 @@ std::shared_ptr<com::common::DataServicesIface> dataServices =
 
 void slave_callback(ClientId clientId, PortId, BufferDescriptor buffer)
 {
+  if (buffer.GetBufferPtr() == nullptr || buffer.GetSize() == 0U) {
+    std::cout << "Invalid instruction buffer received!" << std::endl;
+    return;
+  }
+
   InstructionBuffer * receive = reinterpret_cast<InstructionBuffer *>(buffer.GetBufferPtr());
-  int sizeIncomingBuf = buffer.GetSize();
   uint32_t instnumber = receive->GetNumOfInstructions();
   auto instructions = receive->GetInstructions();
 
@@ -84,18 +89,28 @@ void stream_port(std::string portFile)
 
   ClientId masterId = 1;
   PortId portTargetListId = 66;
-  std::ifstream ifs(portFile, std::ifstream::binary | std::ios::binary);
-  std::filebuf * pbuf = ifs.rdbuf();
-  int size = pbuf->pubseekoff(0, ifs.end, ifs.in);
-  pbuf->pubseekpos(0, ifs.in);
-  char * filebuffer = new (std::nothrow) char[size];
-
-  if (filebuffer == nullptr) {
-    std::cout << "error assigning memory!" << std::endl;
+  std::ifstream ifs(portFile, std::ios::binary | std::ios::ate);
+  if (!ifs.is_open()) {
+    std::cout << "could not open port file: " << portFile << std::endl;
+    return;
   }
 
-  pbuf->sgetn(filebuffer, size);
-  BufferDescriptor bufferdesc((uint8_t *)filebuffer, size);
+  const auto file_end_pos = ifs.tellg();
+  if (file_end_pos <= 0) {
+    std::cout << "invalid or empty port file: " << portFile << std::endl;
+    return;
+  }
+
+  const auto size = static_cast<size_t>(file_end_pos);
+  std::vector<uint8_t> filebuffer(size);
+
+  ifs.seekg(0, std::ios::beg);
+  if (!ifs.read(reinterpret_cast<char *>(filebuffer.data()), static_cast<std::streamsize>(size))) {
+    std::cout << "failed reading port file: " << portFile << std::endl;
+    return;
+  }
+
+  BufferDescriptor bufferdesc(filebuffer.data(), size);
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
   if (ERROR_CODE_OK != dataServices->StreamDataPort(masterId, portTargetListId, bufferdesc)) {
@@ -103,8 +118,6 @@ void stream_port(std::string portFile)
   }
 
   std::cout << "sensor is transmitting data! " << std::endl;
-  ifs.close();
-  delete[] filebuffer;
 }
 
 int main(int argc, char * argv[])

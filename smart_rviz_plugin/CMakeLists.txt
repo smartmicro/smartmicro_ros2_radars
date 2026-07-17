@@ -33,6 +33,7 @@ set(smart_rviz_plugin_SRCS
   src/smart_services.cpp
   src/smart_download.cpp
   src/smart_status.cpp
+  src/smart_faults.cpp
 )
 
 set(smart_rviz_plugin_HDRS
@@ -40,6 +41,7 @@ set(smart_rviz_plugin_HDRS
   include/smart_rviz_plugin/smart_services.hpp
   include/smart_rviz_plugin/smart_download.hpp
   include/smart_rviz_plugin/smart_status.hpp
+  include/smart_rviz_plugin/smart_faults.hpp
 )
 
 add_library(smart_rviz_plugin SHARED

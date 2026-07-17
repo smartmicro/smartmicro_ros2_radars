@@ -96,6 +96,8 @@ void SmartRadarService::create_widgets()
   status_value_type = new QComboBox(this);
   status_value_type->addItem("uint32, (0)");
   status_value_type->addItem("uint16, (1)");
+  status_value_type->addItem("uint8, (2)");
+  status_value_type->addItem("int32, (3)");
 
   send_status_button = new QPushButton("Get Status", this);
   status_table_widget = new QTableWidget(this);
@@ -220,6 +222,20 @@ void SmartRadarService::on_param_selection()
     int row = selected[0]->row();
     param_name_line_edit->setText(param_table_widget->item(row, 1)->text());
     param_section_name->setText(param_table_widget->item(row, 0)->text());
+
+    QTableWidgetItem * type_item = param_table_widget->item(row, 3);
+    if (type_item) {
+      const QString type = type_item->text().trimmed().toLower();
+      if (type == "f32" || type == "float" || type == "float32") {
+        param_value_type->setCurrentIndex(0);
+      } else if (type == "u32" || type == "uint32") {
+        param_value_type->setCurrentIndex(1);
+      } else if (type == "u16" || type == "uint16") {
+        param_value_type->setCurrentIndex(2);
+      } else if (type == "u8" || type == "uint8") {
+        param_value_type->setCurrentIndex(3);
+      }
+    }
   }
 }
 
@@ -240,6 +256,20 @@ void SmartRadarService::on_status_selection()
     int row = selected[0]->row();
     status_name_line_edit->setText(status_table_widget->item(row, 1)->text());
     status_section_name->setText(status_table_widget->item(row, 0)->text());
+
+    QTableWidgetItem * type_item = status_table_widget->item(row, 3);
+    if (type_item) {
+      const QString type = type_item->text().trimmed().toLower();
+      if (type == "u32") {
+        status_value_type->setCurrentIndex(0);
+      } else if (type == "u16") {
+        status_value_type->setCurrentIndex(1);
+      } else if (type == "u8") {
+        status_value_type->setCurrentIndex(2);
+      } else if (type == "i32") {
+        status_value_type->setCurrentIndex(3);
+      }
+    }
   }
 }
 
@@ -349,7 +379,7 @@ void SmartRadarService::read_command_json_data()
 
   // Set up table headers
   QStringList command_header_labels = {"Section", "Name", "Argument", "Comment"};
-  command_table_widget->setColumnCount(3);
+  command_table_widget->setColumnCount(4);
   command_table_widget->setHorizontalHeaderLabels(command_header_labels);
 
   // Populate the table with command data
@@ -392,7 +422,7 @@ void SmartRadarService::read_param_json_data()
 
   // Set up table headers
   QStringList param_header_labels = {"Section", "Name", "Comment", "Type"};
-  param_table_widget->setColumnCount(3);
+  param_table_widget->setColumnCount(4);
   param_table_widget->setHorizontalHeaderLabels(param_header_labels);
 
   // Populate the table with parameter data
@@ -435,7 +465,7 @@ void SmartRadarService::read_status_json_data()
 
   // Set up table headers
   QStringList status_header_labels = {"Section", "Name", "Comment", "Type"};
-  status_table_widget->setColumnCount(3);
+  status_table_widget->setColumnCount(4);
   status_table_widget->setHorizontalHeaderLabels(status_header_labels);
 
   // Populate the table with status data

@@ -14,5 +14,6 @@ uint8 acquisition_tx_ant_idx
 uint8 acquisition_sweep_idx
 uint8 acquisition_cf_idx
 uint8 prf
+uint8 acquisition_time_stamp_base
 float32 umambiguous_speed
 uint64 acquisition_start

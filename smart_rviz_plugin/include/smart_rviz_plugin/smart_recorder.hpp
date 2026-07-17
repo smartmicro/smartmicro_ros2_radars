@@ -20,6 +20,7 @@
 #include <sensor_msgs/msg/compressed_image.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
+#include <string>
 #include <vector>
 
 #include "std_msgs/msg/string.hpp"
@@ -28,6 +29,7 @@ namespace smart_rviz_plugin
 {
 struct TargetData
 {
+  std::string topic_name;
   float range;
   float power;
   float azimuth_deg;
@@ -38,21 +40,34 @@ struct TargetData
   float radial_speed;
   float azimuth_angle;
   float elevation_angle;
+  float variance_range;
+  float variance_speed;
+  float variance_azimuth_angle;
+  float variance_elevation_angle;
+  float false_alarm_probability;
+  uint32_t flags;
+  uint16_t peak_idx;
   uint32_t timestamp_sec;
   uint32_t timestamp_nanosec;
 };
 
 struct ObjectData
 {
+  std::string topic_name;
   float x_pos;
   float y_pos;
   float z_pos;
   float speed_abs;
   float heading;
   float length;
+  float mileage;
   float quality;
   float acceleration;
-  uint16_t object_id;
+  int16_t object_id;
+  uint16_t idle_cycles;
+  uint16_t spline_idx;
+  uint8_t object_class;
+  uint16_t status;
   uint32_t timestamp_sec;
   uint32_t timestamp_nanosec;
 };
@@ -146,17 +161,23 @@ private:
   /// @brief      Function to handle the data recording for target topics.
   ///
   void update_target_recorded_data(
-    float range, float power, float azimuth_deg, float elevation_deg, float rcs, float noise,
-    float snr, float radial_speed, float azimuth_angle, float elevation_angle,
-    uint32_t timestamp_sec, uint32_t timestamp_nanosec);
+    const std::string & topic_name, float range, float power, float azimuth_deg,
+    float elevation_deg, float rcs, float noise, float snr, float radial_speed,
+    float azimuth_angle, float elevation_angle, float variance_range, float variance_speed,
+    float variance_azimuth_angle, float variance_elevation_angle, float false_alarm_probability,
+    uint32_t flags, uint16_t peak_idx, uint32_t timestamp_sec, uint32_t timestamp_nanosec);
 
   ///
   /// @brief      Function to handle the data recording for objects topics.
   ///
   void update_object_recorded_data(
-    float x_pos, float y_pos, float z_pos, float speed_abs, float heading, float length,
-    float quality, float acceleration, uint16_t object_id, uint32_t timestamp_sec,
-    uint32_t timestamp_nanosec);
+    const std::string & topic_name, float x_pos, float y_pos, float z_pos, float speed_abs,
+    float heading, float length, float mileage, float quality, float acceleration,
+    int16_t object_id, uint16_t idle_cycles, uint16_t spline_idx, uint8_t object_class,
+    uint16_t status, uint32_t timestamp_sec, uint32_t timestamp_nanosec);
+
+  void clear_recorded_data();
+  void return_to_ready_state();
 
   QTableWidget * table_data_;
   QTableWidget * table_data_2_;
@@ -187,8 +208,10 @@ private:
   std::vector<TargetData> target_recorded_data;
   std::vector<ObjectData> object_recorded_data;
   std::string selected_topic_;
+  std::string recording_topic_;
   std::string selected_topic_2_;
   bool recording_active_{false};
+  bool pending_save_{false};
 };
 
 }  // namespace smart_rviz_plugin
