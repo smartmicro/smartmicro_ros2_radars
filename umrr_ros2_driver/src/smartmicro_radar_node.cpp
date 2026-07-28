@@ -17,15 +17,6 @@
 
 #include <signal.h>
 
-#include <algorithm>
-#include <fstream>
-#include <limits>
-#include <memory>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <vector>
-
 #include <nlohmann/json.hpp>
 #include <point_cloud_msg_wrapper/point_cloud_msg_wrapper.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
@@ -113,6 +104,15 @@
 #include <umrra4_mse_v1_0_0/comobjectlist/Object.h>
 #include <umrra4_mse_v2_1_0/comobjectlist/ComObjectList.h>
 #include <umrra4_mse_v2_1_0/comobjectlist/Object.h>
+
+#include <algorithm>
+#include <fstream>
+#include <limits>
+#include <memory>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <vector>
 
 #include "umrr_ros2_driver/config_path.hpp"
 
@@ -406,18 +406,18 @@ void SmartmicroRadarNode::initialize_services()
 void SmartmicroRadarNode::setup_publishers()
 {
   const auto validate_sensor = [](const auto & sensor) {
-    std::string_view pub_type{sensor.pub_type};
-    std::string_view model{sensor.model};
+      std::string_view pub_type{sensor.pub_type};
+      std::string_view model{sensor.model};
 
-    const bool is_mse = (pub_type == kMseType);
-    const bool has_mse = (model.find(kMseType) != std::string_view::npos);
+      const bool is_mse = (pub_type == kMseType);
+      const bool has_mse = (model.find(kMseType) != std::string_view::npos);
 
-    if (is_mse == !has_mse) {
-      throw std::runtime_error(
-        std::string("Model name ") + (is_mse ? "must" : "must not") +
-        " contain 'mse' when pub_type is '" + std::string(pub_type) + "'");
-    }
-  };
+      if (is_mse == !has_mse) {
+        throw std::runtime_error(
+                std::string("Model name ") + (is_mse ? "must" : "must not") +
+                " contain 'mse' when pub_type is '" + std::string(pub_type) + "'");
+      }
+    };
 
   for (size_t i = 0; i < m_number_of_sensors; ++i) {
     const auto & sensor = m_sensors[i];
@@ -445,16 +445,16 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
         "smart_radar/port_objects_" + std::to_string(sensor_idx), sensor.history_size);
       m_publishers_port_obj_header[sensor_idx] =
         create_publisher<umrr_ros2_msgs::msg::PortObjectHeader>(
-          "smart_radar/port_objectheader_" + std::to_string(sensor_idx), sensor.history_size);
+        "smart_radar/port_objectheader_" + std::to_string(sensor_idx), sensor.history_size);
       m_publishers[sensor_idx] = create_publisher<sensor_msgs::msg::PointCloud2>(
         "smart_radar/port_targets_" + std::to_string(sensor_idx), sensor.history_size);
       m_publishers_port_target_header[sensor_idx] =
         create_publisher<umrr_ros2_msgs::msg::PortTargetHeader>(
-          "smart_radar/port_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
+        "smart_radar/port_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
       if (supports_fault_reports(sensor.model)) {
         m_publishers_fault_report_msg[sensor_idx] =
           create_publisher<umrr_ros2_msgs::msg::PortFaultReportsMsg>(
-            "smart_radar/port_faultreport_" + std::to_string(sensor_idx), sensor.history_size);
+          "smart_radar/port_faultreport_" + std::to_string(sensor_idx), sensor.history_size);
       }
 
     } else if (pub_type == kTargetType) {
@@ -462,11 +462,11 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
         "smart_radar/port_targets_" + std::to_string(sensor_idx), sensor.history_size);
       m_publishers_port_target_header[sensor_idx] =
         create_publisher<umrr_ros2_msgs::msg::PortTargetHeader>(
-          "smart_radar/port_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
+        "smart_radar/port_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
       if (supports_fault_reports(sensor.model)) {
         m_publishers_fault_report_msg[sensor_idx] =
           create_publisher<umrr_ros2_msgs::msg::PortFaultReportsMsg>(
-            "smart_radar/port_faultreport_" + std::to_string(sensor_idx), sensor.history_size);
+          "smart_radar/port_faultreport_" + std::to_string(sensor_idx), sensor.history_size);
       }
     } else {
       RCLCPP_ERROR(get_logger(), "Unknown publish type: %s", sensor.pub_type.c_str());
@@ -484,8 +484,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v3_0_0->RegisterComObjectListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::objectlist_callback_umrra4_mse_v3_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::objectlist_callback_umrra4_mse_v3_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register objectlist callback for sensor umrra4_mse_v3_0_0");
     }
@@ -493,8 +494,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v3_0_0->RegisterComTargetListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra4_mse_v3_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::targetlist_callback_umrra4_mse_v3_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrra4_mse_v3_0_0");
     }
@@ -502,18 +504,21 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v3_0_0->RegisterFaultReportsReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::faultreport_callback_umrra4_mse_v3_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::faultreport_callback_umrra4_mse_v3_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register faultreport callback for sensor umrra4_mse_v3_0_0");
     }
-  }  if (sensor.model == "umrra4_mse_v2_1_0") {
+  }
+  if (sensor.model == "umrra4_mse_v2_1_0") {
     if (
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v2_1_0->RegisterComObjectListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::objectlist_callback_umrra4_mse_v2_1_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::objectlist_callback_umrra4_mse_v2_1_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register objectlist callback for sensor umrra4_mse_v2_1_0");
     }
@@ -521,8 +526,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v2_1_0->RegisterComTargetListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra4_mse_v2_1_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::targetlist_callback_umrra4_mse_v2_1_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrra4_mse_v2_1_0");
     }
@@ -532,8 +538,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v1_0_0->RegisterComObjectListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::objectlist_callback_umrra4_mse_v1_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::objectlist_callback_umrra4_mse_v1_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register objectlist callback for sensor umrra4_mse_v1_0_0");
     }
@@ -541,8 +548,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v1_0_0->RegisterComTargetListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrra4_mse_v1_0_0");
     }
@@ -552,8 +560,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v2_0_0->RegisterComObjectListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v2_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v2_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register objectlist callback for sensor umrr9f_mse_v2_0_0");
     }
@@ -561,8 +570,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v2_0_0->RegisterComTargetListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v2_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v2_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_mse_v2_0_0");
     }
@@ -570,8 +580,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v2_0_0->RegisterFaultReportsReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::faultreport_callback_umrr9f_mse_v2_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::faultreport_callback_umrr9f_mse_v2_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register faultreport callback for sensor umrr9f_mse_v2_0_0");
     }
@@ -581,8 +592,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_3_0->RegisterComObjectListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register objectlist callback for sensor umrr9f_mse_v1_3_0");
     }
@@ -590,8 +602,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_3_0->RegisterComTargetListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_3_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_3_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_mse_v1_3_0");
     }
@@ -601,8 +614,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_1_0->RegisterComObjectListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register objectlist callback for sensor umrr9f_mse_v1_1_0");
     }
@@ -610,8 +624,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_1_0->RegisterComTargetListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_mse_v1_1_0");
     }
@@ -621,8 +636,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_0_0->RegisterComObjectListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register objectlist callback for sensor umrr9f_mse_v1_0_0");
     }
@@ -630,8 +646,9 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_0_0->RegisterComTargetListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_mse_v1_0_0");
     }
@@ -639,80 +656,88 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
   if (
     sensor.model == "umrr96_v1_2_2" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr96->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr96, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr96->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr96, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr96_v1_2_2");
   }
   if (
     sensor.model == "umrr11_v1_1_2" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr11->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr11, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr11->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr11, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr11_v1_1_2");
   }
   if (
     sensor.model == "umrr9f_v1_1_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v1_1_1->RegisterComTargetListPortReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v1_1_1->RegisterComTargetListPortReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_v1_1_1");
   }
   if (
     sensor.model == "umrr9f_v2_0_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v2_0_0->RegisterComTargetListPortReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v2_0_0->RegisterComTargetListPortReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_v2_0_0");
   }
   if (
     sensor.model == "umrr9f_v2_1_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v2_1_1->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_1_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v2_1_1->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_1_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_v2_1_1");
   }
   if (
     sensor.model == "umrr9f_v2_2_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v2_2_1->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v2_2_1->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_v2_2_1");
   }
   if (
     sensor.model == "umrr9f_v2_4_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v2_4_1->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_4_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v2_4_1->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9f_v2_4_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_v2_4_1");
   }
   if (
     sensor.model == "umrr9f_v3_0_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v3_0_0->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9f_v3_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v3_0_0->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9f_v3_0_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_v3_0_0");
   }
@@ -720,19 +745,21 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
   if (sensor.model == "umrr9f_v3_2_0") {
     if (
       com::types::ERROR_CODE_OK !=
-        data_umrr9f_v3_2_0->RegisterComTargetListReceiveCallback(
-          sensor.id, std::bind(
-                       &SmartmicroRadarNode::targetlist_callback_umrr9f_v3_2_0, this, sensor_idx,
-                       std::placeholders::_1, std::placeholders::_2))) {
+      data_umrr9f_v3_2_0->RegisterComTargetListReceiveCallback(
+        sensor.id, std::bind(
+          &SmartmicroRadarNode::targetlist_callback_umrr9f_v3_2_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrr9f_v3_2_0");
     }
     if (
       com::types::ERROR_CODE_OK !=
-        data_umrr9f_v3_2_0->RegisterFaultReportsReceiveCallback(
-          sensor.id, std::bind(
-                       &SmartmicroRadarNode::faultreport_callback_umrr9f_v3_2_0, this, sensor_idx,
-                       std::placeholders::_1, std::placeholders::_2))) {
+      data_umrr9f_v3_2_0->RegisterFaultReportsReceiveCallback(
+        sensor.id, std::bind(
+          &SmartmicroRadarNode::faultreport_callback_umrr9f_v3_2_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register faultreport callback for sensor umrr9f_v3_2_0");
     }
@@ -741,40 +768,44 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
   if (
     sensor.model == "umrr9d_v1_0_3" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_0_3->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_3, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_0_3->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_3, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9d_v1_0_3");
   }
   if (
     sensor.model == "umrr9d_v1_2_2" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_2_2->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_2, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_2_2->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_2, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9d_v1_2_2");
   }
   if (
     sensor.model == "umrr9d_v1_4_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_4_1->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_4_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_4_1->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_4_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9d_v1_4_1");
   }
   if (
     sensor.model == "umrr9d_v1_5_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_5_0->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_5_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_5_0->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_5_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrr9d_v1_5_0");
   }
@@ -786,23 +817,25 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
 
     const auto target_cb_ret = data_umrr9d_v1_7_0->RegisterComTargetListReceiveCallback(
       sensor.id, std::bind(
-                   &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_7_0, this, sensor_idx,
-                   std::placeholders::_1, std::placeholders::_2));
+        &SmartmicroRadarNode::targetlist_callback_umrr9d_v1_7_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2));
 
     const auto fault_cb_ret = data_umrr9d_v1_7_0->RegisterFaultReportsReceiveCallback(
       sensor.id, std::bind(
-                   &SmartmicroRadarNode::faultreport_callback_umrr9d_v1_7_0, this, sensor_idx,
-                   std::placeholders::_1, std::placeholders::_2));
+        &SmartmicroRadarNode::faultreport_callback_umrr9d_v1_7_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2));
 
     if (
       com::types::ERROR_CODE_OK !=
-      target_cb_ret) {
+      target_cb_ret)
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrr9d_v1_7_0");
     }
     if (
       com::types::ERROR_CODE_OK !=
-      fault_cb_ret) {
+      fault_cb_ret)
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register faultreport callback for sensor umrr9d_v1_7_0");
     }
@@ -810,30 +843,33 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
   if (
     sensor.model == "umrra4_v1_0_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra4_v1_0_1->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra4_v1_0_1->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrra4_v1_0_1");
   }
   if (
     sensor.model == "umrra4_v1_2_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra4_v1_2_1->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra4_v1_2_1->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrra4_v1_2_1");
   }
   if (
     sensor.model == "umrra4_v1_4_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra4_v1_4_0->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra4_v1_4_0->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrra4_v1_4_0");
   }
@@ -841,19 +877,21 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
   if (sensor.model == "umrra4_v1_6_0") {
     if (
       com::types::ERROR_CODE_OK !=
-        data_umrra4_v1_6_0->RegisterComTargetListReceiveCallback(
-          sensor.id, std::bind(
-                       &SmartmicroRadarNode::targetlist_callback_umrra4_v1_6_0, this, sensor_idx,
-                       std::placeholders::_1, std::placeholders::_2))) {
+      data_umrra4_v1_6_0->RegisterComTargetListReceiveCallback(
+        sensor.id, std::bind(
+          &SmartmicroRadarNode::targetlist_callback_umrra4_v1_6_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register targetlist callback for sensor umrra4_v1_6_0");
     }
     if (
       com::types::ERROR_CODE_OK !=
-        data_umrra4_v1_6_0->RegisterFaultReportsReceiveCallback(
-          sensor.id, std::bind(
-                       &SmartmicroRadarNode::faultreport_callback_umrra4_v1_6_0, this, sensor_idx,
-                       std::placeholders::_1, std::placeholders::_2))) {
+      data_umrra4_v1_6_0->RegisterFaultReportsReceiveCallback(
+        sensor.id, std::bind(
+          &SmartmicroRadarNode::faultreport_callback_umrra4_v1_6_0, this, sensor_idx,
+          std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(), "Failed to register faultreport callback for sensor umrra4_v1_6_0");
     }
@@ -862,30 +900,33 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
   if (
     sensor.model == "umrra1_v1_0_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra1_v1_0_0->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra1_v1_0_0->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrra1_v1_0_0");
   }
   if (
     sensor.model == "umrra1_v2_0_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra1_v2_0_0->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra1_v2_0_0->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrra1_v2_0_0");
   }
   if (
     sensor.model == "umrra1_v2_0_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra1_v2_0_1->RegisterComTargetListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra1_v2_0_1->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrra1_v2_0_1");
   }
@@ -901,19 +942,19 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
         "smart_radar/can_objects_" + std::to_string(sensor_idx), sensor.history_size);
       m_publishers_can_obj_header[sensor_idx] =
         create_publisher<umrr_ros2_msgs::msg::CanObjectHeader>(
-          "smart_radar/can_objectheader_" + std::to_string(sensor_idx), sensor.history_size);
+        "smart_radar/can_objectheader_" + std::to_string(sensor_idx), sensor.history_size);
 
       m_publishers[sensor_idx] = create_publisher<sensor_msgs::msg::PointCloud2>(
         "smart_radar/can_targets_" + std::to_string(sensor_idx), sensor.history_size);
       m_publishers_can_target_header[sensor_idx] =
         create_publisher<umrr_ros2_msgs::msg::CanTargetHeader>(
-          "smart_radar/can_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
+        "smart_radar/can_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
     } else if (pub_type == kTargetType) {
       m_publishers[sensor_idx] = create_publisher<sensor_msgs::msg::PointCloud2>(
         "smart_radar/can_targets_" + std::to_string(sensor_idx), sensor.history_size);
       m_publishers_can_target_header[sensor_idx] =
         create_publisher<umrr_ros2_msgs::msg::CanTargetHeader>(
-          "smart_radar/can_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
+        "smart_radar/can_targetheader_" + std::to_string(sensor_idx), sensor.history_size);
     } else {
       RCLCPP_INFO(this->get_logger(), "Unkwon publish type!");
     }
@@ -930,8 +971,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v2_1_0->RegisterComObjectBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register objectlist callback for sensor umrra4_can_mse_v2_1_0");
@@ -940,8 +982,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v2_1_0->RegisterComTargetBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register targetlist callback for sensor umrra4_can_mse_v2_1_0");
@@ -952,8 +995,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v1_0_0->RegisterComObjectBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register objectlist callback for sensor umrra4_can_mse_v1_0_0");
@@ -962,8 +1006,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v1_0_0->RegisterComTargetBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register targetlist callback for sensor umrra4_can_mse_v1_0_0");
@@ -974,8 +1019,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_3_0->RegisterComObjectBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register objectlist callback for sensor umrr9f_can_mse_v1_3_0");
@@ -984,8 +1030,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_3_0->RegisterComTargetBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_3_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_3_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register targetlist callback for sensor umrr9f_can_mse_v1_3_0");
@@ -996,8 +1043,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_1_0->RegisterComObjectBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register objectlist callback for sensor umrr9f_can_mse_v1_1_0");
@@ -1006,8 +1054,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_1_0->RegisterComTargetBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register targetlist callback for sensor umrr9f_can_mse_v1_1_0");
@@ -1018,8 +1067,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_0_0->RegisterComObjectBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register objectlist callback for sensor umrr9f_can_mse_v1_0_0");
@@ -1028,8 +1078,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v1_0_0->RegisterComTargetBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register targetlist callback for sensor umrr9f_can_mse_v1_0_0");
@@ -1040,8 +1091,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v3_0_0->RegisterComObjectBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v3_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v3_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register objectlist callback for sensor umrra4_can_mse_v3_0_0");
@@ -1050,8 +1102,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrra4_mse_v3_0_0->RegisterComTargetBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v3_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v3_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register targetlist callback for sensor umrra4_can_mse_v3_0_0");
@@ -1062,8 +1115,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v2_0_0->RegisterComObjectBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v2_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v2_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register objectlist callback for sensor umrr9f_can_mse_v2_0_0");
@@ -1072,8 +1126,9 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
       com::types::ERROR_CODE_OK !=
       data_umrr9f_mse_v2_0_0->RegisterComTargetBaseListReceiveCallback(
         sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v2_0_0, this,
-                     sensor_idx, std::placeholders::_1, std::placeholders::_2))) {
+          &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v2_0_0, this,
+          sensor_idx, std::placeholders::_1, std::placeholders::_2)))
+    {
       RCLCPP_INFO(
         this->get_logger(),
         "Failed to register targetlist callback for sensor umrr9f_can_mse_v2_0_0");
@@ -1082,160 +1137,176 @@ void SmartmicroRadarNode::can_publishers(const detail::SensorConfig & sensor, si
   if (
     sensor.model == "umrr96_can_v1_2_2" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr96->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr96, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr96->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr96, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr96_can_v1_2_2");
   }
   if (
     sensor.model == "umrr11_can_v1_1_2" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr11->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr11, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr11->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr11, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr11_can_v1_1_2");
   }
   if (
     sensor.model == "umrr9f_can_v2_1_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v2_1_1->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_1_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v2_1_1->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_1_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9f_can_v2_1_1");
   }
   if (
     sensor.model == "umrr9f_can_v2_2_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v2_2_1->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_2_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v2_2_1->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_2_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9f_can_v2_2_1");
   }
   if (
     sensor.model == "umrr9f_can_v2_4_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v2_4_1->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_4_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v2_4_1->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_4_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9f_can_v2_4_1");
   }
   if (
     sensor.model == "umrr9f_can_v3_0_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v3_0_0->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_0_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v3_0_0->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_0_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9f_can_v3_0_0");
   }
   if (
     sensor.model == "umrr9f_can_v3_2_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9f_v3_2_0->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_2_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9f_v3_2_0->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_2_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9f_can_v3_2_0");
   }
   if (
     sensor.model == "umrr9d_can_v1_0_3" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_0_3->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_0_3->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9d_can_v1_0_3");
   }
   if (
     sensor.model == "umrr9d_can_v1_2_2" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_2_2->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_2_2->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9d_can_v1_2_2");
   }
   if (
     sensor.model == "umrr9d_can_v1_4_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_4_1->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_4_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_4_1->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_4_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9d_can_v1_4_1");
   }
   if (
     sensor.model == "umrr9d_can_v1_5_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_5_0->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_5_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_5_0->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_5_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9d_can_v1_5_0");
   }
   if (
     sensor.model == "umrr9d_can_v1_7_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrr9d_v1_7_0->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_7_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrr9d_v1_7_0->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_7_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrr9d_can_v1_7_0");
   }
   if (
     sensor.model == "umrra4_can_v1_0_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra4_v1_0_1->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_0_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra4_v1_0_1->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_0_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrra4_can_v1_0_1");
   }
   if (
     sensor.model == "umrra4_can_v1_2_1" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra4_v1_2_1->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_2_1, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra4_v1_2_1->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_2_1, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrra4_can_v1_2_1");
   }
   if (
     sensor.model == "umrra4_can_v1_4_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra4_v1_4_0->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_4_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra4_v1_4_0->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_4_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrra4_can_v1_4_0");
   }
   if (
     sensor.model == "umrra4_can_v1_6_0" &&
     com::types::ERROR_CODE_OK !=
-      data_umrra4_v1_6_0->RegisterComTargetBaseListReceiveCallback(
-        sensor.id, std::bind(
-                     &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_6_0, this, sensor_idx,
-                     std::placeholders::_1, std::placeholders::_2))) {
+    data_umrra4_v1_6_0->RegisterComTargetBaseListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_6_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register CAN targetlist for sensor umrra4_can_v1_6_0");
   }
@@ -1256,7 +1327,7 @@ void SmartmicroRadarNode::firmware_download(
 {
   bool check_flag_id = false;
   client_id = request->sensor_id;
-  update_image = request->file_path;
+  std::string update_image = request->file_path;
 
   for (auto & sensor : m_sensors) {
     if (client_id == sensor.id) {
@@ -1332,7 +1403,8 @@ void SmartmicroRadarNode::set_radar_mode(
   auto section_name = request->section_name;
   if (
     section_name != "auto_interface_0dim" && section_name != "auto_interface_rrm" &&
-    section_name != "Parameter") {
+    section_name != "Parameter")
+  {
     result->res =
       "Error: Invalid section name specified! Must be 'auto_interface_0dim', "
       "'auto_interface_rrm', or 'Parameter'.";
@@ -1342,7 +1414,8 @@ void SmartmicroRadarNode::set_radar_mode(
   // Check arrays have same length
   if (
     request->params.size() != request->values.size() ||
-    request->params.size() != request->value_types.size()) {
+    request->params.size() != request->value_types.size())
+  {
     result->res = "Error: param, values and value_types arrays must have same length";
     return;
   }
@@ -1367,55 +1440,55 @@ void SmartmicroRadarNode::set_radar_mode(
     try {
       switch (value_type) {
         case 0: {
-          float float_value = std::stof(value);
-          auto radar_mode_float =
-            std::make_shared<SetParamRequest<float>>(section_name, param, float_value);
-          request_added = batch->AddRequest(radar_mode_float);
-          break;
-        }
+            float float_value = std::stof(value);
+            auto radar_mode_float =
+              std::make_shared<SetParamRequest<float>>(section_name, param, float_value);
+            request_added = batch->AddRequest(radar_mode_float);
+            break;
+          }
         case 1: {
-          if (value.find('.') != std::string::npos) {
-            result->res = "Error: uint32 value cannot contain decimal points";
-            return;
+            if (value.find('.') != std::string::npos) {
+              result->res = "Error: uint32 value cannot contain decimal points";
+              return;
+            }
+            uint32_t u32_value = static_cast<uint32_t>(std::stoul(value));
+            auto radar_mode_u32 =
+              std::make_shared<SetParamRequest<uint32_t>>(section_name, param, u32_value);
+            request_added = batch->AddRequest(radar_mode_u32);
+            break;
           }
-          uint32_t u32_value = static_cast<uint32_t>(std::stoul(value));
-          auto radar_mode_u32 =
-            std::make_shared<SetParamRequest<uint32_t>>(section_name, param, u32_value);
-          request_added = batch->AddRequest(radar_mode_u32);
-          break;
-        }
         case 2: {
-          if (value.find('.') != std::string::npos) {
-            result->res = "Error: uint16 value cannot contain decimal points";
-            return;
+            if (value.find('.') != std::string::npos) {
+              result->res = "Error: uint16 value cannot contain decimal points";
+              return;
+            }
+            uint64_t temp = std::stoul(value);
+            if (temp > 65535) {
+              result->res = "Error: uint16 value must be between 0 and 65535";
+              return;
+            }
+            uint16_t u16_value = static_cast<uint16_t>(temp);
+            auto radar_mode_u16 =
+              std::make_shared<SetParamRequest<uint16_t>>(section_name, param, u16_value);
+            request_added = batch->AddRequest(radar_mode_u16);
+            break;
           }
-          uint64_t temp = std::stoul(value);
-          if (temp > 65535) {
-            result->res = "Error: uint16 value must be between 0 and 65535";
-            return;
-          }
-          uint16_t u16_value = static_cast<uint16_t>(temp);
-          auto radar_mode_u16 =
-            std::make_shared<SetParamRequest<uint16_t>>(section_name, param, u16_value);
-          request_added = batch->AddRequest(radar_mode_u16);
-          break;
-        }
         case 3: {
-          if (value.find('.') != std::string::npos) {
-            result->res = "Error: uint8 value cannot contain decimal points";
-            return;
+            if (value.find('.') != std::string::npos) {
+              result->res = "Error: uint8 value cannot contain decimal points";
+              return;
+            }
+            uint64_t temp = std::stoul(value);
+            if (temp > 255) {
+              result->res = "Error: uint8 value must be between 0 and 255";
+              return;
+            }
+            uint8_t u8_value = static_cast<uint8_t>(temp);
+            auto radar_mode_u8 =
+              std::make_shared<SetParamRequest<uint8_t>>(section_name, param, u8_value);
+            request_added = batch->AddRequest(radar_mode_u8);
+            break;
           }
-          uint64_t temp = std::stoul(value);
-          if (temp > 255) {
-            result->res = "Error: uint8 value must be between 0 and 255";
-            return;
-          }
-          uint8_t u8_value = static_cast<uint8_t>(temp);
-          auto radar_mode_u8 =
-            std::make_shared<SetParamRequest<uint8_t>>(section_name, param, u8_value);
-          request_added = batch->AddRequest(radar_mode_u8);
-          break;
-        }
         default:
           result->res =
             "Error: Invalid value_type specified. Must be 0 (f32), 1 (u32), 2 (u16), 3 (u8)";
@@ -1439,8 +1512,9 @@ void SmartmicroRadarNode::set_radar_mode(
     com::types::ERROR_CODE_OK !=
     inst->SendInstructionBatch(
       batch, std::bind(
-               &SmartmicroRadarNode::mode_response, this, client_id, std::placeholders::_2,
-               request->params, section_name))) {
+        &SmartmicroRadarNode::mode_response, this, client_id, std::placeholders::_2,
+        request->params, section_name)))
+  {
     result->res = "Error: Check params are valid for this sensor and values within range!";
     return;
   }
@@ -1474,7 +1548,7 @@ void SmartmicroRadarNode::ip_address(
 
   std::shared_ptr<SetParamRequest<uint32_t>> ip_address =
     std::make_shared<SetParamRequest<uint32_t>>(
-      "auto_interface_0dim", "ip_source_address", request->value_ip);
+    "auto_interface_0dim", "ip_source_address", request->value_ip);
 
   std::shared_ptr<CmdRequest> cmd =
     std::make_shared<CmdRequest>("auto_interface_command", "comp_eeprom_ctrl_save_param_sec", 2010);
@@ -1492,7 +1566,8 @@ void SmartmicroRadarNode::ip_address(
     com::types::ERROR_CODE_OK !=
     inst->SendInstructionBatch(
       batch, std::bind(
-               &SmartmicroRadarNode::sensor_response_ip, this, client_id, std::placeholders::_2))) {
+        &SmartmicroRadarNode::sensor_response_ip, this, client_id, std::placeholders::_2)))
+  {
     result->res_ip = "Service not conducted";
     return;
   } else {
@@ -1530,7 +1605,8 @@ void SmartmicroRadarNode::radar_command(
   auto section_name = request->section_name;
   if (
     section_name != "auto_interface_command" && section_name != "auto_interface_rrm_command" &&
-    section_name != "Command") {
+    section_name != "Command")
+  {
     result->res =
       "Error: Invalid section name specified! Must be 'auto_interface_command', "
       "'auto_interface_rrm_command', or 'Command'.";
@@ -1555,9 +1631,10 @@ void SmartmicroRadarNode::radar_command(
 
   if (
     com::types::ERROR_CODE_OK != inst->SendInstructionBatch(
-                                   batch, std::bind(
-                                            &SmartmicroRadarNode::command_response, this, client_id,
-                                            std::placeholders::_2, command_name, section_name))) {
+      batch, std::bind(
+        &SmartmicroRadarNode::command_response, this, client_id,
+        std::placeholders::_2, command_name, section_name)))
+  {
     result->res = "Error in sending command to the sensor!";
     return;
   }
@@ -1585,7 +1662,8 @@ void SmartmicroRadarNode::get_radar_status(
   auto section_name = request->section_name;
   if (
     section_name != "auto_interface" && section_name != "auto_interface_rrm" &&
-    section_name != "Status") {
+    section_name != "Status")
+  {
     result->res =
       "Error: Invalid section name specified! Must be 'auto_interface', 'auto_interface_rrm', or "
       "'Status'.";
@@ -1617,27 +1695,30 @@ void SmartmicroRadarNode::get_radar_status(
 
     switch (status_type) {
       case 0: {
-        auto radar_status_u32 = std::make_shared<GetStatusRequest<uint32_t>>(section_name, status);
-        request_added = batch->AddRequest(radar_status_u32);
-        break;
-      }
+          auto radar_status_u32 =
+            std::make_shared<GetStatusRequest<uint32_t>>(section_name, status);
+          request_added = batch->AddRequest(radar_status_u32);
+          break;
+        }
       case 1: {
-        auto radar_status_u16 = std::make_shared<GetStatusRequest<uint16_t>>(section_name, status);
-        request_added = batch->AddRequest(radar_status_u16);
-        break;
-      }
+          auto radar_status_u16 =
+            std::make_shared<GetStatusRequest<uint16_t>>(section_name, status);
+          request_added = batch->AddRequest(radar_status_u16);
+          break;
+        }
       case 2: {
-        auto radar_status_u8 = std::make_shared<GetStatusRequest<uint8_t>>(section_name, status);
-        request_added = batch->AddRequest(radar_status_u8);
-        break;
-      }
+          auto radar_status_u8 = std::make_shared<GetStatusRequest<uint8_t>>(section_name, status);
+          request_added = batch->AddRequest(radar_status_u8);
+          break;
+        }
       case 3: {
-        auto radar_status_i32 = std::make_shared<GetStatusRequest<int32_t>>(section_name, status);
-        request_added = batch->AddRequest(radar_status_i32);
-        break;
-      }
+          auto radar_status_i32 = std::make_shared<GetStatusRequest<int32_t>>(section_name, status);
+          request_added = batch->AddRequest(radar_status_i32);
+          break;
+        }
       default:
-        result->res = "Error: Invalid value_type specified. Must be 0 (u32), 1 (u16), 2 (u8), or 3 (i32)";
+        result->res =
+          "Error: Invalid value_type specified. Must be 0 (u32), 1 (u16), 2 (u8), or 3 (i32)";
         return;
     }
 
@@ -1651,8 +1732,9 @@ void SmartmicroRadarNode::get_radar_status(
     com::types::ERROR_CODE_OK !=
     inst->SendInstructionBatch(
       batch, std::bind(
-               &SmartmicroRadarNode::status_response, this, client_id, std::placeholders::_2,
-               request->statuses, section_name))) {
+        &SmartmicroRadarNode::status_response, this, client_id, std::placeholders::_2,
+        request->statuses, section_name)))
+  {
     result->res = "Error: Check status are valid for this sensor!";
     return;
   }
@@ -1680,7 +1762,8 @@ void SmartmicroRadarNode::get_radar_mode(
   auto section_name = request->section_name;
   if (
     section_name != "auto_interface_0dim" && section_name != "auto_interface_rrm" &&
-    section_name != "Parameter") {
+    section_name != "Parameter")
+  {
     result->res =
       "Error: Invalid section name specified! Must be 'auto_interface_0dim', 'auto_interface_rrm', "
       "or 'Parameter'.";
@@ -1712,25 +1795,25 @@ void SmartmicroRadarNode::get_radar_mode(
 
     switch (param_type) {
       case 0: {
-        auto radar_param_float = std::make_shared<GetParamRequest<float>>(section_name, param);
-        request_added = batch->AddRequest(radar_param_float);
-        break;
-      }
+          auto radar_param_float = std::make_shared<GetParamRequest<float>>(section_name, param);
+          request_added = batch->AddRequest(radar_param_float);
+          break;
+        }
       case 1: {
-        auto radar_param_u32 = std::make_shared<GetParamRequest<uint32_t>>(section_name, param);
-        request_added = batch->AddRequest(radar_param_u32);
-        break;
-      }
+          auto radar_param_u32 = std::make_shared<GetParamRequest<uint32_t>>(section_name, param);
+          request_added = batch->AddRequest(radar_param_u32);
+          break;
+        }
       case 2: {
-        auto radar_param_u16 = std::make_shared<GetParamRequest<uint16_t>>(section_name, param);
-        request_added = batch->AddRequest(radar_param_u16);
-        break;
-      }
+          auto radar_param_u16 = std::make_shared<GetParamRequest<uint16_t>>(section_name, param);
+          request_added = batch->AddRequest(radar_param_u16);
+          break;
+        }
       case 3: {
-        auto radar_param_u8 = std::make_shared<GetParamRequest<uint8_t>>(section_name, param);
-        request_added = batch->AddRequest(radar_param_u8);
-        break;
-      }
+          auto radar_param_u8 = std::make_shared<GetParamRequest<uint8_t>>(section_name, param);
+          request_added = batch->AddRequest(radar_param_u8);
+          break;
+        }
       default:
         result->res =
           "Error: Invalid value_type specified. Must be 0(u32), 1(u16), 2(u8) or 3(float)";
@@ -1747,8 +1830,9 @@ void SmartmicroRadarNode::get_radar_mode(
     com::types::ERROR_CODE_OK !=
     inst->SendInstructionBatch(
       batch, std::bind(
-               &SmartmicroRadarNode::param_response, this, client_id, std::placeholders::_2,
-               request->params, section_name))) {
+        &SmartmicroRadarNode::param_response, this, client_id, std::placeholders::_2,
+        request->params, section_name)))
+  {
     result->res = "Error: Check params are valid for this sensor!";
     return;
   }
@@ -2005,7 +2089,7 @@ void SmartmicroRadarNode::param_response(
 void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v3_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v3_0_0::comobjectlist::ComObjectList> &
-    objectlist_port_umrra4_mse_v3_0_0,
+  objectlist_port_umrra4_mse_v3_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrra4_mse_v3_0_0" << std::endl;
@@ -2054,7 +2138,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v3_0_0(
 
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, mileage, quality, acceleration, object_id,
-        idle_cycles, spline_idx, object_class, status});
+          idle_cycles, spline_idx, object_class, status});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -2065,7 +2149,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v3_0_0(
 void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v3_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v3_0_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrra4_mse_v3_0_0,
+  targetlist_port_umrra4_mse_v3_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Port Targetlist for umrra4_mse_v3_0_0" << std::endl;
@@ -2109,11 +2193,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v3_0_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -2122,11 +2206,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v3_0_0(
 }
 
 void SmartmicroRadarNode::faultreport_callback_umrra4_mse_v3_0_0(
-    const std::uint32_t sensor_idx,
-    const std::shared_ptr<
-      com::master::umrra4_mse_v3_0_0::faultreports::FaultReports> &
-      fault_report_umrra4_mse_v3_0_0,
-    const com::types::ClientId client_id)
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<
+    com::master::umrra4_mse_v3_0_0::faultreports::FaultReports> &
+  fault_report_umrra4_mse_v3_0_0,
+  const com::types::ClientId client_id)
 {
   std::cout << "Faultreport for umrra4_mse_v3_0_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
@@ -2180,14 +2264,14 @@ void SmartmicroRadarNode::faultreport_callback_umrra4_mse_v3_0_0(
       msg.reports.push_back(report_msg);
     }
 
-  m_publishers_fault_report_msg[sensor_idx]->publish(msg);
+    m_publishers_fault_report_msg[sensor_idx]->publish(msg);
   }
 }
 
 void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v2_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v2_1_0::comobjectlist::ComObjectList> &
-    objectlist_port_umrra4_mse_v2_1_0,
+  objectlist_port_umrra4_mse_v2_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrra4_mse_v2_1_0" << std::endl;
@@ -2206,7 +2290,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v2_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2236,7 +2320,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v2_1_0(
 
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, mileage, quality, acceleration, object_id,
-        idle_cycles, spline_idx, object_class, status});
+          idle_cycles, spline_idx, object_class, status});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -2247,7 +2331,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v2_1_0(
 void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v2_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v2_1_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrra4_mse_v2_1_0,
+  targetlist_port_umrra4_mse_v2_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Port Targetlist for umrra4_mse_v2_1_0" << std::endl;
@@ -2266,7 +2350,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v2_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2291,11 +2375,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v2_1_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -2306,7 +2390,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v2_1_0(
 void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v1_0_0::comobjectlist::ComObjectList> &
-    objectlist_port_umrra4_mse_v1_0_0,
+  objectlist_port_umrra4_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrra4_mse_v1_0_0" << std::endl;
@@ -2325,7 +2409,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2355,7 +2439,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v1_0_0(
 
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, mileage, quality, acceleration, object_id,
-        idle_cycles, spline_idx, object_class, status});
+          idle_cycles, spline_idx, object_class, status});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -2366,7 +2450,7 @@ void SmartmicroRadarNode::objectlist_callback_umrra4_mse_v1_0_0(
 void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v1_0_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrra4_mse_v1_0_0,
+  targetlist_port_umrra4_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Port Targetlist for umrra4_mse_v1_0_0" << std::endl;
@@ -2385,7 +2469,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2410,11 +2494,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -2425,7 +2509,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_mse_v1_0_0(
 void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v2_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comobjectlist::ComObjectList> &
-    objectlist_port_umrr9f_mse_v2_0_0,
+  objectlist_port_umrr9f_mse_v2_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_v2_0_0" << std::endl;
@@ -2433,7 +2517,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v2_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comobjectlist::PortHeader> port_header;
     port_header = objectlist_port_umrr9f_mse_v2_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comobjectlist::ObjectListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_port_umrr9f_mse_v2_0_0->GetObjectListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortObjectHeader header;
@@ -2445,7 +2529,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v2_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2475,7 +2559,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v2_0_0(
 
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, mileage, quality, acceleration, object_id,
-        idle_cycles, spline_idx, object_class, status});
+          idle_cycles, spline_idx, object_class, status});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -2486,7 +2570,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v2_0_0(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v2_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_mse_v2_0_0,
+  targetlist_port_umrr9f_mse_v2_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Port Targetlist for umrr9f_mse_v2_0_0" << std::endl;
@@ -2494,12 +2578,12 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v2_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrr9f_mse_v2_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_mse_v2_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
-    
+
     fill_ros_header_stamp(
       msg,
       header,
@@ -2531,11 +2615,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v2_0_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -2544,11 +2628,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v2_0_0(
 }
 
 void SmartmicroRadarNode::faultreport_callback_umrr9f_mse_v2_0_0(
-    const std::uint32_t sensor_idx,
-    const std::shared_ptr<
-      com::master::umrr9f_t169_mse_v2_0_0::faultreports::FaultReports> &
-      fault_report_umrr9f_mse_v2_0_0,
-    const com::types::ClientId client_id)
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<
+    com::master::umrr9f_t169_mse_v2_0_0::faultreports::FaultReports> &
+  fault_report_umrr9f_mse_v2_0_0,
+  const com::types::ClientId client_id)
 {
   std::cout << "Faultreport for umrr9f_mse_v2_0_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
@@ -2602,14 +2686,14 @@ void SmartmicroRadarNode::faultreport_callback_umrr9f_mse_v2_0_0(
       msg.reports.push_back(report_msg);
     }
 
-  m_publishers_fault_report_msg[sensor_idx]->publish(msg);
+    m_publishers_fault_report_msg[sensor_idx]->publish(msg);
   }
 }
 
 void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comobjectlist::ComObjectList> &
-    objectlist_port_umrr9f_mse_v1_3_0,
+  objectlist_port_umrr9f_mse_v1_3_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_v1_3_0" << std::endl;
@@ -2617,7 +2701,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comobjectlist::PortHeader> port_header;
     port_header = objectlist_port_umrr9f_mse_v1_3_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comobjectlist::ObjectListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_port_umrr9f_mse_v1_3_0->GetObjectListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortObjectHeader header;
@@ -2629,7 +2713,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2659,7 +2743,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0(
 
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, mileage, quality, acceleration, object_id,
-        idle_cycles, spline_idx, object_class, status});
+          idle_cycles, spline_idx, object_class, status});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -2670,7 +2754,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_3_0(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_3_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_mse_v1_3_0,
+  targetlist_port_umrr9f_mse_v1_3_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Port Targetlist for umrr9f_mse_v1_3_0" << std::endl;
@@ -2678,19 +2762,19 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_3_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrr9f_mse_v1_3_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_mse_v1_3_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
-    
+
     fill_ros_header_stamp(
       msg,
       header,
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2715,11 +2799,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_3_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -2730,7 +2814,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_3_0(
 void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comobjectlist::ComObjectList> &
-    objectlist_port_umrr9f_mse_v1_1_0,
+  objectlist_port_umrr9f_mse_v1_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_v1_1_0" << std::endl;
@@ -2738,7 +2822,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comobjectlist::PortHeader> port_header;
     port_header = objectlist_port_umrr9f_mse_v1_1_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comobjectlist::ObjectListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_port_umrr9f_mse_v1_1_0->GetObjectListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortObjectHeader header;
@@ -2750,7 +2834,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2780,7 +2864,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0(
 
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, mileage, quality, acceleration, object_id,
-        idle_cycles, spline_idx, object_class, status});
+          idle_cycles, spline_idx, object_class, status});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -2791,7 +2875,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_1_0(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_mse_v1_1_0,
+  targetlist_port_umrr9f_mse_v1_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Port Targetlist for umrr9f_mse_v1_1_0" << std::endl;
@@ -2799,7 +2883,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrr9f_mse_v1_1_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_mse_v1_1_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -2811,7 +2895,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2836,11 +2920,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -2851,7 +2935,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_1_0(
 void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comobjectlist::ComObjectList> &
-    objectlist_port_umrr9f_mse_v1_0_0,
+  objectlist_port_umrr9f_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_v1_0_0" << std::endl;
@@ -2859,7 +2943,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comobjectlist::PortHeader> port_header;
     port_header = objectlist_port_umrr9f_mse_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comobjectlist::ObjectListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_port_umrr9f_mse_v1_0_0->GetObjectListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortObjectHeader header;
@@ -2871,7 +2955,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2901,7 +2985,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0(
 
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, mileage, quality, acceleration, object_id,
-        idle_cycles, spline_idx, object_class, status});
+          idle_cycles, spline_idx, object_class, status});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -2912,7 +2996,7 @@ void SmartmicroRadarNode::objectlist_callback_umrr9f_mse_v1_0_0(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_mse_v1_0_0,
+  targetlist_port_umrr9f_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Port Targetlist for umrr9f_mse_v1_0_0" << std::endl;
@@ -2920,7 +3004,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrr9f_mse_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_mse_v1_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -2932,7 +3016,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -2957,11 +3041,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -2972,16 +3056,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_mse_v1_0_0(
 void SmartmicroRadarNode::targetlist_callback_umrr96(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_2::comtargetlist::ComTargetList> &
-    targetlist_port_umrr96,
+  targetlist_port_umrr96,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr96_v1_2_2" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_2::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr96->GetPortHeader();
     std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_2::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr96->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -2993,7 +3077,7 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -3012,11 +3096,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3027,21 +3111,21 @@ void SmartmicroRadarNode::targetlist_callback_umrr96(
 void SmartmicroRadarNode::targetlist_callback_umrr11(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_2::comtargetlist::ComTargetList> &
-    targetlist_port_umrr11,
+  targetlist_port_umrr11,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr11_v1_1_2" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_2::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr11->GetPortHeader();
     std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_2::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr11->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
-    
+
     fill_ros_header_stamp(
       msg,
       header,
@@ -3068,11 +3152,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr11(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3084,17 +3168,17 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v1_1_1::comtargetlistport::ComTargetListPort> &
-    targetlist_port_umrr9f_v1_1_1,
+  targetlist_port_umrr9f_v1_1_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v1_1_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<
       com::master::umrr9f_t169_automotive_v1_1_1::comtargetlistport::GenericPortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9f_v1_1_1->GetGenericPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v1_1_1::comtargetlistport::StaticPortHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_v1_1_1->GetStaticPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3126,11 +3210,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v1_1_1(
       const auto snr = target->GetPower() - target->GetTgtNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetTgtNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRCS(), target->GetTgtNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3142,17 +3226,17 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v2_0_0::comtargetlistport::ComTargetListPort> &
-    targetlist_port_umrr9f_v2_0_0,
+  targetlist_port_umrr9f_v2_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist callback is being called for umrr9f_v2_0_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<
       com::master::umrr9f_t169_automotive_v2_0_0::comtargetlistport::GenericPortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9f_v2_0_0->GetGenericPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_0_0::comtargetlistport::StaticPortHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_v2_0_0->GetStaticPortHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3188,11 +3272,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0(
       const auto snr = target->GetPower() - target->GetTgtNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRCS(), target->GetTgtNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRCS(), target->GetTgtNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3203,16 +3287,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_0_0(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_1_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_automotive_v2_1_1::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_v2_1_1,
+  targetlist_port_umrr9f_v2_1_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v2_1_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_1_1::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9f_v2_1_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_1_1::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_v2_1_1->GetTargetListHeader();
     umrr_ros2_msgs::msg::PortTargetHeader header;
     sensor_msgs::msg::PointCloud2 msg;
@@ -3248,11 +3332,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_1_1(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3263,16 +3347,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_1_1(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_automotive_v2_2_1::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_v2_2_1,
+  targetlist_port_umrr9f_v2_2_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f v2_2_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_2_1::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9f_v2_2_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_2_1::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_v2_2_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3310,11 +3394,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3325,16 +3409,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_2_1(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_4_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_automotive_v2_4_1::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_v2_4_1,
+  targetlist_port_umrr9f_v2_4_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f v2_4_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_4_1::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9f_v2_4_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_4_1::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_v2_4_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3372,11 +3456,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_4_1(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3387,16 +3471,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v2_4_1(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_v3_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_automotive_v3_0_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_v3_0_0,
+  targetlist_port_umrr9f_v3_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f v3_0_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_0_0::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9f_v3_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_0_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_v3_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3434,11 +3518,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v3_0_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3449,16 +3533,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v3_0_0(
 void SmartmicroRadarNode::targetlist_callback_umrr9f_v3_2_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9f_v3_2_0,
+  targetlist_port_umrr9f_v3_2_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v3_2_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9f_v3_2_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9f_v3_2_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3498,11 +3582,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v3_2_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
     m_publishers[sensor_idx]->publish(msg);
     m_publishers_port_target_header[sensor_idx]->publish(header);
@@ -3510,15 +3594,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9f_v3_2_0(
 }
 
 void SmartmicroRadarNode::faultreport_callback_umrr9f_v3_2_0(
-    const std::uint32_t sensor_idx,
-    const std::shared_ptr<
-      com::master::umrr9f_t169_automotive_v3_2_0::faultreports::FaultReports> &
-      fault_report_umrr9f_v3_2_0,
-    const com::types::ClientId client_id)
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<
+    com::master::umrr9f_t169_automotive_v3_2_0::faultreports::FaultReports> &
+  fault_report_umrr9f_v3_2_0,
+  const com::types::ClientId client_id)
 {
   std::cout << "Faultreport for umrr9f_v3_2_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
-    std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::faultreports::PortHeader> port_header;
+    std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::faultreports::PortHeader>
+    port_header;
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::faultreports::FaultReportHeader>
     fault_header;
     port_header = fault_report_umrr9f_v3_2_0->GetPortHeader();
@@ -3568,23 +3653,23 @@ void SmartmicroRadarNode::faultreport_callback_umrr9f_v3_2_0(
       msg.reports.push_back(report_msg);
     }
 
-  m_publishers_fault_report_msg[sensor_idx]->publish(msg);
+    m_publishers_fault_report_msg[sensor_idx]->publish(msg);
   }
 }
 
 void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_3(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_3::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9d_v1_0_3,
+  targetlist_port_umrr9d_v1_0_3,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_0_3" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_3::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9d_v1_0_3->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_3::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9d_v1_0_3->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3620,11 +3705,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_3(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3635,16 +3720,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_0_3(
 void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_2(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_2::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9d_v1_2_2,
+  targetlist_port_umrr9d_v1_2_2,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_2_2" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_2::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9d_v1_2_2->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_2::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9d_v1_2_2->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3682,11 +3767,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_2(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3697,16 +3782,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_2_2(
 void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_4_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9d_t152_automotive_v1_4_1::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9d_v1_4_1,
+  targetlist_port_umrr9d_v1_4_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_4_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_4_1::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9d_v1_4_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_4_1::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9d_v1_4_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3744,11 +3829,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_4_1(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3759,16 +3844,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_4_1(
 void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_5_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9d_t152_automotive_v1_5_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9d_v1_5_0,
+  targetlist_port_umrr9d_v1_5_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_5_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_5_0::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9d_v1_5_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_5_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9d_v1_5_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3806,11 +3891,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_5_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3820,16 +3905,16 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_5_0(
 void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_7_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrr9d_v1_7_0,
+  targetlist_port_umrr9d_v1_7_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_7_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrr9d_v1_7_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrr9d_v1_7_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -3870,11 +3955,11 @@ void SmartmicroRadarNode::targetlist_callback_umrr9d_v1_7_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -3886,7 +3971,7 @@ void SmartmicroRadarNode::faultreport_callback_umrr9d_v1_7_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9d_t152_automotive_v1_7_0::faultreports::FaultReports> &
-    fault_report_umrr9d_v1_7_0,
+  fault_report_umrr9d_v1_7_0,
   const com::types::ClientId client_id)
 {
   RCLCPP_INFO(
@@ -3894,16 +3979,9 @@ void SmartmicroRadarNode::faultreport_callback_umrr9d_v1_7_0(
     "Faultreport callback entered for umrr9d_v1_7_0 (sensor_idx=%u client_id=%u)",
     sensor_idx, client_id);
 
-  if (!fault_report_umrr9d_v1_7_0) {
-    RCLCPP_WARN(
-      this->get_logger(),
-      "fault_report_umrr9d_v1_7_0 is null (sensor_idx=%u client_id=%u)",
-      sensor_idx, client_id);
-    return;
-  }
-
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
-    std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::faultreports::PortHeader> port_header;
+    std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::faultreports::PortHeader>
+    port_header;
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::faultreports::FaultReportHeader>
     fault_header;
     port_header = fault_report_umrr9d_v1_7_0->GetPortHeader();
@@ -3924,18 +4002,11 @@ void SmartmicroRadarNode::faultreport_callback_umrr9d_v1_7_0(
     msg.fault_report_header.port_index = port_header->GetPortIndex();
     msg.fault_report_header.header_ver_major = port_header->GetHeaderVersionMajor();
     msg.fault_report_header.header_ver_minor = port_header->GetHeaderVersionMinor();
-
     msg.fault_report_header.num_max_reports = fault_header->GetNumMaxReports();
     msg.fault_report_header.num_valid_reports = fault_header->GetNumValidReports();
     msg.fault_report_header.faults_time_line = fault_header->GetFaultsTimeline();
 
     const auto & fault_list = fault_report_umrr9d_v1_7_0->GetFaultReportList();
-
-    RCLCPP_INFO(
-      this->get_logger(),
-      "umrr9d_v1_7_0 fault callback: sensor_idx=%u client_id=%u num_valid_reports=%u fault_list_size=%zu",
-      sensor_idx, client_id, static_cast<unsigned>(msg.fault_report_header.num_valid_reports),
-      fault_list.size());
 
     msg.reports.reserve(fault_list.size());
 
@@ -3959,13 +4030,6 @@ void SmartmicroRadarNode::faultreport_callback_umrr9d_v1_7_0(
       msg.reports.push_back(report_msg);
     }
 
-    if (fault_list.empty()) {
-      RCLCPP_WARN(
-        this->get_logger(),
-        "umrr9d_v1_7_0 fault callback produced an empty reports array for sensor_idx=%u",
-        sensor_idx);
-    }
-
     m_publishers_fault_report_msg[sensor_idx]->publish(msg);
   }
 }
@@ -3973,7 +4037,7 @@ void SmartmicroRadarNode::faultreport_callback_umrr9d_v1_7_0(
 void SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetlist::ComTargetList> &
-    targetlist_port_umrra4_v1_0_1,
+  targetlist_port_umrra4_v1_0_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra4_v1_0_1" << std::endl;
@@ -3981,7 +4045,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1(
     std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrra4_v1_0_1->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrra4_v1_0_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -4019,11 +4083,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4034,7 +4098,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_0_1(
 void SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_automotive_v1_2_1::comtargetlist::ComTargetList> &
-    targetlist_port_umrra4_v1_2_1,
+  targetlist_port_umrra4_v1_2_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra4_v1_2_1" << std::endl;
@@ -4042,7 +4106,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1(
     std::shared_ptr<com::master::umrra4_automotive_v1_2_1::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrra4_v1_2_1->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_2_1::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrra4_v1_2_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -4054,7 +4118,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -4080,11 +4144,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4095,7 +4159,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_2_1(
 void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_automotive_v1_4_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrra4_v1_4_0,
+  targetlist_port_umrra4_v1_4_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra4_v1_4_0" << std::endl;
@@ -4103,7 +4167,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
     std::shared_ptr<com::master::umrra4_automotive_v1_4_0::comtargetlist::PortHeader> port_header;
     port_header = targetlist_port_umrra4_v1_4_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_4_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrra4_v1_4_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -4115,7 +4179,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -4141,11 +4205,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4156,16 +4220,16 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_4_0(
 void SmartmicroRadarNode::targetlist_callback_umrra4_v1_6_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_automotive_v1_6_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrra4_v1_6_0,
+  targetlist_port_umrra4_v1_6_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra4_v1_6_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra4_automotive_v1_6_0::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrra4_v1_6_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_6_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrra4_v1_6_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -4205,11 +4269,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_6_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
     m_publishers[sensor_idx]->publish(msg);
     m_publishers_port_target_header[sensor_idx]->publish(header);
@@ -4217,11 +4281,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra4_v1_6_0(
 }
 
 void SmartmicroRadarNode::faultreport_callback_umrra4_v1_6_0(
-    const std::uint32_t sensor_idx,
-    const std::shared_ptr<
-      com::master::umrra4_automotive_v1_6_0::faultreports::FaultReports> &
-      fault_report_umrra4_v1_6_0,
-    const com::types::ClientId client_id)
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<
+    com::master::umrra4_automotive_v1_6_0::faultreports::FaultReports> &
+  fault_report_umrra4_v1_6_0,
+  const com::types::ClientId client_id)
 {
   std::cout << "Faultreport for umrra4_v1_6_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
@@ -4275,7 +4339,7 @@ void SmartmicroRadarNode::faultreport_callback_umrra4_v1_6_0(
       msg.reports.push_back(report_msg);
     }
 
-  m_publishers_fault_report_msg[sensor_idx]->publish(msg);
+    m_publishers_fault_report_msg[sensor_idx]->publish(msg);
   }
 }
 
@@ -4283,28 +4347,28 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrra1_v1_0_0,
+  targetlist_port_umrra1_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra1_v1_0_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrra1_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v1_0_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrra1_v1_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
     RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
-    
+
     fill_ros_header_stamp(
       msg,
       header,
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
     header.port_ver_minor = port_header->GetPortVersionMinor();
@@ -4330,11 +4394,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v1_0_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4346,16 +4410,16 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::ComTargetList> &
-    targetlist_port_umrra1_v2_0_0,
+  targetlist_port_umrra1_v2_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra1_v2_0_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrra1_v2_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_0::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrra1_v2_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -4367,7 +4431,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = target_header->GetCycleTime();
     header.port_identifier = port_header->GetPortIdentifier();
     header.port_ver_major = port_header->GetPortVersionMajor();
@@ -4393,11 +4457,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_0(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4409,16 +4473,16 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrra1_t166_b_automotive_v2_0_1::comtargetlist::ComTargetList> &
-    targetlist_port_umrra1_v2_0_1,
+  targetlist_port_umrra1_v2_0_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra1_v2_0_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_1::comtargetlist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_port_umrra1_v2_0_1->GetPortHeader();
     std::shared_ptr<com::master::umrra1_t166_b_automotive_v2_0_1::comtargetlist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_port_umrra1_v2_0_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::PortTargetHeader header;
@@ -4456,11 +4520,11 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_1(
       const auto snr = target->GetPower() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
-         target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         target->GetVarianceRange(), target->GetVarianceSpeed(),
-         target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
-         target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4471,7 +4535,7 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_1(
 void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v2_1_0::comobjectbaselist::ComObjectBaseList> &
-    objectlist_can_umrra4_mse_v2_1_0,
+  objectlist_can_umrra4_mse_v2_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrra4_mse_can_v2_1_0" << std::endl;
@@ -4479,7 +4543,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0(
     std::shared_ptr<com::master::umrra4_mse_v2_1_0::comobjectbaselist::PortHeader> port_header;
     port_header = objectlist_can_umrra4_mse_v2_1_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_mse_v2_1_0::comobjectbaselist::ComObjectBaseListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_can_umrra4_mse_v2_1_0->GetComObjectBaseListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanObjectHeader header;
@@ -4491,7 +4555,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -4512,8 +4576,8 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0(
       const auto object_id = static_cast<int16_t>(object->GetObjectId());
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, kRadarFloatSentinel, quality,
-         acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
-         kRadarU16Sentinel});
+          acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
+          kRadarU16Sentinel});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -4524,7 +4588,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v2_1_0(
 void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v2_1_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrra4_mse_v2_1_0,
+  targetlist_can_umrra4_mse_v2_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra4_mse_can_v2_1_0" << std::endl;
@@ -4532,7 +4596,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0(
     std::shared_ptr<com::master::umrra4_mse_v2_1_0::comtargetbaselist::PortHeader> port_header;
     port_header = targetlist_can_umrra4_mse_v2_1_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_mse_v2_1_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrra4_mse_v2_1_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -4544,7 +4608,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -4559,11 +4623,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4574,7 +4638,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v2_1_0(
 void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v1_0_0::comobjectbaselist::ComObjectBaseList> &
-    objectlist_can_umrra4_mse_v1_0_0,
+  objectlist_can_umrra4_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrra4_mse_can_v1_0_0" << std::endl;
@@ -4582,7 +4646,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0(
     std::shared_ptr<com::master::umrra4_mse_v1_0_0::comobjectbaselist::PortHeader> port_header;
     port_header = objectlist_can_umrra4_mse_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_mse_v1_0_0::comobjectbaselist::ComObjectBaseListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_can_umrra4_mse_v1_0_0->GetComObjectBaseListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanObjectHeader header;
@@ -4594,7 +4658,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -4615,8 +4679,8 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0(
       const auto object_id = static_cast<int16_t>(object->GetObjectId());
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, kRadarFloatSentinel, quality,
-         acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
-         kRadarU16Sentinel});
+          acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
+          kRadarU16Sentinel});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -4627,7 +4691,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v1_0_0(
 void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v1_0_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrra4_mse_v1_0_0,
+  targetlist_can_umrra4_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra4_mse_can_v1_0_0" << std::endl;
@@ -4635,7 +4699,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0(
     std::shared_ptr<com::master::umrra4_mse_v1_0_0::comtargetbaselist::PortHeader> port_header;
     port_header = targetlist_can_umrra4_mse_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_mse_v1_0_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrra4_mse_v1_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -4647,7 +4711,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -4662,11 +4726,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4677,7 +4741,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v1_0_0(
 void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comobjectbaselist::ComObjectBaseList> &
-    objectlist_can_umrr9f_mse_v1_0_0,
+  objectlist_can_umrr9f_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_can_v1_0_0" << std::endl;
@@ -4685,7 +4749,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comobjectbaselist::PortHeader> port_header;
     port_header = objectlist_can_umrr9f_mse_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comobjectbaselist::ComObjectBaseListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_can_umrr9f_mse_v1_0_0->GetComObjectBaseListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanObjectHeader header;
@@ -4697,7 +4761,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -4718,8 +4782,8 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0(
       const auto object_id = static_cast<int16_t>(object->GetObjectId());
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, kRadarFloatSentinel, quality,
-         acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
-         kRadarU16Sentinel});
+          acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
+          kRadarU16Sentinel});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -4730,7 +4794,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_0_0(
 void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_mse_v1_0_0,
+  targetlist_can_umrr9f_mse_v1_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_mse_can_v1_0_0" << std::endl;
@@ -4738,7 +4802,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comtargetbaselist::PortHeader> port_header;
     port_header = targetlist_can_umrr9f_mse_v1_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_0_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_mse_v1_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -4750,7 +4814,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -4765,11 +4829,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4780,7 +4844,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_0_0(
 void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comobjectbaselist::ComObjectBaseList> &
-    objectlist_can_umrr9f_mse_v1_1_0,
+  objectlist_can_umrr9f_mse_v1_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_can_v1_1_0" << std::endl;
@@ -4788,7 +4852,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comobjectbaselist::PortHeader> port_header;
     port_header = objectlist_can_umrr9f_mse_v1_1_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comobjectbaselist::ComObjectBaseListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_can_umrr9f_mse_v1_1_0->GetComObjectBaseListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanObjectHeader header;
@@ -4801,7 +4865,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -4822,8 +4886,8 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0(
       const auto object_id = static_cast<int16_t>(object->GetObjectId());
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, kRadarFloatSentinel, quality,
-         acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
-         kRadarU16Sentinel});
+          acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
+          kRadarU16Sentinel});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -4834,7 +4898,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_1_0(
 void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_mse_v1_1_0,
+  targetlist_can_umrr9f_mse_v1_1_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_mse_can_v1_1_0" << std::endl;
@@ -4842,7 +4906,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comtargetbaselist::PortHeader> port_header;
     port_header = targetlist_can_umrr9f_mse_v1_1_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_1_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_mse_v1_1_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -4854,7 +4918,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -4869,11 +4933,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4884,7 +4948,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_1_0(
 void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comobjectbaselist::ComObjectBaseList> &
-    objectlist_can_umrr9f_mse_v1_3_0,
+  objectlist_can_umrr9f_mse_v1_3_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_can_v1_3_0" << std::endl;
@@ -4892,7 +4956,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comobjectbaselist::PortHeader> port_header;
     port_header = objectlist_can_umrr9f_mse_v1_3_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comobjectbaselist::ComObjectBaseListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_can_umrr9f_mse_v1_3_0->GetComObjectBaseListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanObjectHeader header;
@@ -4904,7 +4968,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = object_header->GetCycleDuration();
     header.cycle_count = object_header->GetCycleCount();
     header.number_of_objects = object_header->GetNoOfObjects();
@@ -4925,8 +4989,8 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0(
       const auto object_id = static_cast<int16_t>(object->GetObjectId());
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, kRadarFloatSentinel, quality,
-         acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
-         kRadarU16Sentinel});
+          acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
+          kRadarU16Sentinel});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -4937,7 +5001,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v1_3_0(
 void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_3_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_mse_v1_3_0,
+  targetlist_can_umrr9f_mse_v1_3_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_mse_can_v1_3_0" << std::endl;
@@ -4945,7 +5009,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_3_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comtargetbaselist::PortHeader> port_header;
     port_header = targetlist_can_umrr9f_mse_v1_3_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v1_3_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_mse_v1_3_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -4957,7 +5021,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_3_0(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.cycle_time = target_header->GetCycleDuration();
     header.number_of_targets = target_header->GetNumberOfTargets();
     header.acquisition_setup = target_header->GetAcquisitionSetup();
@@ -4972,11 +5036,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v1_3_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -4988,16 +5052,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr96(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr96_t153_automotive_v1_2_2::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr96,
+  targetlist_can_umrr96,
   const com::types::ClientId client_id)
 {
   std::cout << "CAN Targetlist for umrr96_v1_2_2" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_2::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr96->GetPortHeader();
     std::shared_ptr<com::master::umrr96_t153_automotive_v1_2_2::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr96->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5009,7 +5073,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr96(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -5024,11 +5088,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr96(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5040,16 +5104,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr11(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr11_t132_automotive_v1_1_2::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr11,
+  targetlist_can_umrr11,
   const com::types::ClientId client_id)
 {
   std::cout << "CAN Targetlist for umrr11_v1_1_2" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_2::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr11->GetPortHeader();
     std::shared_ptr<com::master::umrr11_t132_automotive_v1_1_2::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr11->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5061,7 +5125,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr11(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -5076,11 +5140,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr11(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5092,16 +5156,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9d_t152_automotive_v1_0_3::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9d_v1_0_3,
+  targetlist_can_umrr9d_v1_0_3,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_0_3" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_3::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9d_v1_0_3->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_0_3::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9d_v1_0_3->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5113,7 +5177,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -5128,11 +5192,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_0_3(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5144,16 +5208,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9d_t152_automotive_v1_2_2::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9d_v1_2_2,
+  targetlist_can_umrr9d_v1_2_2,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_2_2" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_2::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9d_v1_2_2->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_2_2::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9d_v1_2_2->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5165,7 +5229,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -5180,11 +5244,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_2_2(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5196,16 +5260,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_4_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9d_t152_automotive_v1_4_1::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9d_v1_4_1,
+  targetlist_can_umrr9d_v1_4_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_4_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_4_1::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9d_v1_4_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_4_1::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9d_v1_4_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5217,7 +5281,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_4_1(
       port_header->GetTimestamp(),
       sensor_idx
     );
-    
+
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -5232,11 +5296,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_4_1(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5248,16 +5312,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_5_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9d_t152_automotive_v1_5_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9d_v1_5_0,
+  targetlist_can_umrr9d_v1_5_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_5_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_5_0::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9d_v1_5_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_5_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9d_v1_5_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5268,7 +5332,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_5_0(
       header,
       port_header->GetTimestamp(),
       sensor_idx
-    );    
+    );
     header.acq_ts_fraction = target_header->GetAcqTimeStampFraction();
     header.time_stamp = target_header->GetTimeStamp();
     header.cycle_time = target_header->GetCycleDuration();
@@ -5283,11 +5347,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_5_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5299,16 +5363,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_1_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v2_1_1::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_v2_1_1,
+  targetlist_can_umrr9f_v2_1_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v2_1_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_1_1::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9f_v2_1_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_1_1::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_v2_1_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5333,11 +5397,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_1_1(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5349,16 +5413,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_2_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v2_2_1::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_v2_2_1,
+  targetlist_can_umrr9f_v2_2_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v2_2_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_2_1::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9f_v2_2_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_2_1::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_v2_2_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5383,11 +5447,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_2_1(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5399,16 +5463,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_4_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v2_4_1::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_v2_4_1,
+  targetlist_can_umrr9f_v2_4_1,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v2_4_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_4_1::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9f_v2_4_1->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v2_4_1::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_v2_4_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5433,11 +5497,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v2_4_1(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5449,16 +5513,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v3_0_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_v3_0_0,
+  targetlist_can_umrr9f_v3_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v3_0_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_0_0::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9f_v3_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_0_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_v3_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5483,11 +5547,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_0_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5499,16 +5563,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_0_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrra4_automotive_v1_0_1::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrra4_v1_0_1,
+  targetlist_can_umrra4_v1_0_1,
   const com::types::ClientId client_id)
 {
   std::cout << "CAN Targetlist for umrra4_v1_0_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrra4_v1_0_1->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_0_1::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrra4_v1_0_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5533,11 +5597,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_0_1(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5549,16 +5613,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_2_1(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrra4_automotive_v1_2_1::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrra4_v1_2_1,
+  targetlist_can_umrra4_v1_2_1,
   const com::types::ClientId client_id)
 {
   std::cout << "CAN Targetlist for umrra4_v1_2_1" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra4_automotive_v1_2_1::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrra4_v1_2_1->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_2_1::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrra4_v1_2_1->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5583,11 +5647,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_2_1(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5599,16 +5663,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_4_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrra4_automotive_v1_4_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrra4_v1_4_0,
+  targetlist_can_umrra4_v1_4_0,
   const com::types::ClientId client_id)
 {
   std::cout << "CAN Targetlist for umrra4_v1_4_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra4_automotive_v1_4_0::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrra4_v1_4_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_4_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrra4_v1_4_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5633,11 +5697,11 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_4_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5649,16 +5713,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_2_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9f_t169_automotive_v3_2_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_v3_2_0,
+  targetlist_can_umrr9f_v3_2_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_v3_2_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9f_v3_2_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_automotive_v3_2_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_v3_2_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5679,10 +5743,10 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_v3_2_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5694,16 +5758,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_7_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrr9d_t152_automotive_v1_7_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9d_v1_7_0,
+  targetlist_can_umrr9d_v1_7_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9d_v1_7_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrr9d_v1_7_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9d_t152_automotive_v1_7_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9d_v1_7_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5724,10 +5788,10 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9d_v1_7_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5739,16 +5803,16 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_6_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<
     com::master::umrra4_automotive_v1_6_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrra4_v1_6_0,
+  targetlist_can_umrra4_v1_6_0,
   const com::types::ClientId client_id)
 {
   std::cout << "CAN Targetlist for umrra4_v1_6_0" << std::endl;
   if (!m_shutdown_requested.load(std::memory_order_acquire)) {
     std::shared_ptr<com::master::umrra4_automotive_v1_6_0::comtargetbaselist::PortHeader>
-      port_header;
+    port_header;
     port_header = targetlist_can_umrra4_v1_6_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_automotive_v1_6_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrra4_v1_6_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5769,10 +5833,10 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_6_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5783,7 +5847,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_v1_6_0(
 void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v3_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v3_0_0::comobjectbaselist::ComObjectBaseList> &
-    objectlist_can_umrra4_mse_v3_0_0,
+  objectlist_can_umrra4_mse_v3_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrra4_mse_can_v3_0_0" << std::endl;
@@ -5791,7 +5855,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v3_0_0(
     std::shared_ptr<com::master::umrra4_mse_v3_0_0::comobjectbaselist::PortHeader> port_header;
     port_header = objectlist_can_umrra4_mse_v3_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_mse_v3_0_0::comobjectbaselist::ComObjectBaseListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_can_umrra4_mse_v3_0_0->GetComObjectBaseListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanObjectHeader header;
@@ -5819,8 +5883,8 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v3_0_0(
       const auto object_id = static_cast<int16_t>(object->GetObjectId());
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, kRadarFloatSentinel, quality,
-         acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
-         kRadarU16Sentinel});
+          acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
+          kRadarU16Sentinel});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -5831,7 +5895,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrra4_mse_v3_0_0(
 void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v3_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrra4_mse_v3_0_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrra4_mse_v3_0_0,
+  targetlist_can_umrra4_mse_v3_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrra4_mse_can_v3_0_0" << std::endl;
@@ -5839,7 +5903,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v3_0_0(
     std::shared_ptr<com::master::umrra4_mse_v3_0_0::comtargetbaselist::PortHeader> port_header;
     port_header = targetlist_can_umrra4_mse_v3_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrra4_mse_v3_0_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrra4_mse_v3_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5861,10 +5925,10 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v3_0_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5875,7 +5939,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrra4_mse_v3_0_0(
 void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v2_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comobjectbaselist::ComObjectBaseList> &
-    objectlist_can_umrr9f_mse_v2_0_0,
+  objectlist_can_umrr9f_mse_v2_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Objectlist for umrr9f_mse_can_v2_0_0" << std::endl;
@@ -5883,7 +5947,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v2_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comobjectbaselist::PortHeader> port_header;
     port_header = objectlist_can_umrr9f_mse_v2_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comobjectbaselist::ComObjectBaseListHeader>
-      object_header;
+    object_header;
     object_header = objectlist_can_umrr9f_mse_v2_0_0->GetComObjectBaseListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanObjectHeader header;
@@ -5911,8 +5975,8 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v2_0_0(
       const auto object_id = static_cast<int16_t>(object->GetObjectId());
       modifier.push_back(
         {x_pos, y_pos, z_pos, speed_abs, heading, length, kRadarFloatSentinel, quality,
-         acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
-         kRadarU16Sentinel});
+          acceleration, object_id, kRadarU16Sentinel, kRadarU16Sentinel, kRadarU8Sentinel,
+          kRadarU16Sentinel});
     }
 
     m_publishers_obj[sensor_idx]->publish(msg);
@@ -5923,7 +5987,7 @@ void SmartmicroRadarNode::CAN_objectlist_callback_umrr9f_mse_v2_0_0(
 void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v2_0_0(
   const std::uint32_t sensor_idx,
   const std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comtargetbaselist::ComTargetBaseList> &
-    targetlist_can_umrr9f_mse_v2_0_0,
+  targetlist_can_umrr9f_mse_v2_0_0,
   const com::types::ClientId client_id)
 {
   std::cout << "Targetlist for umrr9f_mse_can_v2_0_0" << std::endl;
@@ -5931,7 +5995,7 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v2_0_0(
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comtargetbaselist::PortHeader> port_header;
     port_header = targetlist_can_umrr9f_mse_v2_0_0->GetPortHeader();
     std::shared_ptr<com::master::umrr9f_t169_mse_v2_0_0::comtargetbaselist::TargetListHeader>
-      target_header;
+    target_header;
     target_header = targetlist_can_umrr9f_mse_v2_0_0->GetTargetListHeader();
     sensor_msgs::msg::PointCloud2 msg;
     umrr_ros2_msgs::msg::CanTargetHeader header;
@@ -5953,10 +6017,10 @@ void SmartmicroRadarNode::CAN_targetlist_callback_umrr9f_mse_v2_0_0(
       const auto snr = target->GetSignalLevel() - target->GetNoise();
       modifier.push_back(
         {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
-         range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
-         target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
-         kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
-         kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetSignalLevel(),
+          target->GetRCS(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel, kRadarFloatSentinel,
+          kRadarFloatSentinel, kRadarFlagsSentinel, kRadarPeakIdxSentinel});
     }
 
     m_publishers[sensor_idx]->publish(msg);
@@ -5970,48 +6034,49 @@ void SmartmicroRadarNode::update_config_files_from_params()
   const auto master_data_serial_type = declare_parameter(kDataSerialTypeTag, std::string{});
 
   auto read_adapter_params_if_possible = [&](const std::uint32_t index) {
-    auto & current_adapter = m_adapters[index];
-    const auto prefix_2 = "adapters.adapter_" + std::to_string(index);
-    current_adapter.hw_dev_id = this->declare_parameter(prefix_2 + ".hw_dev_id", kDefaultHwDevId);
-    if (current_adapter.hw_dev_id == kDefaultHwDevId) {
-      // The id was not set, so the adapter with this index was not defined.
-      // Stop here.
-      return false;
-    }
-    current_adapter.hw_iface_name =
-      this->declare_parameter(prefix_2 + ".hw_iface_name", kDefaultHwDevIface);
-    current_adapter.hw_type = this->declare_parameter(prefix_2 + ".hw_type", kDefaultHwLinkType);
-    current_adapter.baudrate = this->declare_parameter(prefix_2 + ".baudrate", 500000);
-    current_adapter.port = this->declare_parameter(prefix_2 + ".port", kDefaultPort);
+      auto & current_adapter = m_adapters[index];
+      const auto prefix_2 = "adapters.adapter_" + std::to_string(index);
+      current_adapter.hw_dev_id = this->declare_parameter(prefix_2 + ".hw_dev_id", kDefaultHwDevId);
+      if (current_adapter.hw_dev_id == kDefaultHwDevId) {
+        // The id was not set, so the adapter with this index was not defined.
+        // Stop here.
+        return false;
+      }
+      current_adapter.hw_iface_name =
+        this->declare_parameter(prefix_2 + ".hw_iface_name", kDefaultHwDevIface);
+      current_adapter.hw_type = this->declare_parameter(prefix_2 + ".hw_type", kDefaultHwLinkType);
+      current_adapter.baudrate = this->declare_parameter(prefix_2 + ".baudrate", 500000);
+      current_adapter.port = this->declare_parameter(prefix_2 + ".port", kDefaultPort);
 
-    return true;
-  };
+      return true;
+    };
 
   auto read_sensor_params_if_possible = [&](const std::uint32_t index) {
-    auto & sensor = m_sensors[index];
-    const auto prefix_3 = "sensors.sensor_" + std::to_string(index);
-    sensor.dev_id = this->declare_parameter(prefix_3 + ".dev_id", kDefaultHwDevId);
-    sensor.uifname = this->declare_parameter(prefix_3 + ".uifname", "");
-    sensor.uifmajorv = this->declare_parameter(prefix_3 + ".uifmajorv", 0);
-    sensor.uifminorv = this->declare_parameter(prefix_3 + ".uifminorv", 0);
-    sensor.uifpatchv = this->declare_parameter(prefix_3 + ".uifpatchv", 0);
-    sensor.model = this->declare_parameter(prefix_3 + ".model", kDefaultSensorType);
-    sensor.id = this->declare_parameter(prefix_3 + ".id", kDefaultClientId);
-    if (sensor.id == kDefaultClientId) {
-      // The id was not set, so the sensor with this index was not defined. Stop
-      // here.
-      return false;
-    }
-    sensor.ip = this->declare_parameter(prefix_3 + ".ip", "");
-    sensor.port = this->declare_parameter(prefix_3 + ".port", 0);
-    sensor.frame_id = this->declare_parameter(prefix_3 + ".frame_id", kDefaultFrameId);
-    sensor.history_size = this->declare_parameter(prefix_3 + ".history_size", kDefaultHistorySize);
-    sensor.inst_type = this->declare_parameter(prefix_3 + ".inst_type", "");
-    sensor.data_type = this->declare_parameter(prefix_3 + ".data_type", "");
-    sensor.link_type = this->declare_parameter(prefix_3 + ".link_type", kDefaultHwLinkType);
-    sensor.pub_type = this->declare_parameter(prefix_3 + ".pub_type", "");
-    return true;
-  };
+      auto & sensor = m_sensors[index];
+      const auto prefix_3 = "sensors.sensor_" + std::to_string(index);
+      sensor.dev_id = this->declare_parameter(prefix_3 + ".dev_id", kDefaultHwDevId);
+      sensor.uifname = this->declare_parameter(prefix_3 + ".uifname", "");
+      sensor.uifmajorv = this->declare_parameter(prefix_3 + ".uifmajorv", 0);
+      sensor.uifminorv = this->declare_parameter(prefix_3 + ".uifminorv", 0);
+      sensor.uifpatchv = this->declare_parameter(prefix_3 + ".uifpatchv", 0);
+      sensor.model = this->declare_parameter(prefix_3 + ".model", kDefaultSensorType);
+      sensor.id = this->declare_parameter(prefix_3 + ".id", kDefaultClientId);
+      if (sensor.id == kDefaultClientId) {
+        // The id was not set, so the sensor with this index was not defined. Stop
+        // here.
+        return false;
+      }
+      sensor.ip = this->declare_parameter(prefix_3 + ".ip", "");
+      sensor.port = this->declare_parameter(prefix_3 + ".port", 0);
+      sensor.frame_id = this->declare_parameter(prefix_3 + ".frame_id", kDefaultFrameId);
+      sensor.history_size =
+        this->declare_parameter(prefix_3 + ".history_size", kDefaultHistorySize);
+      sensor.inst_type = this->declare_parameter(prefix_3 + ".inst_type", "");
+      sensor.data_type = this->declare_parameter(prefix_3 + ".data_type", "");
+      sensor.link_type = this->declare_parameter(prefix_3 + ".link_type", kDefaultHwLinkType);
+      sensor.pub_type = this->declare_parameter(prefix_3 + ".pub_type", "");
+      return true;
+    };
 
   for (auto j = 0UL; j < m_adapters.size(); ++j) {
     if (!read_adapter_params_if_possible(j)) {

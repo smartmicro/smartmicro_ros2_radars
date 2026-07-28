@@ -1,0 +1,13 @@
+services:
+  sensor_0:
+    logging:
+      driver: "none"
+  sensor_1:
+    logging:
+      driver: "none"
+  sensor_2:
+    logging:
+      driver: "none"
+  sensor_3:
+    logging:
+      driver: "none"

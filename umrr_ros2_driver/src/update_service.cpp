@@ -1,15 +1,33 @@
+// Copyright 2021 Apex.AI, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// The initial version of the code was developed by Apex.AI and
+// was thereafter adapted and extended by smartmicro.
+
 #include "umrr_ros2_driver/update_service.hpp"
 
 #include <chrono>
 #include <fstream>
+#include <string>
 #include <thread>
 
-using namespace com::types;
-using namespace com::master;
+using com::master::CommunicationServicesIface;
 
 UpdateService::UpdateService() {}
 
-UpdateResult UpdateService::StartSoftwareUpdate(ClientId client_id, std::string & update_image)
+UpdateResult UpdateService::StartSoftwareUpdate(
+  com::types::ClientId client_id,
+  std::string & update_image)
 {
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -53,16 +71,18 @@ UpdateResult UpdateService::StartSoftwareUpdate(ClientId client_id, std::string 
 
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    updateInfo_.SetUpdateStatus(RUNNING);
+    updateInfo_.SetUpdateStatus(com::types::RUNNING);
     updateInfo_.SetCurrentDownloadedBytes(0);
   }
 
   RCLCPP_INFO(
     rclcpp::get_logger("UpdateService"), "Starting firmware download of %lu bytes...", totalSize);
 
-  if (updateService->SoftwareUpdate(update_image, client_id, [this](SWUpdateInfo & info) {
+  if (updateService->SoftwareUpdate(
+      update_image, client_id, [this](com::types::SWUpdateInfo & info) {
         this->UpdateCallback(info);
-      }) != ERROR_CODE_OK) {
+      }) != com::types::ERROR_CODE_OK)
+  {
     RCLCPP_ERROR(rclcpp::get_logger("FirmwareUpdater"), "Start of software download failed");
     std::lock_guard<std::mutex> lock(mutex_);
     update_in_progress_ = false;
@@ -78,9 +98,9 @@ UpdateResult UpdateService::StartSoftwareUpdate(ClientId client_id, std::string 
       lock,
       kUpdateTimeout,
       [this,
-       totalSize] {
-        return updateInfo_.GetUpdateStatus() != RUNNING ||
-               updateInfo_.GetCurrentDownloadedBytes() >= totalSize;
+      totalSize] {
+        return updateInfo_.GetUpdateStatus() != com::types::RUNNING ||
+        updateInfo_.GetCurrentDownloadedBytes() >= totalSize;
       });
   }
 
@@ -88,7 +108,7 @@ UpdateResult UpdateService::StartSoftwareUpdate(ClientId client_id, std::string 
     RCLCPP_ERROR(rclcpp::get_logger("FirmwareUpdater"), "Firmware download timed out. Aborting.");
     updateService->AbortSoftwareUpdate();
     std::lock_guard<std::mutex> lock(mutex_);
-    updateInfo_.SetUpdateStatus(STOPPED_BY_ERROR_TIMEOUT);
+    updateInfo_.SetUpdateStatus(com::types::STOPPED_BY_ERROR_TIMEOUT);
     update_in_progress_ = false;
     return UpdateResult::kTimeout;
   }
@@ -103,7 +123,7 @@ UpdateResult UpdateService::StartSoftwareUpdate(ClientId client_id, std::string 
   return result;
 }
 
-void UpdateService::UpdateCallback(SWUpdateInfo & info)
+void UpdateService::UpdateCallback(com::types::SWUpdateInfo & info)
 {
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -119,23 +139,23 @@ UpdateResult UpdateService::HandleResult()
 {
   std::lock_guard<std::mutex> lock(mutex_);
   switch (updateInfo_.GetUpdateStatus()) {
-    case READY_SUCCESS:
+    case com::types::READY_SUCCESS:
       RCLCPP_INFO(
         rclcpp::get_logger("FirmwareUpdater"), "Firmware download completed successfully.");
       return UpdateResult::kSuccess;
-    case STOPPED_BY_MASTER:
+    case com::types::STOPPED_BY_MASTER:
       RCLCPP_WARN(rclcpp::get_logger("FirmwareUpdater"), "Download stopped by master.");
       return UpdateResult::kStoppedByMaster;
-    case STOPPED_BY_SLAVE:
+    case com::types::STOPPED_BY_SLAVE:
       RCLCPP_ERROR(rclcpp::get_logger("FirmwareUpdater"), "Download stopped by slave.");
       return UpdateResult::kStoppedBySlave;
-    case STOPPED_BY_ERROR_TIMEOUT:
+    case com::types::STOPPED_BY_ERROR_TIMEOUT:
       RCLCPP_ERROR(rclcpp::get_logger("FirmwareUpdater"), "Download failed: timeout.");
       return UpdateResult::kTimeout;
-    case STOPPED_BY_ERROR_BLOCK_REPEAT:
+    case com::types::STOPPED_BY_ERROR_BLOCK_REPEAT:
       RCLCPP_ERROR(rclcpp::get_logger("FirmwareUpdater"), "Download failed: block repeat error.");
       return UpdateResult::kBlockRepeatError;
-    case STOPPED_BY_ERROR_IMAGE_INVALID:
+    case com::types::STOPPED_BY_ERROR_IMAGE_INVALID:
       RCLCPP_ERROR(rclcpp::get_logger("FirmwareUpdater"), "Download failed: invalid image.");
       return UpdateResult::kImageInvalid;
     default:

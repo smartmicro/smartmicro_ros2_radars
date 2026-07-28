@@ -55,7 +55,7 @@ EXPECTED_TARGET_FIELDS = [
 def generate_test_description():
 
     radar__params = os.path.join(
-           get_package_share_directory(PACKAGE_NAME), 'param/radar.params.integration_test.yaml')
+        get_package_share_directory(PACKAGE_NAME), 'param/radar.params.integration_test.yaml')
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
@@ -64,42 +64,46 @@ def generate_test_description():
     )
 
     set_frequency_sweep_service = ExecuteProcess(
-        cmd = [
+        cmd=[
             'ros2', 'service', 'call',
             '/smart_radar/set_radar_mode',
-            'umrr_ros2_msgs/srv/SetMode', 
-            '{section_name: auto_interface_0dim, sensor_id: 200, params: ["frequency_sweep_idx"], values: ["1"], value_types: [3]}'
+            'umrr_ros2_msgs/srv/SetMode',
+            '{section_name: auto_interface_0dim, sensor_id: 200, '
+            'params: ["frequency_sweep_idx"], values: ["1"], value_types: [3]}'
         ],
         output='screen',
     )
 
     set_angular_separation_service = ExecuteProcess(
-    cmd=[
-        'ros2', 'service', 'call',
-        '/smart_radar/set_radar_mode',
-        'umrr_ros2_msgs/srv/SetMode',
-        '{section_name: auto_interface_0dim, sensor_id: 100, params: ["angular_separation"], values: ["1"], value_types: [3]}'
-    ],
+        cmd=[
+            'ros2', 'service', 'call',
+            '/smart_radar/set_radar_mode',
+            'umrr_ros2_msgs/srv/SetMode',
+            '{section_name: auto_interface_0dim, sensor_id: 100, '
+            'params: ["angular_separation"], values: ["1"], value_types: [3]}'
+        ],
         output='screen'
     )
 
-    
     get_range_toggle_mode_service = ExecuteProcess(
-        cmd = [
+        cmd=[
             'ros2', 'service', 'call',
             '/smart_radar/get_radar_mode',
-            'umrr_ros2_msgs/srv/GetMode', 
-            '{section_name: auto_interface_0dim, sensor_id: 300, params: ["range_toggle_mode"], param_types: [3]}'
+            'umrr_ros2_msgs/srv/GetMode',
+            '{section_name: auto_interface_0dim, sensor_id: 300, '
+            'params: ["range_toggle_mode"], param_types: [3]}'
         ],
         output='screen',
     )
 
     get_software_version_service = ExecuteProcess(
-        cmd = [
+        cmd=[
             'ros2', 'service', 'call',
             '/smart_radar/get_radar_status',
-            'umrr_ros2_msgs/srv/GetStatus', 
-            '{section_name: auto_interface, sensor_id: 400, statuses: ["sw_version_major", "sw_version_minor"], status_types: [1, 1]}'
+            'umrr_ros2_msgs/srv/GetStatus',
+            '{section_name: auto_interface, sensor_id: 400, '
+            'statuses: ["sw_version_major", "sw_version_minor"], '
+            'status_types: [1, 1]}'
         ],
         output='screen',
     )

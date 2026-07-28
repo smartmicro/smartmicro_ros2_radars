@@ -192,8 +192,34 @@ if(BUILD_TESTING)
 
     find_package(ament_lint_auto REQUIRED)
     ament_lint_auto_find_test_dependencies()
-    ament_copyright("src/smartmicro_radar_node.cpp")
-    ament_cppcheck("src/smartmicro_radar_node.cpp")
+
+    set(PROJECT_CPP_FILES
+      src/smartmicro_radar_node.cpp
+      src/update_service.cpp
+      include/umrr_ros2_driver/smartmicro_radar_node.hpp
+      include/umrr_ros2_driver/update_service.hpp
+    )
+
+    set(PROJECT_PY_FILES
+      launch/radar.launch.py
+      test/radar_node_test.launch.py
+    )
+
+    # C++ linting
+    ament_uncrustify(${PROJECT_CPP_FILES})
+    ament_cpplint(${PROJECT_CPP_FILES})
+    ament_cppcheck(${PROJECT_CPP_FILES})
+
+    # Python linting
+    ament_flake8(${PROJECT_PY_FILES})
+    ament_pep257(${PROJECT_PY_FILES})
+
+    # Copyright should cover all first-party text sources.
+    ament_copyright(
+      CMakeLists.txt
+      ${PROJECT_CPP_FILES}
+      ${PROJECT_PY_FILES}
+    )
 
 endif()
 

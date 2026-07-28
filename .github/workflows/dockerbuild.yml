@@ -26,10 +26,13 @@ jobs:
         run: docker run --rm -v $(pwd):/code umrr-ros:${{ matrix.ros_distro }} colcon build --packages-skip smart_rviz_plugin
 
       - name: Run tests
-        run: ROS_DISTRO=${{ matrix.ros_distro }} docker compose up
+        run: >
+          ROS_DISTRO=${{ matrix.ros_distro }}
+          docker compose -f docker-compose.yml -f docker-compose.quiet.yml up
+          --no-attach sensor_0 --no-attach sensor_1 --no-attach sensor_2 --no-attach sensor_3
 
       - name: Collect test results
         run: docker run --rm -v`pwd`:/code umrr-ros:${{ matrix.ros_distro }} colcon test-result --all --verbose
 
       - name: Shut down containers
-        run: docker compose down
+        run: docker compose -f docker-compose.yml -f docker-compose.quiet.yml down
