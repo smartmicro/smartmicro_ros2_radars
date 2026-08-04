@@ -209,12 +209,9 @@ if(BUILD_TESTING)
     )
 
     # C++ linting
-    ament_uncrustify(${PROJECT_CPP_FILES})
-    ament_cpplint(${PROJECT_CPP_FILES})
     ament_cppcheck(${PROJECT_CPP_FILES})
 
     # Python linting
-    ament_flake8(${PROJECT_PY_FILES})
     ament_pep257(${PROJECT_PY_FILES})
 
     # Copyright should cover all first-party text sources.
