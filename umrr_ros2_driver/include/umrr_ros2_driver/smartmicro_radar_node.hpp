@@ -47,6 +47,7 @@
 #include <umrra1_t166_b_automotive_v1_0_0/DataStreamServiceIface.h>
 #include <umrra1_t166_b_automotive_v2_0_0/DataStreamServiceIface.h>
 #include <umrra1_t166_b_automotive_v2_0_1/DataStreamServiceIface.h>
+#include <umrra1_t166_b_automotive_v3_0_0/DataStreamServiceIface.h>
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
@@ -719,6 +720,20 @@ private:
     const std::shared_ptr<
       com::master::umrra1_t166_b_automotive_v2_0_1::comtargetlist::ComTargetList> &
     targetlist_port_umrra1_v2_0_1,
+    const com::types::ClientId client_id);
+
+  ///
+  /// @brief      A callback that is called when a new target list port for
+  /// umrra1_v3_0_0 T166 arrives.
+  /// @param[in]  sensor_idx  The sensor id for the respected published topic.
+  /// @param[in]  targetlist_port_umrra1_v3_0_0  The target list port
+  /// @param[in]  client_id The client_id of the sensor
+  ///
+  void targetlist_callback_umrra1_v3_0_0(
+    const std::uint32_t sensor_idx,
+    const std::shared_ptr<
+      com::master::umrra1_t166_b_automotive_v3_0_0::comtargetlist::ComTargetList> &
+    targetlist_port_umrra1_v3_0_0,
     const com::types::ClientId client_id);
 
   ///
@@ -1527,6 +1542,9 @@ data_umrra1_v2_0_0{};
 std::shared_ptr<
   com::master::umrra1_t166_b_automotive_v2_0_1::DataStreamServiceIface>
 data_umrra1_v2_0_1{};
+std::shared_ptr<
+  com::master::umrra1_t166_b_automotive_v3_0_0::DataStreamServiceIface>
+data_umrra1_v3_0_0{};
 
 }  // namespace radar
 }  // namespace drivers

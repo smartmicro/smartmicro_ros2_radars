@@ -47,7 +47,7 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVE
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `July 25, 2026`
+- Date of release: `August 07, 2026`
 - Smart Access Automotive version: `v3.13.0`
 
 For each sensor user interface there is a corressponding sensor firmware. The following list all the possible combinations. 
@@ -84,6 +84,7 @@ For each sensor user interface there is a corressponding sensor firmware. The fo
 | UMRRA1 Type 166 AUTOMOTIVE v1.0.0                | UMRRA1 Type 166: V1.0.0             |
 | UMRRA1 Type 166 AUTOMOTIVE v2.0.0                | UMRRA1 Type 166: V1.0.0             |
 | UMRRA1 Type 166 AUTOMOTIVE v2.0.1                | UMRRA1 Type 166: V2.0.1             |
+| UMRRA1 Type 166 AUTOMOTIVE v3.0.0                | UMRRA1 Type 166: V3.0.0             |
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a

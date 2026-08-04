@@ -86,6 +86,7 @@ install(FILES
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev1.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev2.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev2.0.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev3.0.0_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -133,7 +134,8 @@ smartmicro/include/umrra4_mse_v2_1_0
 smartmicro/include/umrra4_mse_v3_0_0
 smartmicro/include/umrra1_t166_b_automotive_v1_0_0
 smartmicro/include/umrra1_t166_b_automotive_v2_0_0
-smartmicro/include/umrra1_t166_b_automotive_v2_0_1)
+smartmicro/include/umrra1_t166_b_automotive_v2_0_1
+smartmicro/include/umrra1_t166_b_automotive_v3_0_0)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node
@@ -168,7 +170,8 @@ target_link_libraries(smartmicro_radar_node
     umrra4_msev3.0.0_user_interface
     umrra1_t166_b_automotivev1.0.0_user_interface
     umrra1_t166_b_automotivev2.0.0_user_interface
-    umrra1_t166_b_automotivev2.0.1_user_interface)
+    umrra1_t166_b_automotivev2.0.1_user_interface
+    umrra1_t166_b_automotivev3.0.0_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"

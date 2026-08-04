@@ -56,6 +56,8 @@
 #include <umrr9f_t169_automotive_v2_0_0/comtargetlistport/GenericPortHeader.h>
 #include <umrra1_t166_b_automotive_v2_0_1/comtargetlist/PortHeader.h>
 #include <umrra1_t166_b_automotive_v2_0_1/comtargetlist/Target.h>
+#include <umrra1_t166_b_automotive_v3_0_0/comtargetlist/PortHeader.h>
+#include <umrra1_t166_b_automotive_v3_0_0/comtargetlist/Target.h>
 #include <umrr9f_t169_automotive_v2_0_0/comtargetlistport/Target.h>
 #include <umrr9f_t169_automotive_v2_1_1/comtargetlist/PortHeader.h>
 #include <umrr9f_t169_automotive_v2_1_1/comtargetlist/Target.h>
@@ -359,6 +361,7 @@ void SmartmicroRadarNode::initialize_services()
   data_umrra1_v1_0_0 = com::master::umrra1_t166_b_automotive_v1_0_0::DataStreamServiceIface::Get();
   data_umrra1_v2_0_0 = com::master::umrra1_t166_b_automotive_v2_0_0::DataStreamServiceIface::Get();
   data_umrra1_v2_0_1 = com::master::umrra1_t166_b_automotive_v2_0_1::DataStreamServiceIface::Get();
+  data_umrra1_v3_0_0 = com::master::umrra1_t166_b_automotive_v3_0_0::DataStreamServiceIface::Get();
 
   // Wait for initailization
   std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -929,6 +932,17 @@ void SmartmicroRadarNode::port_publishers(const detail::SensorConfig & sensor, s
   {
     RCLCPP_INFO(
       this->get_logger(), "Failed to register targetlist callback for sensor umrra1_v2_0_1");
+  }
+  if (
+    sensor.model == "umrra1_v3_0_0" &&
+    com::types::ERROR_CODE_OK !=
+    data_umrra1_v3_0_0->RegisterComTargetListReceiveCallback(
+      sensor.id, std::bind(
+        &SmartmicroRadarNode::targetlist_callback_umrra1_v3_0_0, this, sensor_idx,
+        std::placeholders::_1, std::placeholders::_2)))
+  {
+    RCLCPP_INFO(
+      this->get_logger(), "Failed to register targetlist callback for sensor umrra1_v3_0_0");
   }
 }
 
@@ -4513,6 +4527,69 @@ void SmartmicroRadarNode::targetlist_callback_umrra1_v2_0_1(
     header.umambiguous_speed = target_header->GetUmambiguousSpeed();
     header.acquisition_start = target_header->GetAcquisitionStart();
     for (const auto & target : targetlist_port_umrra1_v2_0_1->GetTargetList()) {
+      const auto range = target->GetRange();
+      const auto elevation_angle = target->GetElevationAngle();
+      const auto range_2d = range * std::cos(elevation_angle);
+      const auto azimuth_angle = target->GetAzimuthAngle();
+      const auto snr = target->GetPower() - target->GetNoise();
+      modifier.push_back(
+        {range_2d * std::cos(azimuth_angle), range_2d * std::sin(azimuth_angle),
+          range * std::sin(elevation_angle), target->GetSpeedRadial(), target->GetPower(),
+          target->GetRcs(), target->GetNoise(), snr, azimuth_angle, elevation_angle, range,
+          target->GetVarianceRange(), target->GetVarianceSpeed(),
+          target->GetVarianceAzimuthAngle(), target->GetVarianceElevationAngle(),
+          target->GetFalseAlarmProbability(), target->GetFlags(), target->GetPeakIdx()});
+    }
+
+    m_publishers[sensor_idx]->publish(msg);
+    m_publishers_port_target_header[sensor_idx]->publish(header);
+  }
+}
+
+void SmartmicroRadarNode::targetlist_callback_umrra1_v3_0_0(
+  const std::uint32_t sensor_idx,
+  const std::shared_ptr<
+    com::master::umrra1_t166_b_automotive_v3_0_0::comtargetlist::ComTargetList> &
+  targetlist_port_umrra1_v3_0_0,
+  const com::types::ClientId client_id)
+{
+  std::cout << "Targetlist for umrra1_v3_0_0" << std::endl;
+  if (!m_shutdown_requested.load(std::memory_order_acquire)) {
+    std::shared_ptr<com::master::umrra1_t166_b_automotive_v3_0_0::comtargetlist::PortHeader>
+    port_header;
+    port_header = targetlist_port_umrra1_v3_0_0->GetPortHeader();
+    std::shared_ptr<com::master::umrra1_t166_b_automotive_v3_0_0::comtargetlist::TargetListHeader>
+    target_header;
+    target_header = targetlist_port_umrra1_v3_0_0->GetTargetListHeader();
+    sensor_msgs::msg::PointCloud2 msg;
+    umrr_ros2_msgs::msg::PortTargetHeader header;
+    RadarCloudModifier modifier{msg, m_sensors[sensor_idx].frame_id};
+
+    fill_ros_header_stamp(
+      msg,
+      header,
+      port_header->GetTimestamp(),
+      sensor_idx
+    );
+
+    header.cycle_time = target_header->GetCycleTime();
+    header.port_identifier = port_header->GetPortIdentifier();
+    header.port_ver_major = port_header->GetPortVersionMajor();
+    header.port_ver_minor = port_header->GetPortVersionMinor();
+    header.port_size = port_header->GetPortSize();
+    header.body_endianness = port_header->GetBodyEndianness();
+    header.port_index = port_header->GetPortIndex();
+    header.header_ver_major = port_header->GetHeaderVersionMajor();
+    header.header_ver_minor = port_header->GetHeaderVersionMinor();
+
+    header.number_of_targets = target_header->GetNumberOfTargets();
+    header.acquisition_tx_ant_idx = target_header->GetAcquisitionTxAntIdx();
+    header.acquisition_sweep_idx = target_header->GetAcquisitionSweepIdx();
+    header.acquisition_cf_idx = target_header->GetAcquisitionCfIdx();
+    header.prf = target_header->GetPrf();
+    header.umambiguous_speed = target_header->GetUmambiguousSpeed();
+    header.acquisition_start = target_header->GetAcquisitionStart();
+    for (const auto & target : targetlist_port_umrra1_v3_0_0->GetTargetList()) {
       const auto range = target->GetRange();
       const auto elevation_angle = target->GetElevationAngle();
       const auto range_2d = range * std::cos(elevation_angle);

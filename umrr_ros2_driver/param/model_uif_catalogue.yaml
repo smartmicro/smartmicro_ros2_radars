@@ -95,6 +95,8 @@ entries_port:
     uifname: "umrra1_t166_b_automotive"
   - model: "umrra1_v2_0_1"
     uifname: "umrra1_t166_b_automotive"
+  - model: "umrra1_v3_0_0"
+    uifname: "umrra1_t166_b_automotive"
   - model: "umrra4_mse_v1_0_0"
     uifname: "umrra4_mse"
   - model: "umrra4_mse_v2_1_0"
