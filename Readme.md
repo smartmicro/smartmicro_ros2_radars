@@ -19,10 +19,10 @@ ros2 launch umrr_ros2_driver radar.launch.py
 ## How to launch the rviz with recorder plugin
 From a separate terminal and after sourcing workspace
 ```
-rviz2 -d smartmicro_ros2_radars/umrr_ros2_driver/config/rviz/smart_plugin.rviz
+rviz2 -d umrr_ros2_driver/config/rviz/rviz_config.rviz
 ```
 
-![Recorder](smart_rviz_plugin/config/images/smart_rviz_plugin.png "Rviz Outlook") // todo: update png
+![Recorder](smart_rviz_plugin/config/images/rviz_plugin.png "Rviz Outlook")
 
 ## How to start the custom can message sender
 From smart_rviz_plugin folder
@@ -47,7 +47,7 @@ A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVE
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `August 07, 2026`
+- Date of release: `August 06, 2026`
 - Smart Access Automotive version: `v3.13.0`
 
 For each sensor user interface there is a corressponding sensor firmware. The following list all the possible combinations. 
@@ -113,17 +113,17 @@ callback is triggered a new point cloud message is created and published.
 ### The outputs:
 The driver publishes the following topics per sensor, where `<N>` is the sensor index (0-based, up to 9 sensors):
 
-| Topic | Message Type | Description |
-|---|---|---|
-| `smart_radar/port_targets_<N>` | `sensor_msgs/PointCloud2` | Port-based radar target point cloud |
-| `smart_radar/port_targetheader_<N>` | `umrr_ros2_msgs/PortTargetHeader` | Port-based target list header |
-| `smart_radar/can_targets_<N>` | `sensor_msgs/PointCloud2` | CAN-based radar target point cloud |
-| `smart_radar/can_targetheader_<N>` | `umrr_ros2_msgs/CanTargetHeader` | CAN-based target list header |
-| `smart_radar/port_objects_<N>` | `sensor_msgs/PointCloud2` | Port-based object point cloud (MSE models) |
-| `smart_radar/port_objectheader_<N>` | `umrr_ros2_msgs/PortObjectHeader` | Port-based object list header |
-| `smart_radar/can_objects_<N>` | `sensor_msgs/PointCloud2` | CAN-based object point cloud (MSE models) |
-| `smart_radar/can_objectheader_<N>` | `umrr_ros2_msgs/CanObjectHeader` | CAN-based object list header |
-| `smart_radar/port_faultreport_<N>` | `umrr_ros2_msgs/PortFaultReportsMsg` | Fault reports (supported models only) |
+| Topic                               | Message Type                         | Description                                 |
+| :---------------------------------- | :----------------------------------- | :------------------------------------------ |
+| `smart_radar/port_targets_<N>`      | `sensor_msgs/PointCloud2`            | Port-based radar target point cloud         |
+| `smart_radar/port_targetheader_<N>` | `umrr_ros2_msgs/PortTargetHeader`    | Port-based target list header               |
+| `smart_radar/can_targets_<N>`       | `sensor_msgs/PointCloud2`            | CAN-based radar target point cloud          |
+| `smart_radar/can_targetheader_<N>`  | `umrr_ros2_msgs/CanTargetHeader`     | CAN-based target list header                |
+| `smart_radar/port_objects_<N>`      | `sensor_msgs/PointCloud2`            | Port-based object point cloud (MSE models)  |
+| `smart_radar/port_objectheader_<N>` | `umrr_ros2_msgs/PortObjectHeader`    | Port-based object list header               |
+| `smart_radar/can_objects_<N>`       | `sensor_msgs/PointCloud2`            | CAN-based object point cloud (MSE models)   |
+| `smart_radar/can_objectheader_<N>`  | `umrr_ros2_msgs/CanObjectHeader`     | CAN-based object list header                |
+| `smart_radar/port_faultreport_<N>`  | `umrr_ros2_msgs/PortFaultReportsMsg` | Fault reports (supported models only)       |
 
 **Fault reporting** is available for models: `umrra4_mse_v3_0_0`, `umrr9f_mse_v2_0_0`, `umrr9f_v3_2_0`, `umrr9d_v1_7_0`, `umrra4_v1_6_0`. Message types used by the driver are defined in `umrr_ros2_msgs/msg/` — see `PortTargetHeader`, `CanTargetHeader`, `PortObjectHeader`, `CanObjectHeader`, and `PortFaultReportsMsg` for full field definitions.
 
@@ -137,8 +137,8 @@ This uses the default baudrate of _500000_. When using Peak CAN the interfaces a
 
 ### Node Configuration:
 The node is configured through the parameters. Here is a short recap of the most important parts.
-For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/radar.sensor.example.yaml) and 
-[`radar.adapter.example.yaml`](umrr_ros2_driver/param/radar.adapter.example.yaml) files.
+For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/example/radar.sensor.example.yaml) and 
+[`radar.adapter.example.yaml`](umrr_ros2_driver/param/example/radar.adapter.example.yaml) files.
 
 To set up the ***sensors***, configure the following parameters:
 
@@ -173,7 +173,7 @@ To set up the ***sensors***, configure the following parameters:
   ***Relevant for Ethernet sensors.***. 
   ***Should be set to:*** `port_based`.
 
-- **`uifname`**: User interface name of the sensor (refer to the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/)).
+- **`uifname`**: User interface name of the sensor (refer to location: umrr_ros2_driver/smartmicro/user_interfaces/ after running ./smart_extract.sh).
   - **`uifmajorv`**: Major version of the sensor user interface.
   - **`uifminorv`**: Minor version of the sensor user interface.
   - **`uifpatchv`**: Patch version of the sensor user interface.
@@ -202,7 +202,7 @@ To set up the ***adapters***, configure the following parameters:
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
-may access these modes and send commands to the sensor. A list of available sensor operations is given in the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/).
+may access these modes and send commands to the sensor. A list of available sensor operations is under umrr_ros2_driver/smartmicro/user_interfaces/ after running ./smart_extract.sh.
 
 A ros2 `SetMode` service should be called to implement these mode changes. These are the inputs to a ros2 `SetMode` service call:
 - `params`: name/names of the mode instructions (specific to the sensor).
@@ -259,7 +259,7 @@ The call for such a service would be as follows:
 `ros2 service call /smart_radar/set_ip_address umrr_ros2_msgs/srv/SetIp "{value_ip: 3232238400, sensor_id: 100}"`
 
 Note: For successful execution of this call it is important that the sensor is restarted, the ip address in the
-[`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
+[`radar.params.template.yaml`](umrr_ros2_driver/param/radar.params.template.yaml) is updated and the driver is build again.
 
 ## Firmware download
 All the smartmicro radar sensors have independent firmware which are updated every now and than. To keep the sensor updated a firmware download
@@ -278,14 +278,14 @@ Important: The download requires that the transfer length of the interface is se
 ## Sensor Service Responses
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
 
-**Value**   |   **Description**
---- | ---
-0   |    No instruction Response
-1   |    Instruction Response was processed successfully
-2   |    General error
-6   |    Invalid protection
-7   |    Value out of minimal bounds
-8   |    Value out of maximal bounds
+| Value | Description |
+| :---- | :---------- |
+| 0     | No instruction Response |
+| 1     | Instruction Response was processed successfully |
+| 2     | General error |
+| 6     | Invalid protection |
+| 7     | Value out of minimal bounds |
+| 8     | Value out of maximal bounds |
 
 ## RVIZ plugins and custom CAN sender
 The following RViz plugins are provided (foxy only):
@@ -298,7 +298,7 @@ The following RViz plugins are provided (foxy only):
 
 A config file is available to load all plugins in one go:
 ```
-rviz2 -d smartmicro_ros2_radars/umrr_ros2_driver/config/rviz/smart_plugin.rviz  // todo: update config file
+rviz2 -d smartmicro_ros2_radars/umrr_ros2_driver/config/rviz/rviz_plugin.rviz
 ```
 
 Separately, a python GUI is also provided with which it is possible to send custom CAN messages. 
