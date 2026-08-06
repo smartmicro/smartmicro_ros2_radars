@@ -11,8 +11,6 @@ This package provides RViz panels to support day-to-day radar workflows:
 4. Smart Status (target/object header monitoring)
 5. Smart Fault Reports (fault report monitoring)
 
-For detailed architecture and full plugin design, see [DESIGN_DOCUMENT.md](DESIGN_DOCUMENT.md).
-
 ## Build
 
 From workspace root:
