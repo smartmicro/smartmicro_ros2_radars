@@ -1,0 +1,78 @@
+/smart_radar:
+  ros__parameters:
+    adapters:
+      adapter_0:
+        hw_type: "eth"
+        hw_dev_id: 4
+        hw_iface_name: "eth0"
+        port: 55555
+    master_data_serial_type: port_based
+    master_inst_serial_type: port_based
+    sensors:
+      sensor_0:
+        link_type: "eth"
+        pub_type: "target"
+        model: "umrr11_v1_1_2"
+        dev_id: 4
+        id: 100
+        frame_id: "umrr"
+        history_size: 10
+        ip: "172.22.10.101"
+        inst_type: "port_based"
+        data_type: "port_based"
+        port: 55555
+        uifname: "umrr11_t132_automotive"
+        uifmajorv: 1
+        uifminorv: 1
+        uifpatchv: 2
+
+      sensor_1:
+        link_type: "eth"
+        pub_type: "target"
+        model: "umrr96_v1_2_2"
+        dev_id: 4
+        id: 200
+        frame_id: "umrr"
+        history_size: 10
+        ip: "172.22.10.102"
+        inst_type: "port_based"
+        data_type: "port_based"
+        port: 55555
+        uifname: "umrr96_t153_automotive"
+        uifmajorv: 1
+        uifminorv: 2
+        uifpatchv: 2
+
+      sensor_2:
+        link_type: "eth"
+        pub_type: "target"
+        model: "umrr9f_v2_1_1"
+        dev_id: 4
+        id: 300
+        frame_id: "umrr"
+        history_size: 10
+        ip: "172.22.10.103"
+        inst_type: "port_based"
+        data_type: "port_based"
+        port: 55555
+        uifname: "umrr9f_t169_automotive"
+        uifmajorv: 2
+        uifminorv: 1
+        uifpatchv: 1
+
+      sensor_3:
+        link_type: "eth"
+        pub_type: "target"
+        model: "umrr9d_v1_5_0"
+        dev_id: 4
+        id: 400
+        frame_id: "umrr"
+        history_size: 10
+        ip: "172.22.10.104"
+        inst_type: "port_based"
+        data_type: "port_based"
+        port: 55555
+        uifname: "umrr9d_t152_automotive"
+        uifmajorv: 1
+        uifminorv: 5
+        uifpatchv: 0

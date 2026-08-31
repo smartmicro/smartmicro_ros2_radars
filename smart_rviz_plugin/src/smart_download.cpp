@@ -19,7 +19,6 @@ SmartDownloadService::~SmartDownloadService()
   if (ros_thread_.joinable()) {
     ros_thread_.join();
   }
-  rclcpp::shutdown();
 }
 
 void SmartDownloadService::initialize_ros()
@@ -116,14 +115,14 @@ void SmartDownloadService::download_firmware()
         start_download_button_->setEnabled(true);
         start_download_button_->setText("Start Download");
       });
-      RCLCPP_INFO(download_node_->get_logger(), "Firmware download succeeded: %s", result->res.c_str());
+      RCLCPP_INFO(download_node_->get_logger(), "Firmware download service sent. Response: %s", result->res.c_str());
     } catch (const std::exception & e) {
       QMetaObject::invokeMethod(this, [this, e]() {
         response_text_edit_->append(QString("<font color='red'>Error: %1</font>").arg(e.what()));
         start_download_button_->setEnabled(true);
         start_download_button_->setText("Start Download");
       });
-      RCLCPP_ERROR(download_node_->get_logger(), "Firmware download failed: %s", e.what());
+      RCLCPP_ERROR(download_node_->get_logger(), "Firmware download service failed: %s", e.what());
     }
   }).detach();
 }

@@ -133,3 +133,21 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Breaking Changes
 - **Message Structure Refactor**: Replaced single-field param and value fields with array-based params, values, and value_types to support batch processing. Existing integrations must be updated to the new array format.
+
+## v9.0.0 - 2026-08-31
+
+### New Features
+- **New User Interfaces**: Added support for:
+  - umrr9f_t169_automotive_v3_2_0
+  - umrr9d_t152_automotive_v1_7_0
+  - umrra4_automotive_v1_6_0
+  - umrr9f_t169_mse_v2_0_0
+  - umrra4_mse_v3_0_0
+  - umrra1_t166_b_automotive_v2_0_1
+  - umrra1_t166_b_automotive_v3_0_0
+- **Fault Reporting**: Added ROS 2 fault report messages and publishers for supported radar models.
+- **RViz Panel**: Introduced the RViz Smart Fault Reports panel.
+- **PointCloud2 Updates**: Expanded PointCloud2 fields for newer interface schemas.
+- **Firmware Download Improvements**: Improved firmware download status reporting and busy-state handling.
+- **RViz Support Extensions**: Extended RViz service and status support.
+- **Configuration and Validation**: Updated configuration, integration tests, and documentation.

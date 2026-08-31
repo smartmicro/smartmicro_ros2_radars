@@ -17,6 +17,7 @@ RUN if [ "$ROS_DISTRO" = "foxy" ]; then \
 RUN apt-get update && apt-get install -y \
     iputils-ping \
     python3 \
+    python3-dev \
     python3-pip \
     wget \
     git \

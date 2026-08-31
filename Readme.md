@@ -19,10 +19,10 @@ ros2 launch umrr_ros2_driver radar.launch.py
 ## How to launch the rviz with recorder plugin
 From a separate terminal and after sourcing workspace
 ```
-rviz2 -d smartmicro_ros2_radars/umrr_ros2_driver/config/rviz/smart_plugin.rviz
+rviz2 -d umrr_ros2_driver/config/rviz/rviz_config.rviz
 ```
 
-![Recorder](smart_rviz_plugin/config/images/smart_rviz_plugin.png "Rviz Outlook")
+![Recorder](smart_rviz_plugin/config/images/rviz_plugin.png "Rviz Outlook")
 
 ## How to start the custom can message sender
 From smart_rviz_plugin folder
@@ -35,49 +35,56 @@ python custom_can_sender.py
 ## Prerequisites
 
 ### Supported ROS distributions:
-- ROS2 foxy
+- ROS2 foxy *(recommended — full stack: driver + RViz plugins)*
+- ROS2 humble *(driver node only)*
+- ROS2 jazzy *(driver node only)*
+
+> **Note:** The RViz plugins (`smart_rviz_plugin`) are currently only available for **ROS2 foxy**.
+> On humble and jazzy the radar driver node is fully functional but the plugins are not supported.
 
 ### UMRR radars and Smart Access API version
 A [smartmicro](https://www.smartmicro.com/automotive-radar) UMRR96, UMRR11, DRVEGRD 171, DRVEGRD 152, DRVEGRD 169, DRVEGRD 169 MSE or DRVEGRD 171 MSE radar is 
 required to run this node. This code is bundled with a version of Smart Access API. Please make
 sure the version used to publish the data is compatible with this version:
 
-- Date of release: `March 03, 2026`
-- Smart Access Automotive version: `v3.11.0`
+- Date of release: `August 31, 2026`
+- Smart Access Automotive version: `v3.13.0`
 
 For each sensor user interface there is a corressponding sensor firmware. The following list all the possible combinations. 
 
 | **User Interface Version**                       | **Sensor Firmware Version**         |
 |--------------------------------------------------|-------------------------------------|
-| UMRR96 Type 153 AUTOMOTIVE v1.2.1                | UMRR96 Type 153: V5.2.4             |
 | UMRR96 Type 153 AUTOMOTIVE v1.2.2                | UMRR96 Type 153: V5.2.4             |
-| UMRR11 Type 132 AUTOMOTIVE v1.1.1                | UMRR11 Type 132: V5.1.4             |
 | UMRR11 Type 132 AUTOMOTIVE v1.1.2                | UMRR11 Type 132: V5.1.4             |
 | UMRR9F Type 169 AUTOMOTIVE v1.1.1                | UMRR9F Type 169: V1.3.0             |
 | UMRR9F Type 169 AUTOMOTIVE v2.0.0                | UMRR9F Type 169: V2.0.1             |
 | UMRR9F Type 169 AUTOMOTIVE v2.1.1                | UMRR9F Type 169: V2.0.1             |
-| UMRR9F Type 169 AUTOMOTIVE v2.2.0                | UMRR9F Type 169: V2.2.0             |
 | UMRR9F Type 169 AUTOMOTIVE v2.2.1                | UMRR9F Type 169: V2.2.0             |
 | UMRR9F Type 169 AUTOMOTIVE v2.4.1                | UMRR9F Type 169: V2.4.0             |
-| UMRR9D Type 152 AUTOMOTIVE v1.0.2                | UMRR9D Type 152: V2.1.0             |
+| UMRR9F Type 169 AUTOMOTIVE v3.0.0                | UMRR9F Type 169: V3.0.0             |
+| UMRR9F Type 169 AUTOMOTIVE v3.2.0                | UMRR9F Type 169: V3.2.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.0.3                | UMRR9D Type 152: V2.5.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.2.2                | UMRR9D Type 152: V2.5.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.4.1                | UMRR9D Type 152: V2.7.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.5.0                | UMRR9D Type 152: V3.3.0             |
 | UMRR9D Type 152 AUTOMOTIVE v1.5.0                | UMRR9D Type 152: V3.6.0             |
-| UMRRA4 Type 171 AUTOMOTIVE v1.0.0                | UMRRA4 Type 171: V1.0.0             |
+| UMRR9D Type 152 AUTOMOTIVE v1.7.0                | UMRR9D Type 152: V3.9.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.0.1                | UMRRA4 Type 171: V1.0.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.2.1                | UMRRA4 Type 171: V1.2.1             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.4.0                | UMRRA4 Type 171: V2.0.0             |
 | UMRRA4 Type 171 AUTOMOTIVE v1.4.0                | UMRRA4 Type 171: V2.3.0             |
-| UMRR11 Type 132 MSE v1.1.1                       | UMRR11 Type 132-MSE: V6.1.2         |
+| UMRRA4 Type 171 AUTOMOTIVE v1.6.0                | UMRRA4 Type 171: V2.6.0             |
 | UMRR9F Type 169 MSE v1.0.0                       | UMRR9F Type 169-MSE: V1.1.0         |
 | UMRR9F Type 169 MSE v1.1.0                       | UMRR9F Type 169-MSE: V1.3.0         |
 | UMRR9F Type 169 MSE v1.3.0                       | UMRR9F Type 169-MSE: V1.5.0         |
-| UMRRA4 Type 171 MSE v1.0.0                       | UMRR9F Type 171-MSE: V1.0.0         |
-| UMRRA4 Type 171 MSE v1.3.0                       | UMRR9F Type 171-MSE: V2.1.0         |
+| UMRR9F Type 169 MSE v2.0.0                       | UMRR9F Type 169-MSE: V1.7.0         |
+| UMRRA4 Type 171 MSE v1.0.0                       | UMRRA4 Type 171-MSE: V1.0.0         |
+| UMRRA4 Type 171 MSE v2.1.0                       | UMRRA4 Type 171-MSE: V1.3.0         |
+| UMRRA4 Type 171 MSE v3.0.0                       | UMRRA4 Type 171-MSE: V1.5.0         |
 | UMRRA1 Type 166 AUTOMOTIVE v1.0.0                | UMRRA1 Type 166: V1.0.0             |
 | UMRRA1 Type 166 AUTOMOTIVE v2.0.0                | UMRRA1 Type 166: V1.0.0             |
+| UMRRA1 Type 166 AUTOMOTIVE v2.0.1                | UMRRA1 Type 166: V2.0.1             |
+| UMRRA1 Type 166 AUTOMOTIVE v3.0.0                | UMRRA1 Type 166: V3.0.0             |
 
 ### Point cloud message wrapper library
 To add targets to the point cloud in a safe and quick fashion a
@@ -104,8 +111,21 @@ These inputs are processed through the Smart Access C++ API and trigger a callba
 callback is triggered a new point cloud message is created and published.
 
 ### The outputs:
-The driver publishes `sensor_msgs::msg::PointCloud2` messages with the radar targets on the topic
-`umrr/targets` which can be remapped through the parameters.
+The driver publishes the following topics per sensor, where `<N>` is the sensor index (0-based, up to 9 sensors):
+
+| Topic                               | Message Type                         | Description                                 |
+| :---------------------------------- | :----------------------------------- | :------------------------------------------ |
+| `smart_radar/port_targets_<N>`      | `sensor_msgs/PointCloud2`            | Port-based radar target point cloud         |
+| `smart_radar/port_targetheader_<N>` | `umrr_ros2_msgs/PortTargetHeader`    | Port-based target list header               |
+| `smart_radar/can_targets_<N>`       | `sensor_msgs/PointCloud2`            | CAN-based radar target point cloud          |
+| `smart_radar/can_targetheader_<N>`  | `umrr_ros2_msgs/CanTargetHeader`     | CAN-based target list header                |
+| `smart_radar/port_objects_<N>`      | `sensor_msgs/PointCloud2`            | Port-based object point cloud (MSE models)  |
+| `smart_radar/port_objectheader_<N>` | `umrr_ros2_msgs/PortObjectHeader`    | Port-based object list header               |
+| `smart_radar/can_objects_<N>`       | `sensor_msgs/PointCloud2`            | CAN-based object point cloud (MSE models)   |
+| `smart_radar/can_objectheader_<N>`  | `umrr_ros2_msgs/CanObjectHeader`     | CAN-based object list header                |
+| `smart_radar/port_faultreport_<N>`  | `umrr_ros2_msgs/PortFaultReportsMsg` | Fault reports (supported models only)       |
+
+**Fault reporting** is available for models: `umrra4_mse_v3_0_0`, `umrr9f_mse_v2_0_0`, `umrr9f_v3_2_0`, `umrr9d_v1_7_0`, `umrra4_v1_6_0`. Message types used by the driver are defined in `umrr_ros2_msgs/msg/` — see `PortTargetHeader`, `CanTargetHeader`, `PortObjectHeader`, `CanObjectHeader`, and `PortFaultReportsMsg` for full field definitions.
 
 ### Interface Configuration:
 For setting up a sensor with ethernet or can, the interfaces of the should be set properly prior to configuring the node.
@@ -117,22 +137,17 @@ This uses the default baudrate of _500000_. When using Peak CAN the interfaces a
 
 ### Node Configuration:
 The node is configured through the parameters. Here is a short recap of the most important parts.
-For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/radar.sensor.example.yaml) and 
-[`radar.adapter.example.yaml`](umrr_ros2_driver/param/radar.adapter.example.yaml) files.
+For more details, see the [`radar.sensor.example.yaml`](umrr_ros2_driver/param/example/radar.sensor.example.yaml) and 
+[`radar.adapter.example.yaml`](umrr_ros2_driver/param/example/radar.adapter.example.yaml) files.
 
 To set up the ***sensors***, configure the following parameters:
 
 - **`link_type`**: Specifies the type of hardware connection.
 
 - **`model`**: Defines the model of the sensor being used.  
-  - **CAN Models**:  
-    'umrra4_can_mse_v1_0_0', 'umrra4_can_mse_v2_1_0', 'umrr9f_can_mse_v1_1_0', 'umrr9f_can_mse_v1_0_0', 'umrr96_can_v1_2_2',
-    'umrr11_can_v1_1_2', 'umrr9f_can_v2_1_1', 'umrr9f_can_v2_2_1', 'umrr9f_can_v2_4_1', 'umrr9f_can_v3_0_0', 'umrr9d_can_v1_0_3',
-    'umrr9d_can_v1_2_2', 'umrr9d_can_v1_4_1', 'umrr9d_can_v1_5_0', 'umrra4_can_v1_0_1', 'umrra4_can_v1_2_1', 'umrra4_can_v1_4_0'
-  - **Port Models**:  
-    'umrra1_v2_0_0', 'umrra1_v1_0_0', 'umrra4_mse_v1_0_0', 'umrra4_mse_v2_1_0', 'umrr9f_mse_v1_3_0', 'umrr9f_mse_v1_1_0',
-    'umrr9f_mse_v1_0_0', 'umrr96_v1_2_2', 'umrr11_v1_1_2', 'umrr9f_v2_1_1', 'umrr9f_v2_2_1', 'umrr9f_v2_4_1','umrr9f_v3_0_0',
-    'umrr9d_v1_0_3', 'umrr9d_v1_2_2', 'umrr9d_v1_4_1', 'umrr9d_v1_5_0', 'umrra4_v1_0_1', 'umrra4_v1_2_1', 'umrra4_v1_4_0'
+  - Supported models are maintained in [`model_uif_catalogue.yaml`](umrr_ros2_driver/param/model_uif_catalogue.yaml).
+  - The catalogue distinguishes **CAN models** and **Port models**.
+  - Model version is encoded in the name (for example: `umrr96_can_v1_2_2`).
 
 - **`dev_id`**: Adapter ID to which the sensor is connected.  
   ***Note:*** The adapter and sensor must have the same `dev_id`.
@@ -158,10 +173,11 @@ To set up the ***sensors***, configure the following parameters:
   ***Relevant for Ethernet sensors.***. 
   ***Should be set to:*** `port_based`.
 
-- **`uifname`**: User interface name of the sensor (refer to the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/)).
+- **`uifname`**: User interface name of the sensor (refer to location: umrr_ros2_driver/smartmicro/user_interfaces/ after running ./smart_extract.sh).
   - **`uifmajorv`**: Major version of the sensor user interface.
   - **`uifminorv`**: Minor version of the sensor user interface.
   - **`uifpatchv`**: Patch version of the sensor user interface.
+  - For model and user interface naming guidance, refer to [`model_uif_catalogue.yaml`](umrr_ros2_driver/param/model_uif_catalogue.yaml).
 
 To set up the ***adapters***, configure the following parameters:
 
@@ -186,7 +202,7 @@ To set up the ***adapters***, configure the following parameters:
 
 ## Mode of operations of the sensors
 The smartmicro radars come equipped with numerous features and modes of operation. Using the ros2 services provided one
-may access these modes and send commands to the sensor. A list of available sensor operations is given in the [`user_interfaces`](umrr_ros2_driver/smartmicro/user_interfaces/).
+may access these modes and send commands to the sensor. A list of available sensor operations is under umrr_ros2_driver/smartmicro/user_interfaces/ after running ./smart_extract.sh.
 
 A ros2 `SetMode` service should be called to implement these mode changes. These are the inputs to a ros2 `SetMode` service call:
 - `params`: name/names of the mode instructions (specific to the sensor).
@@ -243,7 +259,7 @@ The call for such a service would be as follows:
 `ros2 service call /smart_radar/set_ip_address umrr_ros2_msgs/srv/SetIp "{value_ip: 3232238400, sensor_id: 100}"`
 
 Note: For successful execution of this call it is important that the sensor is restarted, the ip address in the
-[`radar.template.yaml`](umrr_ros2_driver/param/radar.template.yaml) is updated and the driver is build again.
+[`radar.params.template.yaml`](umrr_ros2_driver/param/radar.params.template.yaml) is updated and the driver is build again.
 
 ## Firmware download
 All the smartmicro radar sensors have independent firmware which are updated every now and than. To keep the sensor updated a firmware download
@@ -262,20 +278,28 @@ Important: The download requires that the transfer length of the interface is se
 ## Sensor Service Responses
 The sensor services respond with certain value codes. The following is a lookup table for the possible responses:
 
-**Value**   |   **Description**
---- | ---
-0   |    No instruction Response
-1   |    Instruction Response was processed successfully
-2   |    General error
-6   |    Invalid protection
-7   |    Value out of minimal bounds
-8   |    Value out of maximal bounds
+| Value | Description |
+| :---- | :---------- |
+| 0     | No instruction Response |
+| 1     | Instruction Response was processed successfully |
+| 2     | General error |
+| 6     | Invalid protection |
+| 7     | Value out of minimal bounds |
+| 8     | Value out of maximal bounds |
 
 ## RVIZ plugins and custom CAN sender
-Custom plugins for rviz has been provided. This plugin provides logging of the target list, object list and their respective headers.
-It provides a command configurator plugin through which commands, status and mode reqeust could be send. It also provides a plugin for initiating a firmware download.
-A config file is available which adds this plugin to the rviz. Along with logging the data the plugin also gives the possibility to record
-the target/object list data, convert it into a csv format and save it.
+The following RViz plugins are provided (foxy only):
+
+- **Smart Recorder** — view and record target/object point cloud data per topic; export to CSV.
+- **Smart Command Configurator** — send parameter writes/reads, commands, and status queries to sensors via the ROS2 service interface.
+- **Smart Status** — display target and object list header fields (port metadata, timestamps, counts) for any active header topic.
+- **Smart Firmware Download** — trigger firmware download to a sensor from within RViz.
+- **Smart Fault Reports** — monitor fault reports per sensor. Only models that support fault reporting will appear in the list.
+
+A config file is available to load all plugins in one go:
+```
+rviz2 -d smartmicro_ros2_radars/umrr_ros2_driver/config/rviz/rviz_plugin.rviz
+```
 
 Separately, a python GUI is also provided with which it is possible to send custom CAN messages. 
 
@@ -307,6 +331,8 @@ Running the unit and integration tests via the docker compose
 ```bash
 docker-compose up
 ```
+
+> **Note:** Integration tests use `umrr_ros2_driver/param/radar.params.integration_test.yaml`, which is pre-configured to match the four simulator instances started by docker-compose. Do not use `radar.params.template.yaml` for integration tests.
 
 Getting the test coverage via the docker container
 ```bash

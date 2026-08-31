@@ -1,3 +1,5 @@
+smart_rviz_plugin/src/smart_session_recorder.cpp
+smart_rviz_plugin/include/smart_rviz_plugin/smart_session_recorder.hpp
 build
 install
 log

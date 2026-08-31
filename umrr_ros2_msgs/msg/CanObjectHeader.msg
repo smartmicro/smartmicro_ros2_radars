@@ -1,4 +1,5 @@
-string frame_id
+std_msgs/Header header
+
 float32 cycle_time
 uint16 number_of_objects
 float32 ego_speed

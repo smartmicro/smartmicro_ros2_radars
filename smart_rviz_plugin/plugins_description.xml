@@ -23,4 +23,10 @@
       base_class_type="rviz_common::Panel">
     <description>The Smart Status.</description>
   </class>
+  <class
+      name="smart_rviz_plugin/Smart Fault Reports"
+      type="smart_rviz_plugin::SmartFaultReports"
+      base_class_type="rviz_common::Panel">
+    <description>The Smart Fault Reports panel.</description>
+  </class>
 </library>

@@ -1,5 +1,3 @@
-std_msgs/Header header
-
 uint32 port_identifier
 int16 port_ver_major
 int16 port_ver_minor
@@ -8,6 +6,6 @@ uint8 body_endianness
 uint8 port_index 
 uint8 header_ver_major
 uint8 header_ver_minor
-float32 cycle_time
-uint16 number_of_objects
-uint64 ts_measurement
+uint16 num_max_reports
+uint16 num_valid_reports
+uint8 faults_time_line

@@ -19,7 +19,7 @@ import unittest
 import launch
 import launch_testing
 import launch_testing.actions
-from launch.actions import ExecuteProcess
+from launch.actions import ExecuteProcess, TimerAction
 
 import pytest
 import rclpy
@@ -29,12 +29,33 @@ from launch_ros.actions import Node
 
 PACKAGE_NAME = 'umrr_ros2_driver'
 
+EXPECTED_TARGET_FIELDS = [
+    'x',
+    'y',
+    'z',
+    'radial_speed',
+    'power',
+    'rcs',
+    'noise',
+    'snr',
+    'azimuth_angle',
+    'elevation_angle',
+    'range',
+    'variance_range',
+    'variance_speed',
+    'variance_azimuth_angle',
+    'variance_elevation_angle',
+    'false_alarm_probability',
+    'flags',
+    'peak_idx',
+]
+
 
 @pytest.mark.launch_test
 def generate_test_description():
 
     radar__params = os.path.join(
-           get_package_share_directory(PACKAGE_NAME), 'param/radar.params.template.yaml')
+        get_package_share_directory(PACKAGE_NAME), 'param/radar.params.integration_test.yaml')
     radar_node = Node(
         package=PACKAGE_NAME,
         executable='smartmicro_radar_node_exe',
@@ -43,42 +64,46 @@ def generate_test_description():
     )
 
     set_frequency_sweep_service = ExecuteProcess(
-        cmd = [
+        cmd=[
             'ros2', 'service', 'call',
             '/smart_radar/set_radar_mode',
-            'umrr_ros2_msgs/srv/SetMode', 
-            '{section_name: auto_interface_0dim, sensor_id: 200, params: ["frequency_sweep_idx"], values: ["1"], value_types: [3]}'
+            'umrr_ros2_msgs/srv/SetMode',
+            '{section_name: auto_interface_0dim, sensor_id: 200, '
+            'params: ["frequency_sweep_idx"], values: ["1"], value_types: [3]}'
         ],
         output='screen',
     )
 
     set_angular_separation_service = ExecuteProcess(
-    cmd=[
-        'ros2', 'service', 'call',
-        '/smart_radar/set_radar_mode',
-        'umrr_ros2_msgs/srv/SetMode',
-        '{section_name: auto_interface_0dim, sensor_id: 100, params: ["angular_separation"], values: ["1"], value_types: [3]}'
-    ],
+        cmd=[
+            'ros2', 'service', 'call',
+            '/smart_radar/set_radar_mode',
+            'umrr_ros2_msgs/srv/SetMode',
+            '{section_name: auto_interface_0dim, sensor_id: 100, '
+            'params: ["angular_separation"], values: ["1"], value_types: [3]}'
+        ],
         output='screen'
     )
 
-    
     get_range_toggle_mode_service = ExecuteProcess(
-        cmd = [
+        cmd=[
             'ros2', 'service', 'call',
             '/smart_radar/get_radar_mode',
-            'umrr_ros2_msgs/srv/GetMode', 
-            '{section_name: auto_interface_0dim, sensor_id: 300, params: ["range_toggle_mode"], param_types: [3]}'
+            'umrr_ros2_msgs/srv/GetMode',
+            '{section_name: auto_interface_0dim, sensor_id: 300, '
+            'params: ["range_toggle_mode"], param_types: [3]}'
         ],
         output='screen',
     )
 
     get_software_version_service = ExecuteProcess(
-        cmd = [
+        cmd=[
             'ros2', 'service', 'call',
             '/smart_radar/get_radar_status',
-            'umrr_ros2_msgs/srv/GetStatus', 
-            '{section_name: auto_interface, sensor_id: 400, statuses: ["sw_version_major", "sw_version_minor"], status_types: [1, 1]}'
+            'umrr_ros2_msgs/srv/GetStatus',
+            '{section_name: auto_interface, sensor_id: 400, '
+            'statuses: ["sw_version_major", "sw_version_minor"], '
+            'status_types: [1, 1]}'
         ],
         output='screen',
     )
@@ -86,10 +111,10 @@ def generate_test_description():
     return (
         launch.LaunchDescription([
             radar_node,
-            set_frequency_sweep_service,
-            set_angular_separation_service,
-            get_range_toggle_mode_service,
-            get_software_version_service,
+            TimerAction(period=2.0, actions=[set_frequency_sweep_service]),
+            TimerAction(period=3.0, actions=[set_angular_separation_service]),
+            TimerAction(period=4.0, actions=[get_range_toggle_mode_service]),
+            TimerAction(period=5.0, actions=[get_software_version_service]),
             launch_testing.actions.ReadyToTest(),
         ]),
         {
@@ -165,6 +190,11 @@ class TestSmartNode(unittest.TestCase):
             self.assertGreater(len(data_rx_s1), 1)
             self.assertGreater(len(data_rx_s2), 1)
             self.assertGreater(len(data_rx_s3), 1)
+
+            # Validate that target cloud schema includes all expected fields.
+            for msg in (data_rx_s1[-1], data_rx_s2[-1], data_rx_s3[-1]):
+                field_names = [field.name for field in msg.fields]
+                self.assertEqual(field_names, EXPECTED_TARGET_FIELDS)
 
         finally:
             self.test_node.destroy_subscription(sub_s1)

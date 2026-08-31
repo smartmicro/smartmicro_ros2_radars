@@ -66,20 +66,27 @@ install(FILES
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.2.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev2.4.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev3.0.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_automotivev3.2.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.0.3_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.2.2_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.4.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.5.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9d_t152_automotivev1.7.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.0.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.2.1_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.4.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_automotivev1.6.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_msev1.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_msev1.1.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_msev1.3.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrr9f_t169_msev2.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_msev1.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_msev2.1.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra4_msev3.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev1.0.0_user_interface.so"
     "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev2.0.0_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev2.0.1_user_interface.so"
+    "${PROJECT_SOURCE_DIR}/smartmicro/${SMARTMICRO_LIB_DIR}/libumrra1_t166_b_automotivev3.0.0_user_interface.so"
 DESTINATION lib)
 
 set(LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -108,20 +115,27 @@ smartmicro/include/umrr9f_t169_automotive_v2_1_1
 smartmicro/include/umrr9f_t169_automotive_v2_2_1
 smartmicro/include/umrr9f_t169_automotive_v2_4_1
 smartmicro/include/umrr9f_t169_automotive_v3_0_0
+smartmicro/include/umrr9f_t169_automotive_v3_2_0
 smartmicro/include/umrr9d_t152_automotive_v1_0_3
 smartmicro/include/umrr9d_t152_automotive_v1_2_2
 smartmicro/include/umrr9d_t152_automotive_v1_4_1
 smartmicro/include/umrr9d_t152_automotive_v1_5_0
+smartmicro/include/umrr9d_t152_automotive_v1_7_0
 smartmicro/include/umrra4_automotive_v1_0_1
 smartmicro/include/umrra4_automotive_v1_2_1
 smartmicro/include/umrra4_automotive_v1_4_0
+smartmicro/include/umrra4_automotive_v1_6_0
 smartmicro/include/umrr9f_t169_mse_v1_0_0
 smartmicro/include/umrr9f_t169_mse_v1_1_0
 smartmicro/include/umrr9f_t169_mse_v1_3_0
+smartmicro/include/umrr9f_t169_mse_v2_0_0
 smartmicro/include/umrra4_mse_v1_0_0
 smartmicro/include/umrra4_mse_v2_1_0
+smartmicro/include/umrra4_mse_v3_0_0
 smartmicro/include/umrra1_t166_b_automotive_v1_0_0
-smartmicro/include/umrra1_t166_b_automotive_v2_0_0)
+smartmicro/include/umrra1_t166_b_automotive_v2_0_0
+smartmicro/include/umrra1_t166_b_automotive_v2_0_1
+smartmicro/include/umrra1_t166_b_automotive_v3_0_0)
 
 # link smart_access_lib-linux-x86_64-gcc_9 to the node
 target_link_libraries(smartmicro_radar_node
@@ -137,20 +151,27 @@ target_link_libraries(smartmicro_radar_node
     umrr9f_t169_automotivev2.2.1_user_interface
     umrr9f_t169_automotivev2.4.1_user_interface
     umrr9f_t169_automotivev3.0.0_user_interface
+    umrr9f_t169_automotivev3.2.0_user_interface
     umrr9d_t152_automotivev1.0.3_user_interface
     umrr9d_t152_automotivev1.2.2_user_interface
     umrr9d_t152_automotivev1.4.1_user_interface
     umrr9d_t152_automotivev1.5.0_user_interface
+    umrr9d_t152_automotivev1.7.0_user_interface
     umrra4_automotivev1.0.1_user_interface
     umrra4_automotivev1.2.1_user_interface
     umrra4_automotivev1.4.0_user_interface
+    umrra4_automotivev1.6.0_user_interface
     umrr9f_t169_msev1.0.0_user_interface
     umrr9f_t169_msev1.1.0_user_interface
     umrr9f_t169_msev1.3.0_user_interface
+    umrr9f_t169_msev2.0.0_user_interface
     umrra4_msev1.0.0_user_interface
     umrra4_msev2.1.0_user_interface
+    umrra4_msev3.0.0_user_interface
     umrra1_t166_b_automotivev1.0.0_user_interface
-    umrra1_t166_b_automotivev2.0.0_user_interface)
+    umrra1_t166_b_automotivev2.0.0_user_interface
+    umrra1_t166_b_automotivev2.0.1_user_interface
+    umrra1_t166_b_automotivev3.0.0_user_interface)
 
 rclcpp_components_register_node(smartmicro_radar_node
     PLUGIN "smartmicro::drivers::radar::SmartmicroRadarNode"
@@ -174,8 +195,31 @@ if(BUILD_TESTING)
 
     find_package(ament_lint_auto REQUIRED)
     ament_lint_auto_find_test_dependencies()
-    ament_copyright("src/smartmicro_radar_node.cpp")
-    ament_cppcheck("src/smartmicro_radar_node.cpp")
+
+    set(PROJECT_CPP_FILES
+      src/smartmicro_radar_node.cpp
+      src/update_service.cpp
+      include/umrr_ros2_driver/smartmicro_radar_node.hpp
+      include/umrr_ros2_driver/update_service.hpp
+    )
+
+    set(PROJECT_PY_FILES
+      launch/radar.launch.py
+      test/radar_node_test.launch.py
+    )
+
+    # C++ linting
+    ament_cppcheck(${PROJECT_CPP_FILES})
+
+    # Python linting
+    ament_pep257(${PROJECT_PY_FILES})
+
+    # Copyright should cover all first-party text sources.
+    ament_copyright(
+      CMakeLists.txt
+      ${PROJECT_CPP_FILES}
+      ${PROJECT_PY_FILES}
+    )
 
 endif()
 
