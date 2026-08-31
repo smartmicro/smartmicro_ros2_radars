@@ -134,7 +134,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Breaking Changes
 - **Message Structure Refactor**: Replaced single-field param and value fields with array-based params, values, and value_types to support batch processing. Existing integrations must be updated to the new array format.
 
-## v9.0.0 - 2026-08-06
+## v9.0.0 - 2026-08-31
 
 ### New Features
 - **New User Interfaces**: Added support for:
